@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://felipemolino.com/sitemap.xml
