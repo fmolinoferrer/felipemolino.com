@@ -1,8 +1,465 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8">
-<title>The Control Tower Method · Felipe Molino</title>
-<meta name="description" content="White paper by Felipe Molino: roadmaps, gates and maturity for moving a product's controls from manual to autonomous with AI agents.">
-<link rel="canonical" href="https://felipemolino.com/#control-tower-method">
-<meta http-equiv="refresh" content="0; url=/#control-tower-method">
-<script>location.replace("/#control-tower-method");</script>
-</head><body><p>Opening the white paper… <a href="/#control-tower-method">continue</a></p></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Control Tower Method · White paper by Felipe Molino</title>
+<meta name="description" content="How to move a product's control areas from manual to autonomous with AI agents working under controls: an L0–L5 maturity ladder, a roadmap control tower, review gates and ADRs. White paper by Felipe Molino.">
+<link rel="canonical" href="https://felipemolino.com/papers/control-tower-method/">
+<meta name="author" content="Felipe Molino">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Felipe Molino">
+<meta property="og:title" content="The Control Tower Method">
+<meta property="og:description" content="Moving a product's controls from manual to autonomous, with AI agents working under controls. White paper by Felipe Molino.">
+<meta property="og:url" content="https://felipemolino.com/papers/control-tower-method/">
+<meta property="og:image" content="https://felipemolino.com/assets/og-control-tower-method.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="article:author" content="https://felipemolino.com/">
+<meta property="article:published_time" content="2026-10-17">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://felipemolino.com/assets/og-control-tower-method.png">
+<meta name="theme-color" content="#0f1215">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1215'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23e79364'%3EFM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The Control Tower Method","alternativeHeadline":"Roadmaps, gates and maturity: moving a product's controls from manual to autonomous","description":"How to move a product's control areas from manual to autonomous with AI agents working under controls: an L0–L5 maturity ladder, a roadmap control tower, review gates and ADRs. White paper by Felipe Molino.","url":"https://felipemolino.com/papers/control-tower-method/","mainEntityOfPage":"https://felipemolino.com/papers/control-tower-method/","image":"https://felipemolino.com/assets/og-control-tower-method.png","datePublished":"2026-10-17","dateModified":"2026-10-17","author":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/","sameAs":["https://www.linkedin.com/in/felipemolino"]},"publisher":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/"},"keywords":"maturity model, AI agents, product management, control tower, roadmap, ADR, agentic AI, autonomous operations, APEM, digital twin"}</script>
+<style>
+:root {
+    --bg: #0f1215;
+    --surface: #171b1f;
+    --surface-2: #1f242a;
+    --surface-3: #262c33;
+    --ink: #f1efe7;
+    --ink-soft: #c1c5bc;
+    --muted: #858b84;
+    --line: #2a3037;
+    --line-soft: #21262c;
+    --accent: #e79364;
+    --accent-strong: #f3ab84;
+    --accent-ink: #0f1215;
+    --accent-2: #8ec4bc;
+    --accent-2-soft: #1a2b29;
+    --good: #86bd8c;  --good-soft: #16241a;
+    --warn: #ddb168;  --warn-soft: #262013;
+    --bad:  #df9781;  --bad-soft:  #291d19;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -16px rgba(0,0,0,.7);
+    --sidebar-w: 258px;
+  }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Public Sans", -apple-system, "Segoe UI", sans-serif; font-size: 16.5px; line-height: 1.68; -webkit-font-smoothing: antialiased; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+a { color: var(--accent-2); text-underline-offset: 3px; } a:hover { color: var(--accent); }
+h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wrap: balance; margin: 0; color: var(--ink); }
+img { max-width: 100%; } [hidden] { display: none !important; }
+.wp-bar a.wp-back { text-decoration: none; }
+.wp-foot { max-width: 880px; margin: 0 auto; padding: 0 20px 64px; display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: .9rem; color: var(--muted); }
+</style>
+<style>
+  /* ---------- White paper reader ---------- */
+  #whitepaper { position: fixed; inset: 0; z-index: 200; overflow-y: auto; background: var(--bg); padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body.wp-open { overflow: hidden; }
+  .wp-bar { position: sticky; top: 0; z-index: 2; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .wp-bar-in { max-width: 880px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 12px 20px; }
+  .wp-back { background: none; border: 0; color: var(--ink); font: 600 .9rem "Public Sans", sans-serif; cursor: pointer; padding: 6px 0; white-space: nowrap; display: inline-flex; gap: 8px; align-items: center; }
+  .wp-back:hover { color: var(--accent); }
+  .wp-bar-t { margin-left: auto; font: 500 .7rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wp { max-width: 880px; margin: 0 auto; padding-inline: 20px; padding-block: 44px 96px; }
+  .wp p, .wp li { color: var(--ink-soft); max-width: 68ch; }
+  .wp p { margin: 14px 0 0; }
+  .wp strong { color: var(--ink); }
+  .wp ul, .wp ol { padding-left: 22px; margin: 12px 0 0; }
+  .wp li { margin-top: 7px; }
+  .wp-kick { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0; }
+  .wp h1 { font-size: clamp(2.1rem, 5.4vw, 3.2rem); line-height: 1.08; margin-top: 14px; }
+  .wp-dek { font-size: 1.16rem; line-height: 1.55; margin-top: 16px !important; color: var(--ink) !important; }
+  .wp-by { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 18px; font: 500 .78rem "IBM Plex Mono", monospace; color: var(--muted); }
+  .wp h2 { font-size: 1.55rem; margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--line); line-height: 1.2; }
+  .wp h2 .n { font: 600 .74rem "IBM Plex Mono", monospace; color: var(--accent); letter-spacing: .06em; display: block; margin-bottom: 8px; }
+  .wp h3 { font-size: 1.08rem; margin-top: 30px; font-family: "Public Sans", sans-serif; font-weight: 700; }
+  .wp-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 28px; }
+  .wp-fact { background: var(--surface); padding: 16px 18px; min-width: 0; }
+  @media (max-width: 560px) { .wp-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .wp-fact b { display: block; font: 600 1.35rem "IBM Plex Mono", monospace; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .wp-fact span { display: block; margin-top: 6px; font-size: .82rem; line-height: 1.4; color: var(--muted); }
+  .wp-fact.hero { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+  .wp-fact.hero b { font-size: 1.9rem; color: var(--accent-2); }
+  .wp-fact.hero span { margin: 0; font-size: .95rem; color: var(--ink-soft); }
+  .wp-pull { border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; margin: 26px 0 0; font-family: "Fraunces", Georgia, serif; font-size: 1.28rem; line-height: 1.45; color: var(--ink); max-width: 60ch; }
+  .wp-fig { margin: 28px 0 0; }
+  .wp-fig figcaption { margin-top: 10px; font-size: .82rem; color: var(--muted); max-width: 72ch; line-height: 1.5; }
+  .wp-fig figcaption b { font: 600 .68rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-right: 6px; }
+  .wp-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .wp-ill { display: inline-block; font: 700 .64rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); padding: 3px 9px; border-radius: 100px; vertical-align: middle; margin-left: 8px; }
+  /* loop diagram */
+  .wp-loop svg { display: block; width: 100%; min-width: 660px; height: auto; }
+  .wp-loop .nd rect { fill: var(--surface-2); stroke: var(--line); }
+  .wp-loop .nd.h rect { fill: color-mix(in srgb, var(--accent) 16%, var(--surface-2)); stroke: var(--accent); }
+  .wp-loop .nd.c rect { fill: color-mix(in srgb, var(--accent-2) 16%, var(--surface-2)); stroke: var(--accent-2); }
+  .wp-loop text { fill: var(--ink); font: 600 13px "Public Sans", sans-serif; }
+  .wp-loop text.s { fill: var(--muted); font: 500 10.5px "IBM Plex Mono", monospace; }
+  .wp-loop path { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+  .wp-loop .ah { fill: var(--muted); }
+  .wp-key { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 10px 16px; border-top: 1px solid var(--line); font-size: .78rem; color: var(--muted); }
+  .wp-key span { display: inline-flex; align-items: center; gap: 6px; }
+  .wp-key i { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid; }
+  /* tables */
+  .wp table { border-collapse: collapse; width: 100%; font-size: .86rem; }
+  .wp th { font: 600 .64rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 9px 10px; background: var(--surface-2); border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .wp td { padding: 8px 10px; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+  .wp tr:last-child td { border-bottom: 0; }
+  .lv { display: block; border-radius: 4px; padding: 5px 0; font: 600 .74rem "IBM Plex Mono", monospace; text-align: center; }
+  .lv0 { background: #22282c; color: #7d8487; } .lv1 { background: #3a2420; color: #ef9f88; } .lv2 { background: #362d18; color: #e2bd6e; }
+  .lv3 { background: #1d3532; color: #9fd6cd; } .lv4 { background: #2a5550; color: #d3f1ec; } .lv5 { background: #8ec4bc; color: #0f1215; }
+  .wp-ladder td:first-child { width: 64px; }
+  .wp-mat table { min-width: 780px; }
+  .wp-mat td.c { padding: 3px; width: 60px; }
+  .wp-mat th.q { text-align: center; }
+  .wp-mat .qd { display: block; font-weight: 400; letter-spacing: 0; text-transform: none; font-size: .64rem; }
+  .wp-mat tr.g td { background: var(--surface-2); font: 600 .66rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-2); }
+  .wp-mat td.d { color: var(--ink); font-weight: 500; white-space: nowrap; }
+  .wp-mat td.e { font-size: .8rem; min-width: 230px; }
+  .wp-mat tr.m td { font-weight: 700; color: var(--ink); text-align: center; font-family: "IBM Plex Mono", monospace; }
+  .wp-mat tr.m td.d, .wp-mat tr.m td.e { text-align: left; font-family: "Public Sans", sans-serif; }
+  .wp-traj { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+  .wp-traj div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-width: 0; }
+  .wp-traj b { display: block; font: 600 1.3rem "IBM Plex Mono", monospace; color: var(--accent-2); font-variant-numeric: tabular-nums; }
+  .wp-traj span { display: block; font-size: .74rem; line-height: 1.35; color: var(--muted); margin-top: 4px; }
+  @media (max-width: 600px) { .wp-traj { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wp-traj div:last-child { grid-column: 1 / -1; } }
+  /* control tower */
+  .wp-ct { padding: 18px; }
+  .wp-ct-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .wp-ct-t { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .wp-ct-t b { display: block; font: 600 1.5rem "IBM Plex Mono", monospace; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .wp-ct-t span { font-size: .76rem; color: var(--muted); }
+  .wp-ct-t.ok b { color: var(--good); } .wp-ct-t.w b { color: var(--warn); }
+  .wp-bars { margin-top: 16px; display: grid; gap: 9px; }
+  .wp-bar-row { display: grid; grid-template-columns: 150px 1fr 70px; gap: 10px; align-items: center; font-size: .8rem; color: var(--ink-soft); }
+  .wp-bar-row .tr { height: 10px; background: var(--surface-3); border-radius: 5px; overflow: hidden; display: flex; }
+  .wp-bar-row .dn { background: var(--accent-2); } .wp-bar-row .rv { background: var(--accent); opacity: .75; }
+  .wp-bar-row .pt { font: 500 .74rem "IBM Plex Mono", monospace; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+  @media (max-width: 560px) { .wp-bar-row { grid-template-columns: 1fr 64px; } .wp-bar-row .tr { grid-column: 1 / -1; grid-row: 2; } }
+  /* review packet */
+  .wp-pkt { padding: 6px 0; }
+  .wp-pkt-h { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+  .wp-pkt-h b { color: var(--ink); font-size: .95rem; }
+  .wp-pkt-h span { font: 500 .72rem "IBM Plex Mono", monospace; color: var(--muted); }
+  .wp-pkt dl { margin: 0; display: grid; grid-template-columns: 170px 1fr; }
+  .wp-pkt dt, .wp-pkt dd { padding: 9px 18px; border-bottom: 1px solid var(--line-soft); margin: 0; font-size: .86rem; }
+  .wp-pkt dt { font: 600 .68rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); padding-top: 11px; }
+  .wp-pkt dd { color: var(--ink-soft); }
+  .wp-pkt dd.ci { color: var(--good); font-family: "IBM Plex Mono", monospace; font-size: .8rem; }
+  .wp-pkt dd.ap { color: var(--warn); }
+  @media (max-width: 560px) { .wp-pkt dl { grid-template-columns: 1fr; } .wp-pkt dt { border-bottom: 0; padding-bottom: 0; } }
+  /* test stack */
+  .wp-stack { display: flex; flex-direction: column-reverse; gap: 6px; padding: 16px; }
+  .wp-layer { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: center; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: .88rem; color: var(--ink-soft); }
+  .wp-layer .i { font: 600 .74rem "IBM Plex Mono", monospace; color: var(--muted); }
+  .wp-layer b { color: var(--ink); font-weight: 600; }
+  .wp-tag { font: 600 .64rem "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 100px; white-space: nowrap; }
+  .wp-tag.pr { background: var(--good-soft); color: var(--good); } .wp-tag.sc { background: var(--warn-soft); color: var(--warn); }
+  @media (max-width: 560px) { .wp-layer { grid-template-columns: 22px 1fr; } .wp-layer .wp-tag { grid-column: 2; justify-self: start; } }
+  /* raci */
+  .wp-raci { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .wp-raci div { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+  .wp-raci div:nth-child(2) { border-top-color: var(--accent-2); } .wp-raci div:nth-child(3) { border-top-color: var(--good); }
+  .wp-raci h4 { margin: 0; font: 600 .7rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .wp-raci p { margin: 6px 0 0; font-size: .9rem; }
+  .wp-raci p strong { display: block; font-family: "Fraunces", Georgia, serif; font-size: 1.1rem; }
+  @media (max-width: 640px) { .wp-raci { grid-template-columns: 1fr; } }
+  .wp-adopt { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 18px; }
+  .wp-adopt div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .wp-adopt b { display: block; color: var(--ink); margin-bottom: 4px; }
+  .wp-adopt span { font-size: .88rem; color: var(--ink-soft); }
+  .wp-author { margin-top: 56px; display: grid; grid-template-columns: 1fr; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; }
+  .wp-author p { margin: 0; font-size: .92rem; }
+  .wp-author .k { font: 600 .68rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+  /* writing card for the paper */
+  .wp-card { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 22px; align-items: center; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, var(--surface)), var(--surface)); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); border-radius: 14px; padding: 24px 26px; margin-bottom: 30px; text-decoration: none; color: inherit; cursor: pointer; text-align: left; width: 100%; font: inherit; }
+  .wp-card:hover { border-color: var(--accent); }
+  .wp-card .k { font: 600 .7rem "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+  .wp-card h3 { font-size: 1.5rem; margin-top: 8px; line-height: 1.2; }
+  .wp-card p { margin: 10px 0 0; color: var(--ink-soft); font-size: .95rem; }
+  .wp-card .go { display: inline-block; margin-top: 14px; font-weight: 600; color: var(--accent); }
+  .wp-card-mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .wp-card-mini .lv { padding: 8px 0; font-size: .7rem; }
+  @media (max-width: 720px) { .wp-card { grid-template-columns: 1fr; } }
+</style>
+
+
+<style>
+  .wp-glance { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+  .wp-glance div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; min-width: 0; }
+  .wp-glance h4 { margin: 0; font: 600 .68rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+  .wp-glance p { margin: 6px 0 0; font-size: .92rem; }
+  @media (max-width: 640px) { .wp-glance { grid-template-columns: 1fr; } }
+  /* staircase */
+  .wp-stairs { padding: 18px 18px 14px; }
+  .wp-st-axis { display: flex; justify-content: space-between; font: 600 .66rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .wp-st-axis span:last-child { color: var(--accent-2); }
+  .wp-st { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; align-items: end; }
+  .wp-step { border-radius: 10px 10px 4px 4px; padding: 12px 11px; display: flex; flex-direction: column; gap: 6px; min-width: 0; border: 1px solid var(--line); background: var(--surface-2); }
+  .wp-step .lv { padding: 6px 0; }
+  .wp-step h4 { margin: 0; font: 700 .86rem "Public Sans", sans-serif; color: var(--ink); line-height: 1.25; }
+  .wp-step p { margin: 0; font-size: .78rem; line-height: 1.45; color: var(--ink-soft); }
+  .wp-step .nx { margin-top: auto; padding-top: 6px; border-top: 1px dashed var(--line); font-size: .74rem; color: var(--muted); }
+  .wp-step .nx b { color: var(--accent-2); font: 600 .62rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; display: block; }
+  .wp-step:nth-child(1) { min-height: 190px; } .wp-step:nth-child(2) { min-height: 215px; } .wp-step:nth-child(3) { min-height: 240px; }
+  .wp-step:nth-child(4) { min-height: 265px; border-color: var(--accent-2); } .wp-step:nth-child(5) { min-height: 290px; } .wp-step:nth-child(6) { min-height: 315px; background: color-mix(in srgb, var(--accent-2) 14%, var(--surface-2)); border-color: var(--accent-2); }
+  @media (max-width: 760px) { .wp-st { grid-template-columns: 1fr; } .wp-step { min-height: 0 !important; border-radius: 10px; } .wp-st-axis { display: none; } }
+  /* manual vs autonomous */
+  .wp-vs table td:first-child { font: 600 .68rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .wp-vs th.l1 { color: #ef9f88; } .wp-vs th.l5 { color: var(--accent-2); }
+  .wp-vs td.a { color: var(--ink); }
+  /* NFI vs CorkAI */
+  .wp-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .wp-side > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; min-width: 0; }
+  .wp-side h4 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 1.15rem; color: var(--ink); }
+  .wp-side .sub { font: 600 .66rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin: 2px 0 12px; }
+  .wp-side ul { margin: 12px 0 0; padding-left: 18px; } .wp-side li { font-size: .88rem; margin-top: 5px; }
+  .wp-g27 { display: grid; grid-template-columns: repeat(9, 1fr); gap: 5px; max-width: 290px; }
+  .wp-g27 i { aspect-ratio: 1; border: 1.5px solid var(--accent); border-radius: 4px; background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .wp-g12 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; max-width: 200px; }
+  .wp-g12 i { aspect-ratio: 1; border: 1.5px solid var(--accent-2); border-radius: 4px; background: color-mix(in srgb, var(--accent-2) 10%, transparent); }
+  .wp-gl { font-size: .76rem; color: var(--muted); margin-top: 8px; }
+  @media (max-width: 680px) { .wp-side { grid-template-columns: 1fr; } }
+  /* ADR lifecycle */
+  .wp-adr { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 22px; padding: 16px; }
+  .wp-adr div { position: relative; padding: 12px 18px 12px 14px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; min-width: 0; }
+  .wp-adr div:not(:last-child)::after { content: "→"; position: absolute; right: -11px; top: 50%; transform: translate(50%, -50%); color: var(--muted); font-weight: 600; }
+  .wp-adr b { display: block; font: 600 .66rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); }
+  .wp-adr h4 { margin: 4px 0 0; font: 700 .9rem "Public Sans", sans-serif; color: var(--ink); }
+  .wp-adr p { margin: 4px 0 0; font-size: .78rem; line-height: 1.45; color: var(--ink-soft); }
+  .wp-adr .hu { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); }
+  .wp-adr .hu b { color: var(--accent); }
+  @media (max-width: 760px) { .wp-adr { grid-template-columns: 1fr; gap: 14px; } .wp-adr div:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -11px; transform: translate(50%, 50%); } }
+  /* results checklist */
+  .wp-checks { display: grid; gap: 8px; margin-top: 16px; }
+  .wp-checks div { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; font-size: .92rem; color: var(--ink-soft); }
+  .wp-checks i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; background: var(--good-soft); color: var(--good); display: grid; place-items: center; font-size: .8rem; font-weight: 700; }
+  .wp-checks b { color: var(--ink); }
+  /* timeline */
+  .wp-tl { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; padding: 18px 16px 16px; position: relative; }
+  .wp-tl::before { content: ""; position: absolute; left: 30px; right: 30px; top: 31px; height: 2px; background: var(--line); }
+  .wp-tl div { position: relative; min-width: 0; }
+  .wp-tl time { display: inline-block; position: relative; z-index: 1; background: var(--surface-2); border: 1px solid var(--accent-2); color: var(--accent-2); font: 600 .74rem "IBM Plex Mono", monospace; padding: 3px 8px; border-radius: 100px; }
+  .wp-tl div:last-child time { border-color: var(--accent); color: var(--accent); }
+  .wp-tl h4 { margin: 10px 0 0; font: 700 .86rem "Public Sans", sans-serif; color: var(--ink); }
+  .wp-tl p { margin: 4px 0 0; font-size: .78rem; line-height: 1.45; color: var(--ink-soft); }
+  @media (max-width: 760px) { .wp-tl { grid-template-columns: 1fr; } .wp-tl::before { left: 44px; right: auto; top: 18px; bottom: 18px; width: 2px; height: auto; } .wp-tl div { padding-left: 0; } }
+  .wp-map { margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--line); }
+  .wp-map-l { margin: 0 0 8px !important; font: 600 .64rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted) !important; }
+  .wp-map-g { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .wp-map-g span { border: 1px dashed var(--line); border-radius: 6px; padding: 8px 6px; text-align: center; font: 500 .68rem "IBM Plex Mono", monospace; color: var(--muted); }
+  .wp-map-g span.on { border: 1.5px solid var(--accent-2); color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 10%, transparent); }
+  @media (max-width: 560px) { .wp-map-g { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+</head>
+<body>
+<div class="wp-bar"><div class="wp-bar-in"><a class="wp-back" href="/">&larr; felipemolino.com</a><span class="wp-bar-t">White paper · The Control Tower Method</span></div></div>
+<article class="wp">
+    <p class="wp-kick">White paper · October 2026 · 5 min read</p>
+    <h1 id="wp-title">The Control Tower Method</h1>
+    <p class="wp-dek">Roadmaps, gates and maturity: how I move a product's control areas from manual to autonomous, with multiple AI agents working under controls.</p>
+    <div class="wp-by"><span>Felipe Molino</span><span>Founder, CorkAI · Senior Director of Engineering</span></div>
+
+    <div class="wp-facts">
+      <div class="wp-fact hero"><b>Multiple agents</b><span>Claude Code agents (Opus 5.5, medium effort), each on bounded, controlled work</span></div>
+      <div class="wp-fact"><b>27</b><span>control areas mapped on NFI's digital-twin platform</span></div>
+      <div class="wp-fact"><b>L0 → L5</b><span>an evidence-based ladder from not done to autonomous</span></div>
+      <div class="wp-fact"><b>~1,150</b><span>automated tests on every change at CorkAI</span></div>
+      <div class="wp-fact"><b>100%</b><span>of CorkAI's API routes covered by contract tests</span></div>
+      <div class="wp-fact"><b>~370</b><span>story points on a 10-week plan</span></div>
+      <div class="wp-fact"><b>6–9 mo</b><span>target to reach L5 where it pays</span></div>
+    </div>
+
+    <h2><span class="n">01</span>At a glance</h2>
+    <p>Every product runs on controls: the checks, reviews and decisions that keep it working. Most are manual. AI agents can do that work, but an agent without controls is just a faster way to break things.</p>
+    <div class="wp-glance">
+      <div><h4>The framework</h4><p>Split the product into control areas and score each from L0 (not done) to L5 (autonomous). An agent gets more authority in an area only when the evidence supports it.</p></div>
+      <div><h4>What I built</h4><p>At NFI: 27 control areas on an enterprise platform. At CorkAI: the whole system, from roadmap to tests, with multiple Claude Code agents doing the building.</p></div>
+      <div><h4>Results so far</h4><p>The gates are enforced and the tests already caught real defects before release. Most of the foundation is in review, not yet released.</p></div>
+      <div><h4>The end game</h4><p>Where failure is expensive, agents detect, fix and document known problems inside limits I approved in advance. People handle strategy and exceptions.</p></div>
+    </div>
+    <p class="wp-pull">The model writes the code. The operating model decides whether the code is any good, and how much an agent is trusted to do on its own.</p>
+
+    <h2><span class="n">02</span>The framework</h2>
+    <p>A <strong>control area</strong> is anything the product depends on that can fail without anyone noticing: a feature like billing or sign-in, or part of the engineering system like testing or releases. Each area gets a current level, a target and the evidence behind both. Not every area needs L5.</p>
+    <figure class="wp-fig">
+      <div class="wp-scroll wp-stairs">
+        <div class="wp-st-axis"><span>Manual</span><span>Autonomous</span></div>
+        <div class="wp-st">
+          <div class="wp-step"><span class="lv lv0">L0</span><h4>Not done</h4><p>Nobody checks it. Users find the problems.</p><p class="nx"><b>Next</b>Give it an owner</p></div>
+          <div class="wp-step"><span class="lv lv1">L1</span><h4>Manual</h4><p>A person checks it, sometimes, their own way.</p><p class="nx"><b>Next</b>Write the standard</p></div>
+          <div class="wp-step"><span class="lv lv2">L2</span><h4>Partly automated</h4><p>Some checks run, but a failure stops nothing.</p><p class="nx"><b>Next</b>CI that can refuse a change</p></div>
+          <div class="wp-step"><span class="lv lv3">L3</span><h4>Checked on every change</h4><p>A failure blocks the release. The biggest jump.</p><p class="nx"><b>Next</b>Production alerts</p></div>
+          <div class="wp-step"><span class="lv lv4">L4</span><h4>Measured, with alerts</h4><p>Drift reaches the right person, with a runbook.</p><p class="nx"><b>Next</b>Track record + pre-approved fixes</p></div>
+          <div class="wp-step"><span class="lv lv5">L5</span><h4>Autonomous, under control</h4><p>An agent fixes known problems within approved limits and leaves evidence.</p><p class="nx"><b>Then</b>Audit the evidence trail</p></div>
+        </div>
+      </div>
+      <figcaption><b>Figure 1</b>The L0–L5 ladder. A level measures whether a control has consequences, not whether it exists. Each step has a specific unlock, so the gap to target becomes roadmap items.</figcaption>
+    </figure>
+
+    <figure class="wp-fig wp-vs">
+      <div class="wp-scroll"><table>
+        <thead><tr><th></th><th class="l1">L1 · Manual</th><th class="l5">L5 · Autonomous, under control</th></tr></thead>
+        <tbody>
+          <tr><td>Who notices</td><td>A user, or someone who happens to look</td><td class="a">A production check, within minutes</td></tr>
+          <tr><td>Who fixes</td><td>Whoever is available, by hand</td><td class="a">A controlled agent, using a pre-approved fix</td></tr>
+          <tr><td>Who decides</td><td>Decided on the spot, under pressure</td><td class="a">The owner, in advance, for known patterns only</td></tr>
+          <tr><td>Evidence</td><td>Memory and chat threads</td><td class="a">Logged automatically, reviewed in the digest</td></tr>
+        </tbody></table></div>
+      <figcaption><b>Figure 2</b>What changes between a manual control and an autonomous one.</figcaption>
+    </figure>
+
+    <figure class="wp-fig wp-loop">
+      <div class="wp-scroll">
+        <svg viewBox="0 0 900 300" role="img" aria-labelledby="wpLoopT">
+          <title id="wpLoopT">The operating loop, from strategy through agents, CI and approval back to strategy</title>
+          <defs><marker id="wpA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+          <g class="nd h"><rect x="20" y="40" width="140" height="66" rx="10"/><text x="90" y="70" text-anchor="middle">Strategy</text><text class="s" x="90" y="90" text-anchor="middle">themes, targets</text></g>
+          <g class="nd h"><rect x="195" y="40" width="140" height="66" rx="10"/><text x="265" y="70" text-anchor="middle">Roadmap</text><text class="s" x="265" y="90" text-anchor="middle">epics, points</text></g>
+          <g class="nd h"><rect x="370" y="40" width="150" height="66" rx="10"/><text x="445" y="70" text-anchor="middle">Work item</text><text class="s" x="445" y="90" text-anchor="middle">done + tests defined</text></g>
+          <g class="nd"><rect x="555" y="40" width="140" height="66" rx="10"/><text x="625" y="70" text-anchor="middle">Agents build</text><text class="s" x="625" y="90" text-anchor="middle">Claude Code</text></g>
+          <g class="nd"><rect x="730" y="40" width="150" height="66" rx="10"/><text x="805" y="70" text-anchor="middle">Pull request</text><text class="s" x="805" y="90" text-anchor="middle">+ review packet</text></g>
+          <g class="nd c"><rect x="730" y="194" width="150" height="66" rx="10"/><text x="805" y="224" text-anchor="middle">CI gate</text><text class="s" x="805" y="244" text-anchor="middle">can refuse</text></g>
+          <g class="nd h"><rect x="555" y="194" width="140" height="66" rx="10"/><text x="625" y="224" text-anchor="middle">Owner approves</text><text class="s" x="625" y="244" text-anchor="middle">judgment</text></g>
+          <g class="nd"><rect x="370" y="194" width="150" height="66" rx="10"/><text x="445" y="224" text-anchor="middle">Release</text><text class="s" x="445" y="244" text-anchor="middle">tagged deploy</text></g>
+          <g class="nd c"><rect x="195" y="194" width="140" height="66" rx="10"/><text x="265" y="218" text-anchor="middle">Control tower</text><text class="s" x="265" y="238" text-anchor="middle">+ maturity</text><text class="s" x="265" y="252" text-anchor="middle">update</text></g>
+          <path d="M160 73 H193" marker-end="url(#wpA)"/><path d="M335 73 H368" marker-end="url(#wpA)"/><path d="M520 73 H553" marker-end="url(#wpA)"/><path d="M695 73 H728" marker-end="url(#wpA)"/>
+          <path d="M805 106 V192" marker-end="url(#wpA)"/>
+          <path d="M730 227 H697" marker-end="url(#wpA)"/><path d="M555 227 H522" marker-end="url(#wpA)"/><path d="M370 227 H337" marker-end="url(#wpA)"/>
+          <path d="M195 227 H90 V108" marker-end="url(#wpA)"/>
+          <text class="s" x="96" y="160">evidence feeds</text><text class="s" x="96" y="174">the next decision</text>
+        </svg>
+        <div class="wp-key"><span><i style="background:color-mix(in srgb,var(--accent) 16%,var(--surface-2));border-color:var(--accent)"></i>Human decision</span><span><i style="background:var(--surface-2);border-color:var(--line)"></i>Agent work</span><span><i style="background:color-mix(in srgb,var(--accent-2) 16%,var(--surface-2));border-color:var(--accent-2)"></i>Automated check or measure</span></div>
+      </div>
+      <figcaption><b>Figure 3</b>The operating loop. I decide at the start and at approval. Agents build, CI verifies, and a change that fails never reaches me.</figcaption>
+    </figure>
+
+    <h2><span class="n">03</span>What I built</h2>
+    <figure class="wp-fig">
+      <div class="wp-side">
+        <div>
+          <h4>NFI Industries</h4><p class="sub">Enterprise digital-twin platform · 10 accounts</p>
+          <div class="wp-g27" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <p class="wp-gl">27 control areas, each scored L0–L5</p>
+          <ul>
+            <li>A plan to move each area from manual controls toward autonomous execution (APEM)</li>
+            <li>A roadmap control tower showing the plan and the maturity trajectory side by side</li>
+            <li>ADRs to record the decisions that shape the platform</li>
+          </ul>
+        </div>
+        <div>
+          <h4>CorkAI</h4><p class="sub">AI-native wine app · web, iOS, Android</p>
+          <div class="wp-g12" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <p class="wp-gl">12 control areas, built by multiple Claude Code agents</p>
+          <ul>
+            <li><strong>Plan:</strong> about 100 work items, each with "done looks like" and "tests required"</li>
+            <li><strong>Gate:</strong> a review packet on every pull request, enforced by CI</li>
+            <li><strong>Prove:</strong> about 1,150 tests on every change, from unit to browser journeys</li>
+          </ul>
+        </div>
+      </div>
+      <figcaption><b>Figure 4</b>The same method at two scales. The grids show how many areas each product has, not their scores.</figcaption>
+    </figure>
+
+    <h3>How decisions get remembered</h3>
+    <p>Agents start every session with no memory, and people move on. So every decision that's expensive to reverse gets an architecture decision record (ADR), at NFI and at CorkAI. Agents read the relevant ADRs before they work, so settled decisions aren't reopened, and whoever comes next inherits the <em>why</em>, not just the code.</p>
+    <figure class="wp-fig">
+      <div class="wp-scroll wp-adr">
+        <div><b>1 · Trigger</b><h4>A costly-to-reverse choice</h4><p>Architecture, data model, vendor, AI model or security</p></div>
+        <div><b>2 · Draft</b><h4>An agent writes it</h4><p>Context, options, decision, consequences, how we'd know it's wrong</p></div>
+        <div class="hu"><b>3 · Review</b><h4>I approve it</h4><p>In the same pull request as the code it affects</p></div>
+        <div><b>4 · Accepted</b><h4>It becomes the rule</h4><p>Agents read it before touching that area</p></div>
+        <div><b>5 · Superseded</b><h4>Never deleted</h4><p>A new ADR links back, so the reasoning trail stays whole</p></div>
+      </div>
+      <figcaption><b>Figure 5</b>The ADR lifecycle. Orange marks the human decision.</figcaption>
+    </figure>
+
+    <figure class="wp-fig">
+      <div class="wp-scroll wp-ct">
+        <div class="wp-ct-tiles">
+          <div class="wp-ct-t w"><b>3</b><span>PRs waiting for review</span></div>
+          <div class="wp-ct-t ok"><b>0</b><span>open incidents</span></div>
+          <div class="wp-ct-t"><b>142 / 61</b><span>points done / in review</span></div>
+          <div class="wp-ct-t ok"><b>98%</b><span>CI pass rate, 7 days</span></div>
+        </div>
+        <div class="wp-bars" aria-label="Points per theme, illustrative">
+          <div class="wp-bar-row"><span>Theme A</span><span class="tr"><span class="dn" style="width:72%"></span><span class="rv" style="width:18%"></span></span><span class="pt">54/60</span></div>
+          <div class="wp-bar-row"><span>Theme B</span><span class="tr"><span class="dn" style="width:48%"></span><span class="rv" style="width:30%"></span></span><span class="pt">39/50</span></div>
+          <div class="wp-bar-row"><span>Theme C</span><span class="tr"><span class="dn" style="width:35%"></span><span class="rv" style="width:20%"></span></span><span class="pt">22/40</span></div>
+          <div class="wp-bar-row"><span>Theme D</span><span class="tr"><span class="dn" style="width:20%"></span><span class="rv" style="width:15%"></span></span><span class="pt">21/60</span></div>
+        </div>
+        <div class="wp-map">
+          <p class="wp-map-l">Where this panel sits in the control tower</p>
+          <div class="wp-map-g">
+            <span>Roadmap &amp; timeline</span><span>Weekly board</span><span class="on">Overview · this panel</span><span>Review queue</span>
+            <span>Quality &amp; CI</span><span>Delivery (DORA)</span><span>Maturity matrix</span><span>Decisions (ADRs)</span>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Figure 6</b>The overview panel, one of eight views in the control tower, all fed from GitHub so no status is updated by hand <span class="wp-ill">Illustrative data</span> Roadmap content, numbers and theme names are placeholders.</figcaption>
+    </figure>
+
+    <h2><span class="n">04</span>Results so far</h2>
+    <p>The CorkAI foundation was built in one intensive working session, and most of it is in review, not yet released. What's already true:</p>
+    <div class="wp-checks">
+      <div><i>✓</i><span><b>The gates are real.</b> Every pull request carries a review packet, and CI rejects any that don't.</span></div>
+      <div><i>✓</i><span><b>The tests paid off on day one.</b> They found authorization and data-integrity defects, fixed before release.</span></div>
+      <div><i>✓</i><span><b>Every API route has a contract test,</b> so an agent can't silently break the mobile apps.</span></div>
+      <div><i>✓</i><span><b>The plan can't drift from the code.</b> Roadmap, board and metrics read from one system of record.</span></div>
+      <div><i>✓</i><span><b>Key decisions are written down,</b> drafted by agents and approved by me.</span></div>
+    </div>
+
+    <h2><span class="n">05</span>The end game</h2>
+    <p>Not everything at L5: every area at the level its risk justifies, with evidence to prove it. For CorkAI that's L5 within six to nine months where a silent failure is expensive, and L3–L4 elsewhere.</p>
+    <figure class="wp-fig wp-mat">
+      <div class="wp-scroll"><table>
+        <thead>
+          <tr><th rowspan="2">Area</th><th class="q">Q4 2026</th><th class="q" colspan="2">Q1 2027</th><th class="q" colspan="2">Q2 2027</th><th rowspan="2">Target</th></tr>
+          <tr><th class="q">Today<span class="qd">Oct</span></th><th class="q">M2<span class="qd">Dec</span></th><th class="q">M4<span class="qd">Feb</span></th><th class="q">M6<span class="qd">Apr</span></th><th class="q">M8<span class="qd">Jun</span></th></tr>
+        </thead>
+        <tbody>
+          <tr class="g"><td colspan="7">Product areas</td></tr>
+          <tr><td class="d">Recommendations</td><td class="c"><span class="lv lv1">L1</span></td><td class="c"><span class="lv lv2">L2</span></td><td class="c"><span class="lv lv3">L3</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv5">L5</span></td><td class="c"><span class="lv lv5">L5</span></td></tr>
+          <tr><td class="d">AI sommelier chat</td><td class="c"><span class="lv lv1">L1</span></td><td class="c"><span class="lv lv2">L2</span></td><td class="c"><span class="lv lv3">L3</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv4">L4</span></td></tr>
+          <tr><td class="d">Billing</td><td class="c"><span class="lv lv2">L2</span></td><td class="c"><span class="lv lv3">L3</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv5">L5</span></td><td class="c"><span class="lv lv5">L5</span></td></tr>
+          <tr><td class="d">Social &amp; events</td><td class="c"><span class="lv lv0">L0</span></td><td class="c"><span class="lv lv1">L1</span></td><td class="c"><span class="lv lv2">L2</span></td><td class="c"><span class="lv lv3">L3</span></td><td class="c"><span class="lv lv3">L3</span></td><td class="c"><span class="lv lv3">L3</span></td></tr>
+          <tr class="g"><td colspan="7">Engineering system</td></tr>
+          <tr><td class="d">CI/CD &amp; release</td><td class="c"><span class="lv lv2">L2</span></td><td class="c"><span class="lv lv3">L3</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv5">L5</span></td><td class="c"><span class="lv lv5">L5</span></td></tr>
+          <tr><td class="d">Monitoring &amp; incidents</td><td class="c"><span class="lv lv1">L1</span></td><td class="c"><span class="lv lv3">L3</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv5">L5</span></td><td class="c"><span class="lv lv5">L5</span></td></tr>
+          <tr><td class="d">Docs &amp; decisions</td><td class="c"><span class="lv lv1">L1</span></td><td class="c"><span class="lv lv2">L2</span></td><td class="c"><span class="lv lv3">L3</span></td><td class="c"><span class="lv lv3">L3</span></td><td class="c"><span class="lv lv4">L4</span></td><td class="c"><span class="lv lv4">L4</span></td></tr>
+        </tbody></table></div>
+      <figcaption><b>Figure 7</b>The path from manual to autonomous, for a sample of areas <span class="wp-ill">Illustrative data</span> The real matrix is scored from evidence and updated in the pull request that changes a level.</figcaption>
+    </figure>
+
+    <h3>What L5 looks like</h3>
+    <figure class="wp-fig">
+      <div class="wp-scroll wp-tl">
+        <div><time>02:10</time><h4>Detect</h4><p>A production check sees recommendations stop personalizing for some users.</p></div>
+        <div><time>02:11</time><h4>Triage</h4><p>An agent gathers logs and the last change, and matches a known pattern.</p></div>
+        <div><time>02:14</time><h4>Act</h4><p>The fix is pre-approved, so the agent flips the kill switch to the previous model.</p></div>
+        <div><time>02:20</time><h4>Verify</h4><p>The same checks confirm recovery, and the evidence is logged.</p></div>
+        <div><time>08:00</time><h4>Decide</h4><p>I read the digest. My only decision is when to fix the root cause.</p></div>
+      </div>
+      <figcaption><b>Figure 8</b>An illustrative L5 incident. Anything outside a pre-approved pattern still pages me.</figcaption>
+    </figure>
+    <p>That's the end state for CorkAI, and it's the same direction for NFI's 27 control areas: controlled agents run the controls, and people own strategy, approvals and the exceptions.</p>
+
+    <h2><span class="n">06</span>What this means for a product org</h2>
+    <div class="wp-adopt">
+      <div><b>A maturity matrix per area</b><span>Fixed L0–L5 definitions, a target per area, evidence that moves with the work.</span></div>
+      <div><b>Review packets for every change</b><span>Why, what, effect, tests and rollback, whether a person or an agent made it.</span></div>
+      <div><b>ADRs as shared memory</b><span>Agents draft them, people approve them, and everyone reads them before working.</span></div>
+      <div><b>Autonomy earned per area</b><span>Agents get authority the way a new hire does: with a track record.</span></div>
+    </div>
+    <p class="wp-pull">Build the factory first. Then let the agents build the product, and let the evidence decide what ships.</p>
+
+    <div class="wp-author">
+      <p class="k">About the author</p>
+      <p><strong>Felipe Molino</strong> builds and runs a transportation digital-twin decision platform at NFI Industries, where he built a technology organization from zero to more than twenty people across six countries. His team's work putting AI into live transportation operations won the 2026 FreightWaves AI Excellence in Supply Chain Award. He is completing an M.S. in Artificial Intelligence at the University of Colorado Boulder, is a Level Four Sommelier, and founded CorkAI.</p>
+    </div>
+  </article>
+<footer class="wp-foot"><span>© 2026 Felipe Molino</span><a href="/">Portfolio</a><a href="/#certifications">Certifications</a><a href="https://www.linkedin.com/in/felipemolino" rel="noopener">LinkedIn</a></footer>
+</body>
+</html>
