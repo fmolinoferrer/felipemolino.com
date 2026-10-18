@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Governing an AI Workforce · White paper by Felipe Molino</title>
+<meta name="description" content="Part II of the Control Tower Method: decision rights, evidence and earned autonomy for a company run by AI agents. One operating loop with two lanes, product and growth, that starts itself every night. White paper by Felipe Molino.">
+<link rel="canonical" href="https://felipemolino.com/papers/governing-an-ai-workforce/">
+<meta name="author" content="Felipe Molino">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Felipe Molino">
+<meta property="og:title" content="Governing an AI Workforce">
+<meta property="og:description" content="Decision rights, evidence and earned autonomy: one operating loop, two lanes, three human decisions. Part II of the Control Tower Method.">
+<meta property="og:url" content="https://felipemolino.com/papers/governing-an-ai-workforce/">
+<meta property="og:image" content="https://felipemolino.com/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="article:author" content="https://felipemolino.com/">
+<meta property="article:published_time" content="2026-10-18">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://felipemolino.com/assets/og.png">
+<meta name="theme-color" content="#0f1215">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1215'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23e79364'%3EFM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Governing an AI Workforce","alternativeHeadline":"Decision rights, evidence and earned autonomy: Part II of the Control Tower Method","description":"Part II of the Control Tower Method: decision rights, evidence and earned autonomy for a company run by AI agents. One operating loop with two lanes, product and growth.","url":"https://felipemolino.com/papers/governing-an-ai-workforce/","mainEntityOfPage":"https://felipemolino.com/papers/governing-an-ai-workforce/","image":"https://felipemolino.com/assets/og.png","datePublished":"2026-10-18","dateModified":"2026-10-18","isPartOf":{"@type":"CreativeWorkSeries","name":"The Control Tower Method"},"author":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/","sameAs":["https://www.linkedin.com/in/felipemolino"]},"publisher":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/"},"keywords":"AI agents, governance, decision rights, operating model, agentic AI, growth loop, maturity model, control tower, autonomous operations"}</script>
+<style>
+:root {
+  --bg: #0f1215; --surface: #171b1f; --surface-2: #1f242a; --surface-3: #262c33;
+  --ink: #f1efe7; --ink-soft: #c1c5bc; --muted: #858b84; --line: #2a3037;
+  --accent: #e79364; --accent-strong: #f3ab84; --accent-ink: #0f1215;
+  --accent-2: #8ec4bc; --accent-2-soft: #1a2b29;
+  --good: #86bd8c; --warn: #ddb168;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -16px rgba(0,0,0,.7);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Public Sans", -apple-system, "Segoe UI", sans-serif; font-size: 16.5px; line-height: 1.68; -webkit-font-smoothing: antialiased; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+a { color: var(--accent-2); text-underline-offset: 3px; } a:hover { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wrap: balance; margin: 0; color: var(--ink); }
+.wp-bar { position: sticky; top: 0; z-index: 2; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.wp-bar-in { max-width: 880px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 12px 20px; }
+.wp-back { color: var(--ink); font: 600 .9rem "Public Sans", sans-serif; padding: 6px 0; white-space: nowrap; text-decoration: none; }
+.wp-back:hover { color: var(--accent); }
+.wp-bar-t { margin-left: auto; font: 500 .7rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wp { max-width: 880px; margin: 0 auto; padding-inline: max(20px, env(safe-area-inset-left, 0px)); padding-block: 44px 96px; }
+.wp p, .wp li { color: var(--ink-soft); max-width: 68ch; }
+.wp p { margin: 14px 0 0; }
+.wp strong { color: var(--ink); }
+.wp ul, .wp ol { padding-left: 22px; margin: 12px 0 0; }
+.wp li { margin-top: 8px; }
+.wp-kick { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 !important; }
+.wp h1 { font-size: clamp(2.1rem, 5.4vw, 3.2rem); line-height: 1.08; margin-top: 14px; }
+.wp-dek { font-size: 1.16rem; line-height: 1.55; margin-top: 16px !important; color: var(--ink) !important; }
+.wp-by { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 18px; font: 500 .78rem "IBM Plex Mono", monospace; color: var(--muted); }
+.wp h2 { font-size: clamp(1.45rem, 3vw, 1.85rem); margin-top: 64px; display: flex; gap: 14px; align-items: baseline; }
+.wp h2 .n { font: 600 .82rem "IBM Plex Mono", monospace; color: var(--accent); }
+.wp h3 { font: 700 1.08rem "Public Sans", sans-serif; margin-top: 30px; }
+.wp-exec { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 14px; padding: 22px 26px; margin-top: 34px; box-shadow: var(--shadow); }
+.wp-exec .k { font: 600 .78rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 0 !important; }
+.wp-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-top: 28px; }
+.wp-fact { background: var(--surface); padding: 18px 18px 16px; }
+.wp-fact b { display: block; font: 600 1.45rem "IBM Plex Mono", monospace; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.wp-fact span { display: block; margin-top: 4px; font-size: .82rem; color: var(--muted); line-height: 1.4; }
+.wp-pull { font-family: "Fraunces", Georgia, serif; font-size: 1.32rem !important; line-height: 1.4; color: var(--ink) !important; border-left: 3px solid var(--accent); padding-left: 18px; margin: 34px 0 0 !important; }
+.wp-fig { margin: 30px 0 0; }
+.wp-fig svg { width: 100%; height: auto; display: block; }
+.wp-fig figcaption { font-size: .85rem; color: var(--muted); margin-top: 10px; text-align: center; max-width: 64ch; margin-inline: auto; }
+.wp-fig figcaption b { color: var(--ink-soft); margin-right: 6px; }
+.wp-tbl { overflow-x: auto; margin-top: 18px; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+.wp-tbl table { border-collapse: collapse; width: 100%; background: var(--surface); font-size: .9rem; min-width: 600px; }
+.wp-tbl th { font: 600 .7rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); text-align: left; padding: 11px 14px; background: var(--surface-2); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.wp-tbl td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+.wp-tbl tr:last-child td { border-bottom: 0; }
+.wp-tbl td strong { color: var(--ink); }
+.wp-tbl tr.grp td { background: var(--surface-2); font: 600 .7rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-2); padding: 8px 14px; }
+.lv { display: inline-block; min-width: 30px; text-align: center; font: 600 .74rem "IBM Plex Mono", monospace; border-radius: 5px; padding: 2px 6px; }
+.l1 { background: #3a2420; color: #ef9f88; } .l2 { background: #362d18; color: #e2bd6e; } .l3 { background: #1d3532; color: #9fd6cd; } .l4 { background: #2a5550; color: #d3f1ec; } .l5 { background: #8ec4bc; color: #0f1215; }
+.wp-lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; }
+@media (max-width: 680px) { .wp-lanes { grid-template-columns: 1fr; } }
+.wp-lane { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+.wp-lane .k { font: 600 .7rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .09em; color: var(--accent-2); margin: 0 !important; }
+.wp-lane h3 { margin-top: 6px; font-family: "Fraunces", Georgia, serif; font-size: 1.2rem; font-weight: 600; }
+.wp-lane ol { margin-top: 10px; }
+.wp-lane li { margin-top: 5px; font-size: .92rem; }
+.wp-tl { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.wp-tl > div { background: var(--surface); display: grid; grid-template-columns: 70px 110px 1fr; gap: 14px; padding: 13px 18px; align-items: baseline; }
+@media (max-width: 600px) { .wp-tl > div { grid-template-columns: 60px 1fr; } .wp-tl > div p { grid-column: 1 / -1; } }
+.wp-tl time { font: 600 .8rem "IBM Plex Mono", monospace; color: var(--accent); }
+.wp-tl h4 { margin: 0; font-size: .95rem; color: var(--ink); }
+.wp-tl p { margin: 0 !important; font-size: .9rem; }
+.wp-adopt { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 20px; }
+.wp-adopt > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+.wp-adopt b { display: block; color: var(--ink); }
+.wp-adopt span { display: block; margin-top: 6px; font-size: .9rem; color: var(--ink-soft); }
+.wp-series { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.wp-series a { flex: 1 1 260px; text-decoration: none; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 12px; padding: 16px 20px; color: var(--ink); }
+.wp-series a:hover { border-color: var(--accent); color: var(--ink); }
+.wp-series .k { display: block; font: 600 .68rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-2); }
+.wp-series .t { display: block; font-family: "Fraunces", Georgia, serif; font-size: 1.08rem; margin-top: 4px; }
+.wp-author { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line); }
+.wp-author .k { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 !important; }
+.wp-foot { max-width: 880px; margin: 0 auto; padding: 0 20px 64px; display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: .9rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="wp-bar"><div class="wp-bar-in"><a class="wp-back" href="/">&larr; felipemolino.com</a><span class="wp-bar-t">White paper · Part II · Governing an AI Workforce</span></div></div>
+<article class="wp">
+  <p class="wp-kick">White paper · Part II · October 2026 · 12 min read</p>
+  <h1>Governing an AI Workforce</h1>
+  <p class="wp-dek">Decision rights, evidence and earned autonomy: how the Control Tower Method grows from a way to plan and measure AI-built software into one governed operating loop that runs the product and the growth of a company, and starts itself every night.</p>
+  <div class="wp-by"><span>Felipe Molino</span><span>Founder, CorkAI</span><span>Follows <a href="/papers/control-tower-method/">Part I: The Control Tower Method</a></span></div>
+
+  <section class="wp-exec" aria-labelledby="exec-k">
+    <p class="k" id="exec-k">Executive summary</p>
+    <ul>
+      <li><strong>Part I set the method:</strong> split a product into control areas, score each from L0 (not done) to L5 (autonomous), and give agents authority only where the evidence supports it. <strong>Part II is about running a company on it:</strong> who decides what, what evidence each decision needs, and what happens when the loop starts itself.</li>
+      <li><strong>One loop, two lanes.</strong> The same operating system runs the <strong>product lane</strong> (build, test, release) and the <strong>growth lane</strong> (plan, produce, approve, publish, measure). Both share one control tower, one evidence trail and one owner.</li>
+      <li><strong>The work starts without me.</strong> Each night agents read production signals, failing tests and campaign results, and propose fully scoped work. Agents build, test, document and produce.</li>
+      <li><strong>I keep a handful of decisions:</strong> what gets built, what gets merged, what reaches customers, and what gets promoted with money. Each arrives with the evidence I need to decide in minutes.</li>
+      <li><strong>The first full engineering cycle moved 19 changes into production code in one day</strong>, with zero failing tests reaching me. A rehearsal that combined changes before merging caught five conflicts the per-change checks had missed.</li>
+      <li><strong>Autonomy is earned, never assumed.</strong> L5 within 6–9 months comes from track record and pre-approved classes of change, not from removing the gates.</li>
+    </ul>
+  </section>
+
+  <div class="wp-facts">
+    <div class="wp-fact"><b>2 lanes</b><span>product and growth, on one operating loop</span></div>
+    <div class="wp-fact"><b>~1,150 → ~2,500</b><span>automated tests on every change, Part I to Part II</span></div>
+    <div class="wp-fact"><b>19</b><span>changes integrated in one day, rehearsed first</span></div>
+    <div class="wp-fact"><b>0</b><span>failing tests allowed to reach the approver</span></div>
+  </div>
+
+  <p class="wp-pull">A team that only acts when someone remembers to ask is a tool. A team that senses, proposes, builds and reports on its own, under rules it can't break, is a workforce.</p>
+
+  <h2><span class="n">01</span>What changes from Part I</h2>
+  <p>Part I described a loop that I started: I set the strategy, agents built, CI verified and I approved. That made building fast. It didn't make the company self-running. Part II closes that gap, and widens the loop beyond code.</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Question</th><th>Part I: the method</th><th>Part II: the operating loop</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Scope</strong></td><td>Building the product</td><td>Building the product and growing it, on the same gates and evidence</td></tr>
+      <tr><td><strong>Who starts the work?</strong></td><td>I do, from the roadmap</td><td>Nightly agents propose scoped work from real signals; I approve the scope</td></tr>
+      <tr><td><strong>Human decisions</strong></td><td>Two: direction and approval</td><td>Explicit gates (scope, merge, release, spend), each with required evidence</td></tr>
+      <tr><td><strong>Verification</strong></td><td>CI on each change; ~1,150 tests</td><td>~2,500 tests, plus a rehearsal of whole batches before they merge</td></tr>
+      <tr><td><strong>Release</strong></td><td>A tagged deploy</td><td>A release packet before publishing, a live check after, and alerts if the two disagree</td></tr>
+      <tr><td><strong>Growth</strong></td><td>Outside the method</td><td>A weekly content pack, outcome scorecards and pre-agreed spend rules</td></tr>
+      <tr><td><strong>Operations</strong></td><td>Planned</td><td>Tiered alerts for broken merges and failed user journeys, runbooks, kill switches</td></tr>
+      <tr><td><strong>Cost</strong></td><td>Not addressed</td><td>Fixed-plan scheduling, the cheapest capable model per job, CI skipped where it can't matter</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2><span class="n">02</span>Decision rights</h2>
+  <p>The most important design choice isn't technical. It's deciding which decisions stay human and what evidence makes each one fast. Everything else is delegated.</p>
+  <figure class="wp-fig">
+    <svg viewBox="0 0 760 330" role="img" aria-label="The governed loop: sense, propose, approve scope, build and verify, approve merge, release, learn">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#858b84"/></marker></defs>
+      <g stroke="#858b84" stroke-width="1.5" fill="none" marker-end="url(#ar)">
+        <path d="M148 70 H222"/><path d="M368 70 H442"/><path d="M588 70 H640 Q660 70 660 95 V150"/>
+        <path d="M660 230 V255 Q660 280 635 280 H588"/><path d="M442 280 H368"/><path d="M222 280 H148"/><path d="M80 250 V110"/>
+      </g>
+      <g font-family="Public Sans, sans-serif" text-anchor="middle">
+        <rect x="10" y="40" width="138" height="60" rx="12" fill="#171b1f" stroke="#2a3037"/><text x="79" y="66" font-size="14" font-weight="700" fill="#f1efe7">1 · Sense</text><text x="79" y="85" font-size="11.5" fill="#858b84">nightly, read-only</text>
+        <rect x="222" y="40" width="146" height="60" rx="12" fill="#171b1f" stroke="#2a3037"/><text x="295" y="66" font-size="14" font-weight="700" fill="#f1efe7">2 · Propose</text><text x="295" y="85" font-size="11.5" fill="#858b84">scoped work items</text>
+        <rect x="442" y="40" width="146" height="60" rx="12" fill="#1a2b29" stroke="#8ec4bc" stroke-width="1.5"/><text x="515" y="66" font-size="14" font-weight="700" fill="#8ec4bc">3 · Approve scope</text><text x="515" y="85" font-size="11.5" fill="#8ec4bc">human decision</text>
+        <rect x="590" y="150" width="160" height="80" rx="12" fill="#171b1f" stroke="#2a3037"/><text x="670" y="182" font-size="14" font-weight="700" fill="#f1efe7">4 · Build &amp; verify</text><text x="670" y="201" font-size="11.5" fill="#858b84">agents + CI</text><text x="670" y="217" font-size="11.5" fill="#858b84">review packet</text>
+        <rect x="442" y="250" width="146" height="60" rx="12" fill="#1a2b29" stroke="#8ec4bc" stroke-width="1.5"/><text x="515" y="276" font-size="14" font-weight="700" fill="#8ec4bc">5 · Approve merge</text><text x="515" y="295" font-size="11.5" fill="#8ec4bc">human decision</text>
+        <rect x="222" y="250" width="146" height="60" rx="12" fill="#1a2b29" stroke="#8ec4bc" stroke-width="1.5"/><text x="295" y="276" font-size="14" font-weight="700" fill="#8ec4bc">6 · Release</text><text x="295" y="295" font-size="11.5" fill="#8ec4bc">human decision</text>
+        <rect x="10" y="250" width="138" height="60" rx="12" fill="#171b1f" stroke="#2a3037"/><text x="79" y="276" font-size="14" font-weight="700" fill="#f1efe7">7 · Learn</text><text x="79" y="295" font-size="11.5" fill="#858b84">metrics, maturity</text>
+      </g>
+      <text x="380" y="180" text-anchor="middle" font-family="Fraunces, serif" font-size="18" fill="#e79364">The loop starts itself.</text>
+      <text x="380" y="204" text-anchor="middle" font-family="Fraunces, serif" font-size="18" fill="#e79364">The key decisions stay human.</text>
+    </svg>
+    <figcaption><b>Figure 1</b>The operating loop. Compared with Part I, sensing and proposing are automatic, and release is an explicit human decision with its own evidence.</figcaption>
+  </figure>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Decision</th><th>Who decides</th><th>What agents do</th><th>Evidence required</th></tr></thead>
+    <tbody>
+      <tr><td><strong>What to build</strong></td><td>Owner</td><td>Propose, with "done looks like" and tests</td><td>A work item tied to the roadmap and the written strategy</td></tr>
+      <tr><td><strong>Whether a change is safe</strong></td><td>Owner</td><td>Build, test, document</td><td>Review packet; all checks green on a production-shaped database</td></tr>
+      <tr><td><strong>When customers get it</strong></td><td>Owner</td><td>Prepare the release packet; verify live</td><td>Every change and database change since the last release; post-release live check</td></tr>
+      <tr><td><strong>What we say in public</strong></td><td>Owner, one week at a time</td><td>Plan 6–8 weeks ahead, produce each week's posts, schedule what's approved</td><td>The finished weekly pack, each post tied to the plan and the goal it serves</td></tr>
+      <tr><td><strong>Where money goes</strong></td><td>Owner, every time</td><td>Propose a boost when a post beats its baseline</td><td>The post's outcome score against the baseline, the budget left, and the stop rule</td></tr>
+      <tr><td><strong>Sensitive areas</strong>: payments, sign-in, customer data, AI models</td><td>Owner, always</td><td>Flag for approval</td><td>Explicit approval in the packet, even when routine changes are pre-approved later</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2><span class="n">03</span>One loop, two lanes</h2>
+  <p>A control area can sit in the product (billing, sign-in), in the engineering system (testing, releases) or in growth (content, paid acquisition). The ladder doesn't care which. So the same loop that builds the product also grows it: the same sensing, the same packets, the same gates, the same evidence trail.</p>
+  <figure class="wp-fig">
+    <svg viewBox="0 0 760 300" role="img" aria-label="Two lanes sharing one control tower: the product lane runs work item, agents build, pull request, CI gate, release; the growth lane runs content plan, agents produce, weekly pack, owner approves, publish; both feed sense and evidence">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#858b84"/></marker></defs>
+      <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#8ec4bc" letter-spacing="1.2"><text x="14" y="30">PRODUCT LANE</text><text x="14" y="270">GROWTH LANE</text></g>
+      <g stroke="#858b84" stroke-width="1.5" fill="none" marker-end="url(#ar2)">
+        <path d="M132 64 H150"/><path d="M272 64 H290"/><path d="M412 64 H430"/><path d="M552 64 H570"/>
+        <path d="M132 234 H150"/><path d="M272 234 H290"/><path d="M412 234 H430"/><path d="M552 234 H570"/>
+        <path d="M630 88 V118"/><path d="M630 210 V182"/><path d="M570 150 H330"/><path d="M200 150 H90 Q72 150 72 132 V92"/><path d="M200 150 H90 Q72 150 72 168 V208"/>
+      </g>
+      <g font-family="Public Sans, sans-serif" text-anchor="middle" font-size="12.5">
+        <rect x="12" y="42" width="120" height="44" rx="10" fill="#171b1f" stroke="#2a3037"/><text x="72" y="69" fill="#f1efe7">Work item</text>
+        <rect x="152" y="42" width="120" height="44" rx="10" fill="#171b1f" stroke="#2a3037"/><text x="212" y="69" fill="#f1efe7">Agents build</text>
+        <rect x="292" y="42" width="120" height="44" rx="10" fill="#171b1f" stroke="#2a3037"/><text x="352" y="69" fill="#f1efe7">Review packet</text>
+        <rect x="432" y="42" width="120" height="44" rx="10" fill="#1a2b29" stroke="#8ec4bc" stroke-width="1.5"/><text x="492" y="69" fill="#8ec4bc" font-weight="700">Merge gate</text>
+        <rect x="572" y="42" width="120" height="44" rx="10" fill="#1a2b29" stroke="#8ec4bc" stroke-width="1.5"/><text x="632" y="69" fill="#8ec4bc" font-weight="700">Release</text>
+        <rect x="12" y="212" width="120" height="44" rx="10" fill="#171b1f" stroke="#2a3037"/><text x="72" y="239" fill="#f1efe7">Content plan</text>
+        <rect x="152" y="212" width="120" height="44" rx="10" fill="#171b1f" stroke="#2a3037"/><text x="212" y="239" fill="#f1efe7">Agents produce</text>
+        <rect x="292" y="212" width="120" height="44" rx="10" fill="#171b1f" stroke="#2a3037"/><text x="352" y="239" fill="#f1efe7">Weekly pack</text>
+        <rect x="432" y="212" width="120" height="44" rx="10" fill="#1a2b29" stroke="#8ec4bc" stroke-width="1.5"/><text x="492" y="239" fill="#8ec4bc" font-weight="700">Owner approves</text>
+        <rect x="572" y="212" width="120" height="44" rx="10" fill="#1a2b29" stroke="#8ec4bc" stroke-width="1.5"/><text x="632" y="239" fill="#8ec4bc" font-weight="700">Publish</text>
+        <rect x="572" y="120" width="120" height="60" rx="10" fill="#171b1f" stroke="#e79364" stroke-width="1.5"/><text x="632" y="146" fill="#e79364" font-weight="700">Sense</text><text x="632" y="164" fill="#858b84" font-size="11">signals + results</text>
+        <rect x="202" y="120" width="128" height="60" rx="10" fill="#171b1f" stroke="#e79364" stroke-width="1.5"/><text x="266" y="146" fill="#e79364" font-weight="700">Control tower</text><text x="266" y="164" fill="#858b84" font-size="11">evidence + maturity</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 2</b>Two lanes, one middle. Production signals and campaign results both flow into sensing, and both lanes report into the same control tower and evidence trail.</figcaption>
+  </figure>
+
+  <div class="wp-lanes">
+    <div class="wp-lane"><p class="k">Product lane</p><h3>Build, verify, release</h3>
+      <ol><li>Signals become scoped work items overnight</li><li>Agents build and test; CI gates every change</li><li>Batches are rehearsed before they merge</li><li>The owner releases with a packet; a live check follows</li></ol></div>
+    <div class="wp-lane"><p class="k">Growth lane</p><h3>Plan, produce, measure</h3>
+      <ol><li>A rolling 6–8 week content plan, re-planned every month</li><li>Agents produce each week's posts from the owner's own material</li><li>The owner approves one week at a time; agents schedule only what's approved</li><li>Every post is measured at 24 hours, 48 hours and 7 days, and traced to sign-ups</li></ol></div>
+  </div>
+
+  <h3>The growth lane's rhythm</h3>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>When</th><th>What the agents do</th><th>What the owner does</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Every morning</strong></td><td>Read yesterday's results and sign-ups, fill each post's checkpoints, flag anything far above or below its baseline</td><td>Nothing, unless a boost is proposed</td></tr>
+      <tr><td><strong>48 hours after a post</strong></td><td>Score it on outcomes (saves, shares, profile visits per thousand views) and propose a boost if it is the week's winner</td><td>Approve or skip the boost with one tap</td></tr>
+      <tr><td><strong>Wednesday</strong></td><td>Finish next week's pack: images, video, captions, tracked links</td><td>Review</td></tr>
+      <tr><td><strong>Thursday</strong></td><td>Schedule every approved post</td><td>Approve, change or drop each post</td></tr>
+      <tr><td><strong>Monday</strong></td><td>Scorecard against targets, best and worst post and why, a forecast for the month, proposed changes to the next four weeks</td><td>Accept or reject the proposals</td></tr>
+      <tr><td><strong>Every four weeks</strong></td><td>Re-plan the next four to six weeks from what the data showed</td><td>Accept the general plan</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Outcomes, not activity</h3>
+  <p>An audit of past campaigns showed they had been optimized for clicks, not sign-ups. The fix was the same as in engineering: measure the outcome, and gate decisions on it. Every post carries a tracked link, every sign-up records where it came from, and the weekly score is accounts created and taste quizzes completed, not likes. Rules decided in advance (boost only what already outperforms, stop any ad after two weeks, never let one ad take most of a month's budget) turn judgment into gates, exactly as CI does for code.</p>
+
+  <h2><span class="n">04</span>The controls that make it trustworthy</h2>
+  <p>Part I introduced review packets and decision records. Part II adds the controls a business needs before it lets a loop run overnight.</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Control</th><th>What it does</th><th>Why it matters to the business</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Batch rehearsal</strong></td><td>Before a set of changes merges, they are combined and tested together.</td><td>It caught five conflicts that every individual check had passed.</td></tr>
+      <tr><td><strong>Enforced boundaries</strong></td><td>Agents are technically blocked from merging, from changing the main branch and from publishing. Production data is readable only inside read-only transactions.</td><td>The gates are enforced, not just promised, and no agent can change customer data.</td></tr>
+      <tr><td><strong>Signals to work</strong></td><td>Failing tests, errors, alerts, AI-call logs and campaign results become scoped proposals overnight, placed in the existing roadmap order.</td><td>Problems turn into plans without a status meeting.</td></tr>
+      <tr><td><strong>Bug policy</strong></td><td>Defects found by tests are fixed when the fix is non-breaking. Breaking ones are isolated, scoped and surfaced.</td><td>Quality improves continuously without surprise behaviour changes.</td></tr>
+      <tr><td><strong>Spend rules</strong></td><td>Paid promotion only for posts that already beat their baseline, a fixed monthly budget, a two-week stop and a cap on any single ad.</td><td>Marketing money follows evidence, and no campaign can run away with the budget.</td></tr>
+      <tr><td><strong>Attribution first</strong></td><td>Tracked links on every post and the source of every sign-up recorded, on the web and in both mobile apps.</td><td>Growth is judged on customers gained, not attention bought.</td></tr>
+      <tr><td><strong>Tiered alerting</strong></td><td>A phone push when a merge breaks the main branch or users hit failures, email for degradation, a weekly digest.</td><td>Leadership hears about problems before customers do.</td></tr>
+      <tr><td><strong>Containment</strong></td><td>Kill switches switch a feature off without a deploy, and every alert has a runbook.</td><td>Incidents are contained in minutes, not releases.</td></tr>
+      <tr><td><strong>Delivery metrics</strong></td><td>Deploy frequency, lead time, change-failure rate and time to restore, counted in business days.</td><td>Throughput and stability are measured, and weekends aren't held against the team.</td></tr>
+      <tr><td><strong>Cost governance</strong></td><td>Scheduled agents run on a fixed plan with overage disabled. Each job uses the cheapest model that can do it. Documentation-only changes skip the test run.</td><td>Autonomy without a surprise bill.</td></tr>
+      <tr><td><strong>Strategy next to the work</strong></td><td>The strategic brief and a dated decisions log live in the repository, so agents read them before proposing.</td><td>Agents plan from intent, not from whatever they find.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2><span class="n">05</span>Maturity: where each area is heading</h2>
+  <p>Scored on the Part I ladder, the engineering system moved from mostly L1 (by hand) to L2–L3 (checked on every change) in its first cycle. The deliberate position is <strong>"L4 with human gates"</strong>: automated wherever a machine is reliable, with a person wherever judgment or accountability matters. The growth lane climbs the same ladder.</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Area</th><th>Now</th><th>Month 2</th><th>Month 4</th><th>Month 6</th><th>Target</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="6">Product lane</td></tr>
+      <tr><td><strong>Build &amp; test</strong></td><td><span class="lv l3">L3</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l5">L5</span></td></tr>
+      <tr><td><strong>Release &amp; rollback</strong></td><td><span class="lv l2">L2</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l4">L4</span></td></tr>
+      <tr><td><strong>Operations &amp; alerting</strong></td><td><span class="lv l2">L2</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l5">L5</span></td></tr>
+      <tr><td><strong>AI quality</strong></td><td><span class="lv l2">L2</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l4">L4</span></td></tr>
+      <tr class="grp"><td colspan="6">Growth lane</td></tr>
+      <tr><td><strong>Content production</strong></td><td><span class="lv l2">L2</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l5">L5</span></td></tr>
+      <tr><td><strong>Measurement &amp; attribution</strong></td><td><span class="lv l2">L2</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l5">L5</span></td></tr>
+      <tr><td><strong>Paid promotion</strong></td><td><span class="lv l2">L2</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l3">L3</span></td><td><span class="lv l4">L4</span></td><td><span class="lv l4">L4</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>Paid promotion stops at L4 on purpose: spending money stays a human decision, made in one tap with the evidence in hand.</p>
+
+  <h2><span class="n">06</span>Results from the first cycle</h2>
+  <ul>
+    <li><strong>A roadmap that behaves like an operating system:</strong> 12 themes, about 100 work items in one format, and a 10-week plan sized to real capacity, all read by the control tower from GitHub.</li>
+    <li><strong>19 changes integrated in a day.</strong> Rehearsed together, merged in dependency order, ending with a green main branch: about 2,500 tests and the browser journeys passing.</li>
+    <li><strong>The checks paid for themselves at once.</strong> New suites found authorization and data-integrity defects, which were fixed before release, including a pagination edge case that could hide a customer's items.</li>
+    <li><strong>Mobile layout is now a gate.</strong> Recording the product for the growth lane surfaced layout problems on narrow phones; each became a fix with a browser test at three phone widths that blocks any regression.</li>
+    <li><strong>Owner decisions are recorded once and reused everywhere.</strong> A day of product decisions became a dated log the agents now plan from, and the growth lane runs from the same kind of log.</li>
+  </ul>
+
+  <h2><span class="n">07</span>What L5 looks like</h2>
+  <p>In both lanes, L5 looks the same: the system detects, acts inside a pre-approved rule, verifies, and leaves the owner one decision.</p>
+  <h3>Product lane</h3>
+  <figure class="wp-fig">
+    <div class="wp-tl">
+      <div><time>02:10</time><h4>Detect</h4><p>A production check sees recommendations stop personalizing for some users.</p></div>
+      <div><time>02:11</time><h4>Triage</h4><p>An agent gathers logs and the last change, and matches a known pattern.</p></div>
+      <div><time>02:14</time><h4>Act</h4><p>The fix is pre-approved, so the agent flips the kill switch to the previous model.</p></div>
+      <div><time>02:20</time><h4>Verify</h4><p>The same checks confirm recovery, and the evidence is logged.</p></div>
+      <div><time>08:00</time><h4>Decide</h4><p>I read the digest. My only decision is when to fix the root cause.</p></div>
+    </div>
+  </figure>
+  <h3>Growth lane</h3>
+  <figure class="wp-fig">
+    <div class="wp-tl">
+      <div><time>Mon 07:00</time><h4>Detect</h4><p>The scorecard flags a post converting well above its baseline.</p></div>
+      <div><time>07:01</time><h4>Propose</h4><p>An agent proposes a boost inside the month's pre-approved budget rule.</p></div>
+      <div><time>08:15</time><h4>Decide</h4><p>I approve with one tap.</p></div>
+      <div><time>Day 14</time><h4>Stop</h4><p>The ad stops by rule. Cost per sign-up is logged and feeds the next plan.</p></div>
+    </div>
+    <figcaption><b>Figure 3</b>The same shape in both lanes: detect, act inside a rule, verify, and leave one decision to the owner.</figcaption>
+  </figure>
+
+  <h2><span class="n">08</span>The next horizon</h2>
+  <p>The loop is built to scale beyond one owner. These are the next controls on the roadmap, each designed to widen what agents may do on their own while keeping the evidence trail intact.</p>
+  <ol>
+    <li><strong>A separate agent identity with platform-enforced approvals.</strong> A dedicated identity makes "only the owner approves" a rule of the platform itself.</li>
+    <li><strong>Staging and automatic rollback.</strong> A copy of production to release into first, and an automatic roll back when the live check fails.</li>
+    <li><strong>AI quality gates.</strong> Golden datasets scoring every model and prompt change on accuracy, cost and p95/p99 latency before it ships.</li>
+    <li><strong>Service-level objectives.</strong> Explicit targets for the journeys that matter (scan, chat, checkout), with error budgets that decide when feature work slows down.</li>
+    <li><strong>Install attribution on every platform.</strong> Crediting app installs on iPhone and Android to the post or ad that drove them, so growth decisions use the full funnel.</li>
+    <li><strong>Predictive planning.</strong> Once enough posts are logged, a model predicts each planned post's reach and conversion, the weekly plan is ranked on it, and its accuracy is tracked every week.</li>
+    <li><strong>Pre-approved classes of change.</strong> A written policy for which changes may merge on green after a probation period. This is the real path to L5.</li>
+    <li><strong>One audit trail of approvals.</strong> Who approved what, when, and on what evidence, across code, releases, content and spend, ready for investors, partners and compliance.</li>
+    <li><strong>Control drills.</strong> Rehearsed rollbacks and kill-switch tests each quarter, so the controls are known to work.</li>
+  </ol>
+
+  <h2><span class="n">09</span>What this means for any leader adopting AI agents</h2>
+  <div class="wp-adopt">
+    <div><b>Know which decisions are yours</b><span>And what evidence you need to make each one in minutes. "I review everything" wastes the agents' speed; "nothing" leaves the risk unmanaged.</span></div>
+    <div><b>Let the work start itself</b><span>Agents that sense and propose on their own turn a tool into a workforce.</span></div>
+    <div><b>Earn autonomy one class of change at a time</b><span>On the strength of a measured track record, exactly as with a new hire.</span></div>
+    <div><b>Run one loop across the company</b><span>Growth, support and operations can run on the same gates and evidence as engineering, with autonomy earned per area.</span></div>
+  </div>
+  <p class="wp-pull">Part I argued for building the factory first. Part II is what it looks like to run a company on it: a product that improves every night, a growth engine that learns every week, and one accountable owner.</p>
+
+  <div class="wp-series">
+    <a href="/papers/control-tower-method/"><span class="k">Part I</span><span class="t">The Control Tower Method</span></a>
+    <a href="/#work"><span class="k">More work</span><span class="t">CorkAI, Prodigy and the NFI digital twin</span></a>
+  </div>
+
+  <div class="wp-author">
+    <p class="k">About the author</p>
+    <p><strong>Felipe Molino</strong> is the founder of CorkAI, where this operating loop runs the product and its growth, and builds and runs a transportation digital-twin decision platform at NFI Industries. CorkAI is actively developed on the method described here.</p>
+  </div>
+</article>
+<footer class="wp-foot"><span>© 2026 Felipe Molino</span><a href="/">Portfolio</a><a href="/papers/control-tower-method/">Part I</a><a href="https://www.linkedin.com/in/felipemolino" rel="noopener">LinkedIn</a></footer>
+</body>
+</html>
