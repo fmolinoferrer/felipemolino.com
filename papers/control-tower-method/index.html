@@ -22,7 +22,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1215'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23e79364'%3EFM%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The Control Tower Method","alternativeHeadline":"Roadmaps, gates and maturity: moving a product's controls from manual to autonomous","description":"How to move a product's control areas from manual to autonomous with AI agents working under controls: an L0–L5 maturity ladder, a roadmap control tower, review gates and ADRs. White paper by Felipe Molino.","url":"https://felipemolino.com/papers/control-tower-method/","mainEntityOfPage":"https://felipemolino.com/papers/control-tower-method/","image":"https://felipemolino.com/assets/og-control-tower-method.png","datePublished":"2026-10-17","dateModified":"2026-10-17","author":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/","sameAs":["https://www.linkedin.com/in/felipemolino"]},"publisher":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/"},"keywords":"maturity model, AI agents, product management, control tower, roadmap, ADR, agentic AI, autonomous operations, APEM, digital twin"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The Control Tower Method","alternativeHeadline":"Roadmaps, gates and maturity: moving a product's controls from manual to autonomous","description":"How to move a product's control areas from manual to autonomous with AI agents working under controls: an L0–L5 maturity ladder, a roadmap control tower, review gates and ADRs. White paper by Felipe Molino.","url":"https://felipemolino.com/papers/control-tower-method/","mainEntityOfPage":"https://felipemolino.com/papers/control-tower-method/","image":"https://felipemolino.com/assets/og-control-tower-method.png","datePublished":"2026-10-17","dateModified":"2026-10-19","author":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/","sameAs":["https://www.linkedin.com/in/felipemolino"]},"publisher":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/"},"keywords":"maturity model, AI agents, product management, control tower, roadmap, ADR, agentic AI, autonomous operations, APEM, digital twin, load tracking, logistics operations"}</script>
 <style>
 :root {
     --bg: #0f1215;
@@ -210,6 +210,17 @@ img { max-width: 100%; } [hidden] { display: none !important; }
   .wp-vs table td:first-child { font: 600 .68rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
   .wp-vs th.l1 { color: #ef9f88; } .wp-vs th.l5 { color: var(--accent-2); }
   .wp-vs td.a { color: var(--ink); }
+  /* Applied to operations */
+  .wp-ops { margin: 28px 0 0; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent-2); border-radius: 12px; padding: 20px 22px; }
+  .wp-ops .k { font: 600 .66rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-2); margin: 0; }
+  .wp-ops h3 { margin: 4px 0 6px; font-family: "Fraunces", Georgia, serif; font-size: 1.2rem; color: var(--ink); }
+  .wp-ops > p { margin: 0 0 14px; font-size: .9rem; max-width: 68ch; }
+  .wp-ops ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .wp-ops li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: start; }
+  .wp-ops li .lv { padding: 4px 0; }
+  .wp-ops li p { margin: 0; font-size: .9rem; line-height: 1.5; min-width: 0; }
+  .wp-ops li p b { color: var(--ink); font-weight: 600; }
+  .wp-ops .note { margin: 14px 0 0; font-size: .84rem; color: var(--muted); }
   /* NFI vs CorkAI */
   .wp-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .wp-side > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; min-width: 0; }
@@ -260,7 +271,7 @@ img { max-width: 100%; } [hidden] { display: none !important; }
     <p class="wp-kick">White paper · October 2026 · 5 min read</p>
     <h1 id="wp-title">The Control Tower Method</h1>
     <p class="wp-dek">Roadmaps, gates and maturity: how I move a product's control areas from manual to autonomous, with multiple AI agents working under controls.</p>
-    <div class="wp-by"><span>Felipe Molino</span><span>Founder, CorkAI · Senior Director of Engineering</span></div>
+    <div class="wp-by"><span>Felipe Molino</span><span>Senior Director of Engineering, NFI Industries · Founder, CorkAI</span></div>
 
     <div class="wp-facts">
       <div class="wp-fact hero"><b>Multiple agents</b><span>Claude Code agents (Opus 5.5, medium effort), each on bounded, controlled work</span></div>
@@ -310,6 +321,19 @@ img { max-width: 100%; } [hidden] { display: none !important; }
         </tbody></table></div>
       <figcaption><b>Figure 2</b>What changes between a manual control and an autonomous one.</figcaption>
     </figure>
+
+    <aside class="wp-ops" aria-label="Applied to operations">
+      <p class="k">Applied to operations</p>
+      <h3>The same ladder, on load tracking</h3>
+      <p>The method isn't only for software. Any process that can fail without anyone noticing is a control area. Load tracking is the work behind NFI's 2026 FreightWaves AI Excellence in Supply Chain Award.</p>
+      <ol>
+        <li><span class="lv lv1">L1</span><p><b>Manual.</b> A coordinator calls or emails each carrier for status updates.</p></li>
+        <li><span class="lv lv3">L3</span><p><b>Checked every time.</b> Every load that misses a check-in is flagged automatically, so nothing slips through unnoticed.</p></li>
+        <li><span class="lv lv4">L4</span><p><b>Measured, with alerts.</b> Exceptions reach the right person with a playbook, and on-time performance is tracked.</p></li>
+        <li><span class="lv lv5">L5</span><p><b>Autonomous, under control.</b> An agent requests and records the update, and escalates only what falls outside approved limits.</p></li>
+      </ol>
+      <p class="note">People keep the exceptions and the customer conversation. The agents take on the repetitive chasing.</p>
+    </aside>
 
     <figure class="wp-fig wp-loop">
       <div class="wp-scroll">
@@ -446,7 +470,7 @@ img { max-width: 100%; } [hidden] { display: none !important; }
     </figure>
     <p>That's the end state for CorkAI, and it's the same direction for NFI's 27 control areas: controlled agents run the controls, and people own strategy, approvals and the exceptions.</p>
 
-    <h2><span class="n">06</span>What this means for a product org</h2>
+    <h2><span class="n">06</span>What this means for a product or operations team</h2>
     <div class="wp-adopt">
       <div><b>A maturity matrix per area</b><span>Fixed L0–L5 definitions, a target per area, evidence that moves with the work.</span></div>
       <div><b>Review packets for every change</b><span>Why, what, effect, tests and rollback, whether a person or an agent made it.</span></div>
