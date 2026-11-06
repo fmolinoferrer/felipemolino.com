@@ -210,6 +210,7 @@
   .c-note .c-label { color: var(--accent-2); }
 
   .tbl-wrap { overflow-x: auto; margin: 0 0 28px; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+  .tbl-wrap.wide table { min-width: 580px; }
   table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: .91rem; }
   th { background: var(--surface-2); color: var(--ink); font-family: "IBM Plex Mono", monospace; font-size: .71rem; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; padding: 12px 16px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--line); }
   td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-soft); }
@@ -580,6 +581,9 @@
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#work">Featured Work</a></li>
+      <li><a href="#ai-initiatives">AI Initiatives</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#agent-org">Claude Agent Org</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#credentials">Education</a></li>
       <li><a href="#certifications">Certifications</a></li>
@@ -664,7 +668,7 @@
         <div class="tl-roles">Senior Director of Engineering · previously Director of Supply Chain Engineering, Director of Professional Services, Director of Product Management · Product Owner, Transportation Digital Twin (since 2018)</div>
         <ul>
           <li>Built NFI's consulting and digital twin practice from <strong>$0 to seven-figure revenue</strong>, leading 50+ network-design engagements at 10–15% average savings and supporting <strong>~$700M in customer sales</strong>; together this work delivered <strong>$200M+ in total supply chain savings</strong> at NFI. Cut <strong>RFP and continuous-improvement turnaround from 6 weeks to 1</strong>.</li>
-          <li>Own the Transportation Digital Twin as Product Owner since 2018, scaling it from a $500K pilot into a production B2B SaaS decision platform now <strong>modeling roughly $10M in annual savings</strong> across 10 enterprise accounts.</li>
+          <li>Own the Transportation Digital Twin as Product Owner since 2018, scaling it from a $500K pilot into a production B2B SaaS decision platform now <strong>modeling roughly $10M in annual savings</strong> across 10 enterprise accounts. Built to monitor performance and catch problems before customers feel them, it underpins <strong>90%+ customer retention</strong>.</li>
           <li>Own an <strong>eight-figure vendor and partner portfolio</strong> across AI, optimization, GitHub, and staffing partners, leading evaluation and negotiation alongside NFI's President of Transportation Management, VP of Innovation, and VP of Procurement.</li>
           <li>Led a <strong>six-month phased production migration</strong> of NFI's optimization platform from Supply Chain Guru Cloud to Nextmv against a hard license-expiration deadline — including a full Databricks deployment — running live production and validation workloads in parallel on the same infrastructure, then cutting over account by account across 10 enterprise accounts with <strong>no service interruption</strong>.</li>
           <li>Ship AI/ML into <strong>live transactional systems</strong> — an XGBoost tender-acceptance model writing to Navitrace with tendering executing in 3GTMS, and n8n-orchestrated agentic workflows writing into 3GTMS for load tracking, email triage, and freight-bill exception matching — saving <strong>160+ operational and 100+ back-office hours per week</strong>.</li>
@@ -789,6 +793,176 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="block" id="ai-initiatives" data-sec>
+  <div class="wrap">
+    <div class="block-head">
+      <p class="eyebrow">AI initiatives · Built and running</p>
+      <h2>The AI engineering behind my own work.</h2>
+      <p>Outside NFI I build hands-on, across one product and two research projects: CorkAI (a wine-intelligence app on web, iOS and Android), Prodigy (a research project: a productivity app with an AI assistant, Maia) and a VGC battle bot. Between them they cover most of what a production AI system needs. This is what each one does, and where it lives.</p>
+    </div>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Capability</th><th>What I built</th><th>Where</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Agents with tools, memory and approval</strong></td><td>An assistant with about 33 tools, three layers of memory (recent turns, a rolling summary, user facts) and write actions that wait for the user's confirmation, enforced by a test. It also runs as an MCP server.</td><td>Prodigy</td></tr>
+        <tr><td><strong>Evals</strong></td><td>Golden sets for label scans, menu scans, chat and pairing (235 cases), and a four-model study of about 460 cases run three times each, under a $150 cap, with a second judge from a different model family to check bias. In Prodigy: a 100-case planner suite with fixed grading and a recommendation eval with a sealed 50-case holdout.</td><td>CorkAI, Prodigy</td></tr>
+        <tr><td><strong>Red-teaming</strong></td><td>200 attack cases (prompt injection, data extraction, underage users, self-harm, drink-driving, multi-turn and non-English attacks) plus 30 over-refusal cases. The answer guard cut unsafe answers from 37 to 2.</td><td>CorkAI</td></tr>
+        <tr><td><strong>Hallucination control</strong></td><td>A grounding check that pulls the claims out of each answer and blocks or flags any not backed by a tool result, and citation checks against the source transcript. In CorkAI, a search-grounded label scanner that reports its confidence, and wine-list picks restricted to the list the user uploaded.</td><td>Prodigy, CorkAI</td></tr>
+        <tr><td><strong>Retrieval with citations</strong></td><td>Hybrid search that blends keyword matching with vector similarity (pgvector embeddings), with timestamped citations back to the source.</td><td>Prodigy</td></tr>
+        <tr><td><strong>Voice</strong></td><td>A voice assistant: speech-to-text, a streamed reply, and text-to-speech spoken sentence by sentence with the next one prefetched, which the user can interrupt. Meeting transcription with speaker identification.</td><td>Prodigy</td></tr>
+        <tr><td><strong>Model routing</strong></td><td>One model layer across OpenAI, Gemini and Claude that picks a model per task and fails over to a backup automatically, even mid-stream before the first token. Prodigy routes each step to a cheap, standard or strong tier.</td><td>CorkAI, Prodigy</td></tr>
+        <tr><td><strong>Structured output</strong></td><td>A strict schema for the assistant's plans, with one bounded repair call when validation fails. In CorkAI, a parser that turns a streaming model answer into clean wine records as it arrives.</td><td>Prodigy, CorkAI</td></tr>
+        <tr><td><strong>Documents</strong></td><td>Wine-list and menu photos read into structured wine data, and scores and wine profiles exported as PDF. Prodigy reads PDF, Word and PowerPoint files, and reads scanned pages with vision.</td><td>CorkAI, Prodigy</td></tr>
+        <tr><td><strong>Cost and observability</strong></td><td>Every model call logged with tokens and dollar cost; failure, quota and sign-in health tracked.</td><td>CorkAI, Prodigy</td></tr>
+        <tr><td><strong>Caching and prompt versions</strong></td><td>A semantic cache that reuses answers to similar questions. Versioned prompts, so a prompt change automatically retires stale cached results.</td><td>CorkAI, Prodigy</td></tr>
+        <tr><td><strong>Synthetic data</strong></td><td>Label and menu images rendered from data for scan tests, and attack sets drafted with Claude.</td><td>CorkAI</td></tr>
+        <tr><td><strong>Model training</strong></td><td>Gradient-boosted trees trained on 112,000 positions from real games, shipped only if they beat a simpler model on held-out data. Next: a transformer trained by self-play (below).</td><td>VGC bot</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Next</h3>
+    <p>Retrieval with reranking and cited answers for CorkAI, a claim-level hallucination check for CorkAI's chat, open and self-hosted models, and fine-tuning once there's enough real usage data to justify it.</p>
+  </div>
+</section>
+
+<section class="block alt" id="research" data-sec>
+  <div class="wrap">
+    <div class="block-head">
+      <p class="eyebrow">Research · Self-play reinforcement learning</p>
+      <h2>Teaching a bot to win at competitive Pokémon, on one laptop.</h2>
+      <p>A research project in game-playing AI: a bot for Pokémon VGC doubles (the Regulation M-C format, open team sheets) that learns its play only from games against itself. The goal is to beat the top-rated bot on the Reg M-C ladder (about 1,857 Elo), training on a single Apple M4 Mac.</p>
+    </div>
+    <div class="feature-list">
+      <div class="feature-card">
+        <div>
+          <p class="eyebrow">Status · Design pre-registered 3 Nov 2026 · self-play results still running</p>
+          <h3>A mechanics-aware network, self-play training, and an evaluation written down before the results</h3>
+          <p class="desc">VGC doubles is a hard game for AI. Both players choose moves at the same time, each turn has about 30 options per Pokémon, the opponent's exact stats are hidden, and luck matters. The current engine searches several turns ahead with a 24-feature tree model as its judge. This project replaces that judge with a small transformer that reads the whole board, learns its own play by self-play, and then guides the search. A team builder uses the same network to design teams. Every claim will be tested against a protocol I fixed in advance.</p>
+          <div class="feature-tags">
+            <span class="tag">Self-play RL (PPO)</span>
+            <span class="tag">Transformer</span>
+            <span class="tag">Search-guided training</span>
+            <span class="tag">Pre-registration</span>
+            <span class="tag">Human evaluation</span>
+          </div>
+          <div class="cta-row" style="margin-top:26px;">
+            <a class="btn btn-primary" href="/papers/vgc-selfplay-design/">Read the experiment design →</a>
+          </div>
+        </div>
+        <div class="feature-stats">
+          <div class="feature-stat"><div class="fnum">~12k</div><div class="flabel">real high-rated games for outcome pretraining</div></div>
+          <div class="feature-stat"><div class="fnum">4–5M</div><div class="flabel">parameters, sized to train on one 16 GB laptop</div></div>
+          <div class="feature-stat"><div class="fnum">1,500</div><div class="flabel">mirrored games needed to detect a 5-point edge</div></div>
+          <div class="feature-stat"><div class="fnum">18</div><div class="flabel">threats to validity, each with a planned fix</div></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 id="research-before-now">What I had before, and what I'm doing now</h3>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Part</th><th>Before</th><th>Now</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Position judge</strong></td><td>Gradient-boosted trees on 24 hand-made features. The engine wins over 80% of its games against a heuristic bot, and it climbed to mid-ladder before I stopped it</td><td>A transformer that reads the whole board, with damage and speed matrices wired in</td></tr>
+        <tr><td><strong>Move choice</strong></td><td>Hand-built: a heuristic v1 player, then opponent replies weighted by ladder move frequencies</td><td>A policy learned purely by self-play, never by copying human clicks</td></tr>
+        <tr><td><strong>Search</strong></td><td>Multi-turn search in the real simulator: iterative deepening to depth 8, with a time budget set by how critical the turn is</td><td>The same search, with the network suggesting moves and judging positions</td></tr>
+        <tr><td><strong>Team building</strong></td><td>A 500-team tournament library, judged by hours of simulated Swiss play</td><td>A matchup head that scores two team sheets in milliseconds, plus local search</td></tr>
+        <tr><td><strong>Evaluation</strong></td><td>Holdout accuracy and play review</td><td>A pre-registered protocol: mirrored matches, confidence intervals, ablations, a human study</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 id="research-built">What's built and running today</h3>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Component</th><th>How it works</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Data</strong></td><td>15,333 replays collected (about 10,300 Bo1 and 5,000 Bo3), turned into 112,000 positions: 89,000 for training and 23,000 held out by a hash of the game id.</td></tr>
+        <tr><td><strong>Position judge</strong></td><td>Second-order gradient-boosted trees: 160 depth-3 trees, learning rate 0.1, 32 quantile bins, at least 200 samples per leaf, L2-regularized leaf values, over 24 engineered board features. Training data is mirrored and the output is antisymmetric, so one side's win chance is exactly 1 minus the other's.</td></tr>
+        <tr><td><strong>Overfitting guard</strong></td><td>Champion/challenger on held-out log loss: the boosted model ships only if it beats a logistic-regression baseline's held-out log loss by a fixed margin. Otherwise the engine falls back to the simpler model automatically. Baselines are temperature-calibrated so the comparison is fair, and accuracy and log loss are reported per turn.</td></tr>
+        <tr><td><strong>Search</strong></td><td>Every position is rebuilt in the real battle simulator. Iterative deepening to depth 8 (cap 12); exhaustive search over joint choices at depth 1; beam search with Monte-Carlo rollouts deeper; a UCB1 bandit tree for my next turns. It runs on worker threads and only starts a deeper level if it fits the remaining time.</td></tr>
+        <tr><td><strong>Robust choice</strong></td><td>Each candidate is scored as 0.7 × average outcome + 0.3 × worst case. Opponent replies are a 45 / 40 / 15 mix of a move prior learned from replays, the best response and uniform play.</td></tr>
+        <tr><td><strong>Testing</strong></td><td>1,588 legal-move checks with none rejected, 16 of 16 replays reproduced exactly, and 10 engine scenario tests.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 id="research-algorithms">Algorithms &amp; key settings</h3>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Component</th><th>Algorithm</th><th>Key settings (proposed)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Network</strong></td><td>Transformer encoder over 16 tokens (12 Pokémon, field, 2 sides, summary); damage and speed as attention biases</td><td>Width 256, 6 layers, 8 heads, ~4–5M parameters</td></tr>
+        <tr><td><strong>Pretraining</strong></td><td>Value and helper heads trained on outcomes of ~12,000 real games</td><td>Must beat the tree model's accuracy and log loss on the same holdout</td></tr>
+        <tr><td><strong>Self-play</strong></td><td>PPO with GAE, against a league of past versions (PFSP)</td><td>Clip 0.2, lr 3e-4 → 3e-5, γ 1.0, GAE λ 0.95, target KL 0.02; opponents 50% self / 40% past / 10% anchors; 3–5 days</td></tr>
+        <tr><td><strong>Refinement</strong></td><td>Search-guided refinement (expert iteration): the network learns from the full search's choices</td><td>50,000–200,000 games at 0.5–1 s per move</td></tr>
+        <tr><td><strong>Play</strong></td><td>Multi-turn search with the network as prior and judge; optional regret-matching solve at the root</td><td>16 sampled guesses of the opponent's hidden stats</td></tr>
+        <tr><td><strong>Team building</strong></td><td>Matchup head + local search with simulated annealing, verified by full-search play</td><td>Scored against 500 library teams, weighted by usage</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>How it will be judged</h3>
+    <ul>
+      <li><strong>Pre-registered.</strong> Hypotheses, pass marks and sample sizes were dated and fixed before any self-play run. Changes go in a dated lab notebook, negative results included.</li>
+      <li><strong>Fair comparisons.</strong> Mirrored matches: every pairing plays both seats with the same random seeds, so team strength cancels out. Results are reported with 95% confidence intervals and Bradley-Terry ratings.</li>
+      <li><strong>No tuning on the test.</strong> Separate validation (32 teams) and test (64 teams) sets, a split by player and set to stop leakage, and three seeds for key settings.</li>
+      <li><strong>Hard to exploit, not just strong.</strong> A dedicated exploiter is trained against the frozen bot to measure how easily it can be beaten. Team builds are checked against a field that adapts, not a fixed one.</li>
+      <li><strong>Eleven ablations</strong> isolate what each part contributes: the mechanics inputs, the helper predictions, pretraining, the league and search depth.</li>
+      <li><strong>Humans in the loop.</strong> Expert players from a World Cup team play the bot in Bo3 under tournament rules, with consent, blinding, and a short survey after each set.</li>
+    </ul>
+
+    <h3>Why I'm doing it</h3>
+    <p>It's the hands-on counterpart to my M.S. in AI: owning a model end to end, from network design through training to evaluation, rather than calling one through an API. The discipline is the same one I apply to products. Decide in advance what would prove you wrong, and report what actually happened. Results will be posted here when they exist, negative ones included.</p>
+  </div>
+</section>
+
+<section class="block" id="agent-org" data-sec>
+  <div class="wrap">
+    <div class="block-head">
+      <p class="eyebrow">Deep dive · Claude Code</p>
+      <h2>The agent organization I designed to build CorkAI.</h2>
+      <p>CorkAI is built by a standing organization of Claude Code agents under one human owner. I designed it as an operating model, covering roles, memory, approvals, cadence and cost, and redesigned it from data after the first week.</p>
+    </div>
+    <div class="feature-list">
+      <div class="feature-card">
+        <div>
+          <p class="eyebrow">Operating model · in daily use</p>
+          <h3>Eight agents, two decision packs a day, and a short list of things only I can approve</h3>
+          <p class="desc">The agents don't wait to be asked. A wake-up every two hours lets each idle agent read its queue and carry on. They coordinate through files rather than messages, and a Chief of Staff agent turns everything into two short decision packs a day that I answer in one line. Anything reversible that I don't answer goes ahead on the recommended default, with an undo. Everything that can't be undone waits for me.</p>
+          <div class="feature-tags">
+            <span class="tag">Claude Code</span>
+            <span class="tag">Multi-agent design</span>
+            <span class="tag">Memory in files</span>
+            <span class="tag">Human approval gates</span>
+            <span class="tag">Model routing</span>
+          </div>
+          <div class="cta-row" style="margin-top:26px;">
+            <a class="btn btn-primary" href="/papers/control-tower-method/">The governance method →</a>
+            <a class="btn btn-ghost" href="/papers/governing-an-ai-workforce/">Governing an AI workforce →</a>
+          </div>
+        </div>
+        <div class="feature-stats">
+          <div class="feature-stat"><div class="fnum">233</div><div class="flabel">merged pull requests in a single peak week</div></div>
+          <div class="feature-stat"><div class="fnum">~1,180</div><div class="flabel">commits that same week</div></div>
+          <div class="feature-stat"><div class="fnum">54</div><div class="flabel">Claude chats active that week</div></div>
+          <div class="feature-stat"><div class="fnum">8</div><div class="flabel">standing agents under 21 written charters</div></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 id="agent-org-design">How it's built</h3>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Area</th><th>Design</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Roles</strong></td><td>Chief of Staff, Product, Dev Lead, QA &amp; Release, Algorithms, Wine Data, Marketing and InfoSec, each with its own remit and model. The Dev Lead opens one short session per ticket in its own git worktree, at most three at a time. InfoSec stays independent of Product.</td></tr>
+        <tr><td><strong>Memory</strong></td><td>Sessions don't share memory, so the record lives in files: a handoff file under 3 KB per area, inbox files, a decisions queue and a defaults log. Architecture decision records are the long-term memory. The chat is a scratchpad; the files are the record.</td></tr>
+        <tr><td><strong>Drift check</strong></td><td>At each pack, the Chief of Staff compares every agent's handoff notes with what it actually did. A stale handoff is logged as a miss and fixed on the spot.</td></tr>
+        <tr><td><strong>My attention</strong></td><td>Two decision packs a day, each item with options and a recommended pick. I answer in one line ("1A 2A 3 skip"). Unanswered reversible items proceed on the default and appear in the next pack with a one-line undo.</td></tr>
+        <tr><td><strong>Safety gates</strong></td><td>Permission rules stop agents merging or pushing to main. CI rejects any pull request without a complete review packet and tests. Production data is read-only to Claude. Publishing, money, schema and production writes, sign-in and payment logic, secrets, anything customers see, and scope all wait for me.</td></tr>
+        <tr><td><strong>Automation</strong></td><td>17 scheduled tasks, including the two-hourly wake-up, the two packs, a daily brief and a release go/no-go, plus 7 CI workflows (tests, DORA metrics, end-to-end, security, incident triage). Plain scripts run on the OS scheduler at no model cost and wake an agent only when they find a problem.</td></tr>
+        <tr><td><strong>Model routing</strong></td><td>Opus where a wrong call is expensive to undo (product, algorithms, sensitive security reviews), Sonnet where tests or I check the work, Haiku for monitoring and batch checks. Every new task gets a one-line projection of size, model, share of the weekly budget and what it displaces.</td></tr>
+        <tr><td><strong>Iteration</strong></td><td>Week one ran about 17 agents messaging each other, almost all on Opus. It used a week's Claude plan in about two days, and 58% of the cost was long chats re-reading their own history. Decisions also got lost: two agents were given contradictory rules because I'd told each one separately. I rebuilt it as 8 agents coordinating through files, with every decision going through one channel and one log, and direct messages kept for outages, security incidents and money only.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>What it taught me about AI products</h3>
+    <p>Intelligence isn't the same as continuity. Agents can do excellent work and still lose a decision, let their notes drift, or fail to say what changed. Most of the design above exists to close that gap, and to spend the scarcest resource in the system, my attention, only on the decisions that need it.</p>
   </div>
 </section>
 
@@ -1527,6 +1701,7 @@
   /* ---------------- Fuzzy matching ---------------- */
   function normalize(s) {
     return s.toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
       .replace(/[‘’“”]/g, "")
       .replace(/[^a-z0-9%$.\s]/g, " ")
       .replace(/\s+/g, " ")
@@ -1740,7 +1915,7 @@
       var label = h.entry.secTitle;
       if (h.entry.subTitle) label += " › " + h.entry.subTitle;
       if (!h.res.exact) label += "  ·  similar";
-      html += '\x3Ca class="res" data-i="39" role="option" tabindex="-1">' +
+      html += '\x3Ca class="res" data-i="' + i + '" role="option" tabindex="-1">' +
                 '\x3Cdiv class="r-sec">' + escapeHtml(label) + "\x3C/div>" +
                 '\x3Cdiv class="r-snip">' + buildSnippet(h.entry.text, h.res.words) + "\x3C/div>" +
               "\x3C/a>";

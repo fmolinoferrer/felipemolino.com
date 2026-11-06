@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VGC Self-Play Bot: Experiment Design · Felipe Molino</title>
+<meta name="description" content="Pre-registered experiment design for a self-play reinforcement learning bot for competitive Pokémon VGC doubles (Reg M-C, open team sheets), trained on one Apple M4 Mac: hypotheses, model, PPO league training, search, team building, evaluation protocol and threats to validity. By Felipe Molino.">
+<link rel="canonical" href="https://felipemolino.com/papers/vgc-selfplay-design/">
+<meta name="author" content="Felipe Molino">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Felipe Molino">
+<meta property="og:title" content="A Self-Play Bot for Competitive Pokémon: Experiment Design">
+<meta property="og:description" content="Pre-registered 3 Nov 2026: a mechanics-aware transformer, PPO self-play against a league, search-guided refinement and a team builder, all trained on one laptop. Design only, no results yet.">
+<meta property="og:url" content="https://felipemolino.com/papers/vgc-selfplay-design/">
+<meta property="og:image" content="https://felipemolino.com/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="article:author" content="https://felipemolino.com/">
+<meta property="article:published_time" content="2026-11-03">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://felipemolino.com/assets/og.png">
+<meta name="theme-color" content="#0f1215">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1215'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23e79364'%3EFM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"A Self-Play Bot for Competitive Pokémon: Experiment Design","alternativeHeadline":"Pre-registered design for a self-play reinforcement learning bot for Pokémon VGC doubles, trained on one laptop","description":"Pre-registered experiment design for a self-play reinforcement learning bot for Pokémon VGC doubles (Reg M-C, open team sheets): hypotheses, model, PPO league training, search-guided refinement, team building, evaluation protocol and threats to validity.","url":"https://felipemolino.com/papers/vgc-selfplay-design/","mainEntityOfPage":"https://felipemolino.com/papers/vgc-selfplay-design/","image":"https://felipemolino.com/assets/og.png","datePublished":"2026-11-03","dateModified":"2026-11-03","author":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/","sameAs":["https://www.linkedin.com/in/felipemolino"]},"publisher":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/"},"keywords":"reinforcement learning, self-play, PPO, transformer, game AI, Pokémon VGC, expert iteration, pre-registration, experiment design, team building, simulated annealing"}</script>
+<style>
+:root {
+  --bg: #0f1215; --surface: #171b1f; --surface-2: #1f242a; --surface-3: #262c33;
+  --ink: #f1efe7; --ink-soft: #c1c5bc; --muted: #858b84; --line: #2a3037;
+  --accent: #e79364; --accent-strong: #f3ab84; --accent-ink: #0f1215;
+  --accent-2: #8ec4bc; --accent-2-soft: #1a2b29;
+  --good: #86bd8c; --warn: #ddb168;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -16px rgba(0,0,0,.7);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Public Sans", -apple-system, "Segoe UI", sans-serif; font-size: 16.5px; line-height: 1.68; -webkit-font-smoothing: antialiased; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+a { color: var(--accent-2); text-underline-offset: 3px; } a:hover { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wrap: balance; margin: 0; color: var(--ink); }
+.wp-bar { position: sticky; top: 0; z-index: 2; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.wp-bar-in { max-width: 880px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 12px 20px; }
+.wp-back { color: var(--ink); font: 600 .9rem "Public Sans", sans-serif; padding: 6px 0; white-space: nowrap; text-decoration: none; }
+.wp-back:hover { color: var(--accent); }
+.wp-bar-t { margin-left: auto; font: 500 .7rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wp { max-width: 880px; margin: 0 auto; padding-inline: max(20px, env(safe-area-inset-left, 0px)); padding-block: 44px 96px; }
+.wp p, .wp li { color: var(--ink-soft); max-width: 68ch; }
+.wp p { margin: 14px 0 0; }
+.wp strong { color: var(--ink); }
+.wp ul, .wp ol { padding-left: 22px; margin: 12px 0 0; }
+.wp li { margin-top: 8px; }
+.wp code { font: 500 .86em "IBM Plex Mono", monospace; color: var(--ink); background: var(--surface-2); border-radius: 4px; padding: 1px 5px; overflow-wrap: anywhere; }
+.wp-kick { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 !important; }
+.wp h1 { font-size: clamp(2.1rem, 5.4vw, 3.2rem); line-height: 1.08; margin-top: 14px; }
+.wp-dek { font-size: 1.16rem; line-height: 1.55; margin-top: 16px !important; color: var(--ink) !important; }
+.wp-by { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 18px; font: 500 .78rem "IBM Plex Mono", monospace; color: var(--muted); }
+.wp-status { display: inline-flex; align-items: center; gap: 9px; margin-top: 20px; background: var(--accent-2-soft); color: var(--accent-2); border: 1px solid color-mix(in srgb, var(--accent-2) 32%, transparent); padding: 7px 15px; border-radius: 100px; font-size: .84rem; font-weight: 600; }
+.wp-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--warn); flex-shrink: 0; }
+.wp h2 { font-size: clamp(1.45rem, 3vw, 1.85rem); margin-top: 64px; display: flex; gap: 14px; align-items: baseline; scroll-margin-top: 72px; }
+.wp h2 .n { font: 600 .82rem "IBM Plex Mono", monospace; color: var(--accent); }
+.wp h3 { font: 700 1.08rem "Public Sans", sans-serif; margin-top: 30px; }
+.wp-exec { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 14px; padding: 22px 26px; margin-top: 34px; box-shadow: var(--shadow); }
+.wp-exec .k { font: 600 .78rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 0 !important; }
+.wp-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-top: 28px; }
+.wp-fact { background: var(--surface); padding: 18px 18px 16px; }
+.wp-fact b { display: block; font: 600 1.45rem "IBM Plex Mono", monospace; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.wp-fact span { display: block; margin-top: 4px; font-size: .82rem; color: var(--muted); line-height: 1.4; }
+.wp-pull { font-family: "Fraunces", Georgia, serif; font-size: 1.32rem !important; line-height: 1.4; color: var(--ink) !important; border-left: 3px solid var(--accent); padding-left: 18px; margin: 34px 0 0 !important; }
+.wp-toc { margin-top: 34px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px; }
+.wp-toc .k { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 !important; }
+.wp-toc ol { list-style: none; padding: 0; margin: 10px 0 0; columns: 2 220px; column-gap: 28px; }
+.wp-toc li { margin: 0 0 4px; font-size: .92rem; break-inside: avoid; }
+.wp-toc a { text-decoration: none; color: var(--ink-soft); }
+.wp-toc a:hover { color: var(--accent); }
+.wp-toc .n { font: 600 .74rem "IBM Plex Mono", monospace; color: var(--accent); display: inline-block; min-width: 30px; }
+.wp-tbl { overflow-x: auto; margin-top: 18px; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+.wp-tbl table { border-collapse: collapse; width: 100%; background: var(--surface); font-size: .9rem; min-width: 600px; }
+.wp-tbl.narrow table { min-width: 440px; }
+.wp-tbl th { font: 600 .7rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); text-align: left; padding: 11px 14px; background: var(--surface-2); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.wp-tbl td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+.wp-tbl tr:last-child td { border-bottom: 0; }
+.wp-tbl td strong { color: var(--ink); }
+.wp-tbl td.v { font: 500 .84rem "IBM Plex Mono", monospace; color: var(--accent); white-space: nowrap; }
+.wp-tbl tr.grp td { background: var(--surface-2); font: 600 .7rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-2); padding: 8px 14px; }
+.wp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 20px; }
+.wp-cards > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+.wp-cards .k { display: block; font: 600 .7rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .09em; color: var(--accent-2); }
+.wp-cards b { display: block; color: var(--ink); margin-top: 4px; }
+.wp-cards span.d { display: block; margin-top: 6px; font-size: .9rem; color: var(--ink-soft); }
+.wp-cards ul { margin-top: 8px; }
+.wp-cards li { font-size: .9rem; margin-top: 5px; }
+.wp-note { font-size: .88rem !important; color: var(--muted) !important; border-left: 2px solid var(--line); padding-left: 14px; margin-top: 18px !important; }
+.wp-gloss { margin: 18px 0 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.wp-gloss > div { background: var(--surface); padding: 14px 18px; display: grid; grid-template-columns: 200px 1fr; gap: 16px; }
+@media (max-width: 600px) { .wp-gloss > div { grid-template-columns: 1fr; gap: 4px; } }
+.wp-gloss dt { font-weight: 700; color: var(--ink); font-size: .95rem; }
+.wp-gloss dd { margin: 0; color: var(--ink-soft); font-size: .92rem; }
+.wp-series { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.wp-series a { flex: 1 1 260px; text-decoration: none; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 12px; padding: 16px 20px; color: var(--ink); }
+.wp-series a:hover { border-color: var(--accent); color: var(--ink); }
+.wp-series .k { display: block; font: 600 .68rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-2); }
+.wp-series .t { display: block; font-family: "Fraunces", Georgia, serif; font-size: 1.08rem; margin-top: 4px; }
+.wp-author { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line); }
+.wp-author .k { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 !important; }
+.wp-foot { max-width: 880px; margin: 0 auto; padding: 0 20px 64px; display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: .9rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="wp-bar"><div class="wp-bar-in"><a class="wp-back" href="/">&larr; felipemolino.com</a><span class="wp-bar-t">Research · Experiment design · VGC self-play bot</span></div></div>
+<article class="wp">
+  <p class="wp-kick">Research · Experiment design (pre-registered 3 Nov 2026) · 20 min read</p>
+  <h1>A Self-Play Bot for Competitive Pokémon</h1>
+  <p class="wp-dek">The full methods plan for a bot that learns to play Pokémon VGC doubles by playing against itself, on one laptop: what I'm testing, how the network and training work, how teams get built, and how I'll judge the results, written down before any of them exist.</p>
+  <div class="wp-by"><span>Felipe Molino</span><span>Format: Reg M-C doubles, open team sheets</span><span>Hardware: one Apple M4 Mac, 16 GB</span></div>
+  <p class="wp-status">Design pre-registered · build under way · no results yet</p>
+
+  <section class="wp-exec" aria-labelledby="exec-k">
+    <p class="k" id="exec-k">Summary</p>
+    <ul>
+      <li><strong>The goal:</strong> a bot stronger than the #1 Reg M-C ladder bot (closed source, about 1,857 Elo), trained on a single Apple M4 Mac.</li>
+      <li><strong>What exists today:</strong> an engine I built that searches several turns ahead inside the real battle simulator and judges positions with a small gradient-boosted tree model on 24 hand-made features (72.3% holdout accuracy at predicting the winner).</li>
+      <li><strong>What I'm building:</strong> a 4–5M-parameter transformer that reads the whole board, with a damage calculator and speed order wired in as inputs. It learns to play purely by self-play (PPO against a league of its past versions), then plugs into the existing search as both the move prior and the position judge.</li>
+      <li><strong>Team building, too:</strong> a matchup head scores two team sheets against each other in milliseconds, and a local search with simulated annealing uses it to build teams from scratch or around a named Pokémon.</li>
+      <li><strong>Judged against a protocol fixed in advance:</strong> five hypotheses, pass marks for every stage, mirrored matches with confidence intervals, eleven ablations, a human study with expert players, and 18 threats to validity each with a planned mitigation.</li>
+      <li><strong>Status:</strong> this design is dated and pre-registered. The build is under way. There are no results yet; they will be published here when they exist, negative ones included.</li>
+    </ul>
+  </section>
+
+  <div class="wp-facts">
+    <div class="wp-fact"><b>~12k</b><span>real games for outcome pretraining (6,044 Bo3 + 5,872 Bo1)</span></div>
+    <div class="wp-fact"><b>4–5M</b><span>parameters: 256 wide, 6 layers, 8 heads</span></div>
+    <div class="wp-fact"><b>3–5 days</b><span>of unattended self-play on one laptop</span></div>
+    <div class="wp-fact"><b>1,500</b><span>mirrored games needed to detect a 55% vs 50% edge</span></div>
+  </div>
+
+  <nav class="wp-toc" aria-labelledby="toc-k">
+    <p class="k" id="toc-k">Contents</p>
+    <ol>
+      <li><a href="#before-now"><span class="n">01</span>Before → now</a></li>
+      <li><a href="#hypotheses"><span class="n">02</span>Hypotheses</a></li>
+      <li><a href="#baselines"><span class="n">03</span>Baselines</a></li>
+      <li><a href="#data"><span class="n">04</span>Data</a></li>
+      <li><a href="#state"><span class="n">05</span>State representation</a></li>
+      <li><a href="#actions"><span class="n">06</span>Actions and heads</a></li>
+      <li><a href="#model"><span class="n">07</span>Model</a></li>
+      <li><a href="#training"><span class="n">08</span>Training pipeline</a></li>
+      <li><a href="#teams"><span class="n">09</span>Team sampling</a></li>
+      <li><a href="#team-building"><span class="n">10</span>Team building</a></li>
+      <li><a href="#evaluation"><span class="n">11</span>Evaluation protocol</a></li>
+      <li><a href="#ablations"><span class="n">12</span>Ablations</a></li>
+      <li><a href="#success"><span class="n">13</span>Success criteria</a></li>
+      <li><a href="#repro"><span class="n">14</span>Reproducibility and operations</a></li>
+      <li><a href="#risks"><span class="n">15</span>Risks and fallbacks</a></li>
+      <li><a href="#threats"><span class="n">16</span>Threats to validity</a></li>
+      <li><a href="#hyperparameters"><span class="n">A</span>Hyperparameters in plain terms</a></li>
+      <li><a href="#glossary"><span class="n">B</span>Algorithms glossary</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="before-now"><span class="n">01</span>Before → now</h2>
+  <p>VGC doubles is a hard game for AI. Both players choose at the same time, each Pokémon has about 30 options per turn, the opponent's exact stats are hidden, and damage rolls, accuracy and critical hits add luck. Before this project I had already built two players for it. This experiment keeps what works (the search in the real simulator) and replaces the parts that were hand-made.</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Part</th><th>Before</th><th>Now (this design)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Player</strong></td><td><strong>v1:</strong> a frozen, hand-tuned heuristic that samples one turn and scores outcomes greedily. <strong>Current engine:</strong> a multi-turn search inside the real Showdown simulator.</td><td><strong>Hybrid:</strong> the same search, guided by a trained network for both move suggestions and position judgement.</td></tr>
+      <tr><td><strong>Evaluator (who is winning?)</strong></td><td>A small gradient-boosted tree model (GBDT) on 24 hand-made features such as Pokémon alive, HP, boosts, speed advantage, Tailwind and Trick Room. 72.3% holdout accuracy, log loss 0.508.</td><td>A transformer value head that reads every Pokémon, the field and both sides as tokens, with damage and speed matrices between Pokémon as attention biases. Target: beat the GBDT on the same holdout.</td></tr>
+      <tr><td><strong>Policy (which moves to consider?)</strong></td><td>Hand-built: opponent replies weighted by move frequencies from ladder games, adapted to the player's habits, times a fast damage and utility score.</td><td>Learned by self-play only: a joint doubles action head, a team-preview head, never trained to copy human clicks. The ladder-frequency prior stays only as an ablated fallback.</td></tr>
+      <tr><td><strong>Search</strong></td><td>Iterative deepening in the real simulator (up to 8 turns ahead), sampled opponent replies, a 2.5 s budget per decision, adaptive up to 6 s in critical turns.</td><td>The same search, with the network as leaf value and as the prior for candidate screening and opponent replies. It averages over 16 sampled guesses of the opponent's hidden stat points, with an optional regret-matching solve at the root.</td></tr>
+      <tr><td><strong>Hidden information</strong></td><td>Spread inference: an existing module (which also hosts the damage calculator) keeps a posterior over the opponent's hidden stat points.</td><td>The same inference feeds the network expected stats plus their uncertainty, and the search samples worlds from it.</td></tr>
+      <tr><td><strong>Team building</strong></td><td>A library of 500 tournament teams (1,500 variants, weighted by results) and a 100-player Swiss tournament pipeline: teams are judged by hours of simulated play.</td><td>A matchup head scores two sheets in milliseconds; local search with simulated annealing builds teams from scratch or around a core; the best are verified by full-search play.</td></tr>
+      <tr><td><strong>Evaluation</strong></td><td>Evaluator holdout accuracy and log loss by turn; tournament runs and review of play and decision logs.</td><td>A pre-registered protocol: mirrored matches, Wilson confidence intervals, Bradley-Terry ratings, calibration, eleven ablations, an exploiter, and a human study with consent.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="hypotheses"><span class="n">02</span>Hypotheses</h2>
+  <ul>
+    <li><strong>H1.</strong> A full-board neural evaluator predicts the winner better than the current 24-feature tree model (72.3% holdout, log loss 0.508).</li>
+    <li><strong>H2.</strong> Self-play on a laptop-class machine reaches useful strength if games are cheap: policy from self-play only, plus outcome pretraining on real games.</li>
+    <li><strong>H3.</strong> My multi-turn search, played out in the real simulator, with the network as policy prior and leaf value, beats both the network alone and today's engine. At equal time it also beats the one-turn (1-ply) search used by the ladder-leading bot.</li>
+    <li><strong>H4.</strong> Explicit mechanics inputs (damage calculator, speed order, support state) cut the number of self-play games needed for a given strength.</li>
+    <li><strong>H5.</strong> A network trained on varied and partly random teams can score unseen teams from their sheets alone, accurately enough to build winning teams from scratch. This is checked against simulated matchups and against real tournament placements.</li>
+  </ul>
+
+  <h2 id="baselines"><span class="n">03</span>Baselines</h2>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>ID</th><th>Player</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="v">B0</td><td><strong>Random legal</strong></td><td>Sanity check</td></tr>
+      <tr><td class="v">B1</td><td><strong>Heuristic (v1)</strong></td><td>Hand-scored greedy player, already built</td></tr>
+      <tr><td class="v">B2</td><td><strong>Current engine</strong></td><td>Multi-turn search in the simulator, GBDT evaluator, 2.5 s budget, adaptive to 6 s</td></tr>
+      <tr><td class="v">N</td><td><strong>Network alone</strong></td><td>Policy argmax or sampled, no search</td></tr>
+      <tr><td class="v">H-v</td><td><strong>Engine + network value</strong></td><td>The network replaces the GBDT at the leaves of the search</td></tr>
+      <tr><td class="v">H-vp</td><td><strong>Full hybrid</strong></td><td>Network value plus policy prior for screening my candidates and the opponent's replies</td></tr>
+      <tr><td class="v">X</td><td><strong>External</strong></td><td>The #1 Reg M-C ladder bot (Bo1, open-sheet challenges) and a published open-source bot (Bo3, open-sheet challenges)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="data"><span class="n">04</span>Data</h2>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Set</th><th>Size</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Real Bo3 open-sheet replays, rated 1300+</strong></td><td>6,044 games (about 1,250 at 1400+, 297 at 1500+, 40 at 1600+)</td><td>Value and auxiliary pretraining, holdout, calibration</td></tr>
+      <tr><td><strong>Real Bo1 replays, rated 1592+</strong></td><td>5,872 games</td><td>Value and auxiliary pretraining (team sheets mostly absent, so reduced inputs)</td></tr>
+      <tr><td><strong>My own games</strong></td><td>81</td><td>Analysis only</td></tr>
+      <tr><td><strong>Engine self-play and simulated games</strong></td><td>~14k, plus new runs</td><td>Value pretraining, flagged as simulated</td></tr>
+      <tr><td><strong>Self-play (new)</strong></td><td>Tens of millions of games</td><td>Reinforcement learning</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><strong>Positions.</strong> A dump step writes one row per turn: game id, source, rating, turn, holdout flag, outcome label and the position.</li>
+    <li><strong>Holdout.</strong> A hash of the game id mod 5 == 0, identical to the split the current tree model was trained on. Only real games are used for calibration. (Section 16 tightens this to a split by set and player.)</li>
+    <li><strong>Human tendencies are never a training target.</strong> Real replays supply outcome-type labels only: winner, damage dealt, KOs, survival, game length. The policy is learned purely by self-play. My rule: learn what wins, not how people click.</li>
+    <li><strong>Manifest.</strong> A data manifest lists counts by source, format and rating band, the open-sheet share, pull dates and file hashes.</li>
+  </ul>
+
+  <h2 id="state"><span class="n">05</span>State representation</h2>
+  <p>The network's input is a set of tokens, one per entity: 12 Pokémon tokens (6 per side), 1 field token, 2 side tokens and 1 summary (CLS) token, for <strong>16 tokens</strong> in total. Each token is learned embeddings concatenated with numeric features, projected to the model width. The perspective is always "self = side 0"; the sides are swapped for the opponent, and the value's antisymmetry (my win chance = 1 − theirs) is enforced by training on both perspectives.</p>
+
+  <h3>Pokémon token: identity (learned embeddings)</h3>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Field</th><th>Dim (proposed)</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Species / form</strong></td><td class="v">64</td><td>Base form plus a "Mega forme available" link; the Mega species embedding is also fed when the Pokémon can Mega Evolve</td></tr>
+      <tr><td><strong>Ability</strong></td><td class="v">32</td><td>Current ability; the Mega ability is a separate slot while Mega is pending</td></tr>
+      <tr><td><strong>Item</strong></td><td class="v">32</td><td>"None", "consumed" and "knocked off" are distinct ids</td></tr>
+      <tr><td><strong>Moves ×4</strong></td><td class="v">64 each</td><td>Plus per-move numerics (below)</td></tr>
+      <tr><td><strong>Nature</strong></td><td class="v">8</td><td>Also folded into the stats</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Pokémon token: numeric state</h3>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Group</th><th>Features</th><th>Encoding</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Stats</strong></td><td>HP, Atk, Def, SpA, SpD, Spe: actual values at level 50</td><td>/200. For the opponent: expected value under the stat-point posterior, plus its standard deviation</td></tr>
+      <tr><td><strong>Mega-forme stats</strong></td><td>The same six, if the Pokémon can Mega Evolve</td><td>0 otherwise</td></tr>
+      <tr><td><strong>Types</strong></td><td>Current types (2 × 18 one-hot); Mega types if pending</td><td></td></tr>
+      <tr><td><strong>HP</strong></td><td>Fraction: exact for my side, 1% buckets for the opponent (as shown in game)</td><td></td></tr>
+      <tr><td><strong>Presence</strong></td><td>Alive, active slot (none / left / right), brought (yes / no / unknown), revealed</td><td>Which four the opponent brought stays hidden until seen</td></tr>
+      <tr><td><strong>Stat stages</strong></td><td>Attack, Defense, Sp. Atk, Sp. Def, Speed, accuracy, evasion, each −6…+6 separately</td><td>/6. Drops and boosts both kept, no clipping</td></tr>
+      <tr><td><strong>Status</strong></td><td>None / paralysis / sleep (turns asleep, min and max turns left) / burn / poison / toxic (counter) / freeze</td><td>One-hot plus counters</td></tr>
+      <tr><td><strong>Volatiles</strong></td><td>Protect streak, Fake Out available, Encore and Taunt (turns), choice lock (which move), Substitute (HP), confusion, Leech Seed, Perish count, trapping, Disable, Destiny Bond, Salt Cure, Yawn, Helping Hand received</td><td>Binary or count</td></tr>
+      <tr><td><strong>Mega</strong></td><td>Can Mega Evolve, is Mega, side has used its Mega</td><td></td></tr>
+      <tr><td><strong>Knowledge</strong></td><td>Item known or consumed, ability known</td><td>All known under open sheets for both sides; kept for Bo1 data</td></tr>
+      <tr><td><strong>Speed context</strong></td><td>Effective speed now (Tailwind, paralysis, Choice Scarf, stages, weather and terrain abilities); priority moves available (count, best power)</td><td></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Per-move numerics (×4 per Pokémon)</h3>
+  <p>Base power; accuracy (after No Guard or Compound Eyes); type; category (physical, special, status); priority; target class (single, spread, ally, self, field); PP fraction; disabled; flags (contact, sound, punch, bite, pulse, protect-breaking, high crit, recoil, drain, pivot, setup, recovery); and "blocked right now" flags (Psychic Terrain against priority, Armor Tail, Dazzling and Queenly Majesty, Prankster against Dark types, type immunities).</p>
+
+  <h3>Support tags (per Pokémon, binary plus "usable now")</h3>
+  <p>Fake Out · Follow Me and Rage Powder · redirection (Lightning Rod, Storm Drain) · Helping Hand · Wide Guard and Quick Guard · speed control (Tailwind, Trick Room, Icy Wind, Electroweb, Thunder Wave) · sleep (Spore, Sleep Powder, Yawn) · paralysis spreaders · Intimidate · pivots (Parting Shot, U-turn, Volt Switch) · Encore · Taunt · screens · weather and terrain setters · setup moves · recovery · Perish Song · Imprison.</p>
+
+  <h3>Pairwise mechanics: damage and speed matrices</h3>
+  <p>This is the design's main edge: the ladder-leading bot has no damage calculator. These numbers come from the existing damage calculator under the current field.</p>
+  <ul>
+    <li><strong>Damage matrix.</strong> For each attacker on my side and defender on theirs, and the reverse: the best move's min and max damage %, P(OHKO), P(2HKO), and the best spread move's damage. That is 2 × 36 cells × 5 numbers. The cells feed the Pokémon tokens as attention biases (relative features) and are also pooled into each token.</li>
+    <li><strong>Speed matrix.</strong> For each pair: outspeeds, ties or is slower now, and under Tailwind or Trick Room flips, plus the priority bracket.</li>
+    <li><strong>Cost.</strong> About 72 calculator calls per state, cached by (set, set, field, stages). The measured cost is reported in P0; if it is too slow, the cells are restricted to the active Pokémon against all others.</li>
+  </ul>
+
+  <h3>Field and side tokens</h3>
+  <div class="wp-cards">
+    <div><span class="k">Field token</span><span class="d">Weather and terrain (turns left), Trick Room (turns left), Gravity, turn number, Pokémon remaining per side, Megas used per side.</span></div>
+    <div><span class="k">Side tokens (one per side)</span><span class="d">Tailwind (turns), Reflect, Light Screen and Aurora Veil (turns), Wide Guard, Quick Guard and Mat Block this turn, Safeguard, Mist, hazards, a last-turn summary (who Protected, who moved first), Megas remaining.</span></div>
+  </div>
+
+  <h2 id="actions"><span class="n">06</span>Actions and output heads</h2>
+  <ul>
+    <li><strong>Per slot.</strong> Four moves × valid targets (foe left, foe right, ally, self or none), each with and without Mega, plus a switch to each benched Pokémon, plus pass: about 30 entries, with a legality mask taken from the simulator's request.</li>
+    <li><strong>Joint doubles action.</strong> Slot 1's logits first, then slot 2's logits conditioned on slot 1 through a pairwise bilinear term. Illegal pairs (double Mega, both switching to the same Pokémon) are masked. This follows a design published for the ladder-leading bot.</li>
+    <li><strong>Team preview head.</strong> Scores all 90 plans (which four to bring, which two to lead) from the preview state, which is both team sheets. It is trained by self-play outcomes like the rest of the policy.</li>
+    <li><strong>Matchup head (for team building).</strong> Sees only the two team sheets, with no battle state, and predicts P(sheet A beats sheet B) when both sides play well. Its target is the self-play game result plus the running empirical win rate of that team pair. A team's strength against the field is then the usage-weighted average of this head over the field, computed in milliseconds instead of hours of simulation.</li>
+  </ul>
+
+  <h2 id="model"><span class="n">07</span>Model</h2>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Setting</th><th>Value (proposed)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Architecture</strong></td><td>Transformer encoder, pre-LayerNorm</td></tr>
+      <tr><td><strong>d_model / layers / heads / FFN</strong></td><td>256 / 6 / 8 / 1024</td></tr>
+      <tr><td><strong>Parameters</strong></td><td>≈ 4–5M (the ladder-leading bot: 8.7M; a published open-source bot: 1.5M). Fits a 16 GB M4 with large batches</td></tr>
+      <tr><td><strong>Pair features</strong></td><td>Damage and speed matrices as learned attention biases between Pokémon tokens</td></tr>
+      <tr><td><strong>Heads</strong></td><td>Policy, team preview, value P(win), matchup, auxiliary (below)</td></tr>
+      <tr><td><strong>Auxiliary heads</strong></td><td>Next-turn damage per active pair; KO within 1 or 2 turns per Pokémon; turns survived per Pokémon; turns until the game ends; next weather or terrain; next-turn status applied. The idea follows a published open-source bot</td></tr>
+      <tr><td><strong>Loss weights</strong></td><td>Policy 1.0 (RL), value 0.5, auxiliary 0.1 each</td></tr>
+      <tr><td><strong>Precision</strong></td><td>fp16 / bf16 on Apple's GPU (MPS), fp32 master weights</td></tr>
+      <tr><td><strong>Framework</strong></td><td>PyTorch with the MPS backend, CPU fallback</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="training"><span class="n">08</span>Training pipeline</h2>
+  <p>Five stages, each with a gate that has to pass before the next one starts.</p>
+
+  <h3>P0 · Infrastructure and tests (about a day of build)</h3>
+  <ul>
+    <li><strong>Simulator workers in Node.</strong> Direct battle objects with no protocol streaming. They handle batched observation encoding, legal-action masks and stepping.</li>
+    <li><strong>A Python learner</strong> runs inference and PPO on the Mac's GPU, and talks to the workers over shared memory or pipes with binary batches.</li>
+    <li><strong>Tests that gate the next step:</strong>
+      <ol>
+        <li>The encoder matches the simulator on 1,000 random states, including HP, stages, volatiles and Mega.</li>
+        <li>Over 100,000 random decisions, every action the mask allows is accepted by the simulator, and every action it rejects is masked (Mega once per battle, targets, switch rules).</li>
+        <li>Mega-forme import is regression-tested against an earlier bug, where a Mega forme named in the team text started the battle already Mega Evolved.</li>
+        <li>The damage-matrix cache gives the same answer as a direct calculation.</li>
+      </ol>
+    </li>
+    <li><strong>Throughput benchmark</strong> with the network on 8 workers. Gate: at least 50 games per second. Below that, shrink the model or the features before running.</li>
+  </ul>
+
+  <h3>P1 · Outcome pretraining on real games (hours)</h3>
+  <ul>
+    <li>Trains the value and auxiliary heads only, on the real and simulated positions from section 4. Bo1 positions without sheets use masked set fields.</li>
+    <li>Gates: holdout log loss below 0.508 and accuracy of at least 72.3% (beat the tree model), reported per turn; calibration measured by Brier score and ECE for each phase of the game (turns 1–3, 4–6, 7+).</li>
+  </ul>
+
+  <h3>P2 · Self-play reinforcement learning (3–5 days, unattended)</h3>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Setting</th><th>Value (proposed)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Algorithm</strong></td><td>PPO with a league of past snapshots</td></tr>
+      <tr><td><strong>Reward</strong></td><td>+1 win, −1 loss, at the end of the game only</td></tr>
+      <tr><td><strong>Parallel battles × steps</strong></td><td>2,048 × 32 = 65k samples per update (the ladder-leading bot used 8,192 × 32; scaled down for memory)</td></tr>
+      <tr><td><strong>Epochs / minibatch</strong></td><td>3 / 8,192</td></tr>
+      <tr><td><strong>Optimiser</strong></td><td>AdamW, learning rate 3e-4 with cosine decay to 3e-5, weight decay 0.01, gradient clip 1.0</td></tr>
+      <tr><td><strong>PPO clip / value coef / entropy</strong></td><td>0.2 / 0.5 / 0.01 annealed to 0.002</td></tr>
+      <tr><td><strong>γ / GAE λ</strong></td><td>1.0 / 0.95 (short games, terminal reward)</td></tr>
+      <tr><td><strong>Early stop</strong></td><td>Target KL 0.02 per update</td></tr>
+      <tr><td><strong>Opponents</strong></td><td>50% current policy; 40% past snapshots weighted by PFSP, (1 − p_win)²; 10% fixed anchors (the v1 heuristic and frozen early checkpoints)</td></tr>
+      <tr><td><strong>Snapshots</strong></td><td>Every 2M games; keep 30 (oldest pruned, except anchors)</td></tr>
+      <tr><td><strong>Teams</strong></td><td>See section 9: library teams, set mutations, species swaps, random legal teams and my own Azumarill team</td></tr>
+      <tr><td><strong>Mutation</strong></td><td>Set level: 1–3 changes (move, item, ability, nature, stat-point spread). Species level: replace 1–2 Pokémon with a legal set drawn by usage. Every team is validated against Reg M-C (species, moves, items, Item Clause, one Mega per battle); illegal draws are resampled</td></tr>
+      <tr><td><strong>Hidden information</strong></td><td>The opponent's stat points are sampled from the spread prior each game; the network sees expected stats plus uncertainty</td></tr>
+      <tr><td><strong>Value-head anchor</strong></td><td>Keep 10% real-game positions in each update to stop value drift (to be validated)</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><strong>Checkpoint evaluation:</strong> every 4 hours, 1,000 mirrored games against the v1 heuristic, previous checkpoints and frozen anchors. Every 12 hours, 200 mirrored games against the current engine.</li>
+    <li><strong>Monitoring:</strong> a dashboard in my app shows games, updates, win rates against anchors, Elo, entropy and KL.</li>
+    <li><strong>Collapse alarm:</strong> if the win rate against v1 drops more than 10 points, or entropy collapses, roll back to the last good checkpoint and lower the learning rate.</li>
+  </ul>
+
+  <h3>P3 · Search-guided refinement (1–2 days)</h3>
+  <ul>
+    <li>The full hybrid search plays games at a reduced budget (0.5–1 s per decision). In effect this is expert iteration, similar to the search-guided games used by a published open-source bot.</li>
+    <li><strong>Targets:</strong> the policy learns the search's visit and weight distribution; the value learns a 50/50 mix of the search-backed value and the final outcome (proposed).</li>
+    <li><strong>Expected volume:</strong> 50,000–200,000 games.</li>
+  </ul>
+
+  <h3>P4 · Integration and evaluation</h3>
+  <ul>
+    <li>The network goes into the current engine as the leaf value and as the prior for candidate screening and opponent replies. The ladder-frequency opponent prior stays only as a fallback, and is ablated.</li>
+    <li>World sampling over hidden stat points: 16 by default, ablated against 4 and 64.</li>
+    <li>An optional root solve with regret matching over the top 8×8 joint actions, compared against the current successive-halving ranking.</li>
+  </ul>
+
+  <h2 id="teams"><span class="n">09</span>Team sampling</h2>
+  <p><strong>Tournament fields</strong> work as they do now. The library has 500 teams and 1,500 variants from regional tournaments and public team databases, weighted by results. A field has 25 fixed seats; the rest are drawn by weight and swapped until the usage of the top 30 Pokémon is within about 1 point of the weighted target.</p>
+  <h3>Self-play team mix (proposed)</h3>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Share</th><th>Source</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td class="v">45%</td><td><strong>Library, weighted by results</strong> (same weights as tournament fields)</td><td>Learn the real meta</td></tr>
+      <tr><td class="v">20%</td><td><strong>Library with set mutations</strong></td><td>Understand set changes (move, item, spread swaps)</td></tr>
+      <tr><td class="v">15%</td><td><strong>Library with species swaps</strong> (1–2 Pokémon replaced)</td><td>Understand new compositions, needed to build teams from scratch</td></tr>
+      <tr><td class="v">10%</td><td><strong>Random legal teams:</strong> 6 usage-weighted Pokémon with sets from the library or common sets</td><td>Cover team space far from the meta, so team search can't exploit regions the network has never seen</td></tr>
+      <tr><td class="v">5%</td><td><strong>My own Azumarill team family</strong></td><td>Always well represented: a reference team for evaluation and tuning that becomes optimized over time (below)</td></tr>
+      <tr><td class="v">5%</td><td><strong>Library, uniform</strong> (not weighted)</td><td>Keep rare teams in play</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><strong>Opponents are drawn the same way</strong>, so every team type also faces the weighted meta.</li>
+    <li><strong>The Azumarill share evolves.</strong> Phase 1 (from the start of P2): the 5% is my exact current sheet (Rillaboom, Incineroar, Garchomp, Azumarill, Vivillon, Raichu). Phase 2 (once the team builder passes T1 and T2): 1% stays the original sheet, frozen as the reference, and 4% becomes the team builder's current best "build around Azumarill" variants. Variants can change spreads, moves, items, natures and partners, but always keep Azumarill. The family is refreshed every 4 snapshots (about every 8M games), and every variant passes the mechanics constraints below.</li>
+    <li><strong>Lineage is logged:</strong> what changed from which parent, so the team's evolution can be traced.</li>
+    <li><strong>Held-out evaluation set:</strong> 64 library teams never used in training, to measure generalisation (the published VGC-Bench work reports that more training teams help on unseen teams). Because the Azumarill team is in training, it is evaluated against held-out opponents.</li>
+  </ul>
+
+  <h3>Spread mechanics constraints</h3>
+  <p>Some stat totals must hit exact numbers for an item or ability to work. They are enforced as hard constraints by the validator and the spread optimizer, not left for the optimizer to discover.</p>
+  <ul>
+    <li><strong>Belly Drum + Sitrus Berry:</strong> max HP must be <strong>even</strong>. Belly Drum removes floor(maxHP/2), and Sitrus activates at HP ≤ maxHP/2; with odd HP the user is left 1 HP above the threshold and the berry never fires. Verified in the simulator on my Azumarill: 202, 204 and 206 HP activate, 203 and 205 don't. The current 29 HP points (204 HP) is correct.</li>
+    <li><strong>Scope:</strong> only sets that run an HP-cost move or Substitute. For any HP-cost move (Belly Drum ½, Fillet Away ½, Clangorous Soul ⅓, Substitute ¼, Ghost-type Curse ½, Mind Blown ½) paired with a pinch berry (Sitrus ½; Figy, Wiki, Mago, Aguav, Iapapa ¼; Liechi, Salac, Petaya and others ¼), the HP stat is checked so the berry activates on the first use. Each pair's threshold is computed exactly in the simulator.</li>
+    <li><strong>Substitute</strong> (verified in the simulator) costs floor(maxHP/4) and fails at HP ≤ maxHP/4.
+      <ul>
+        <li><strong>No berry:</strong> max HP should <strong>not</strong> be a multiple of 4. A multiple of 4 allows 3 Substitutes from full HP; 4n+1, 4n+2 and 4n+3 allow 4 (192, 196, 200, 204 HP give 3; 193–195 and 201–203 give 4).</li>
+        <li><strong>With a ¼ pinch berry</strong> (Liechi, Salac, Petaya and similar): max HP <strong>should</strong> be a multiple of 4, so the berry activates after the third Substitute with ¼ HP left. With 4n+1 it activates only after the fourth, at 1 HP.</li>
+        <li><strong>With Sitrus:</strong> 4n+1 or 4n+2 gives 5 Substitutes with Sitrus eaten after the third; 4n gives 4, with Sitrus eaten after the second.</li>
+        <li>The optimizer picks the HP total by the set's goal (most Substitutes vs berry timing) and reports it.</li>
+      </ul>
+    </li>
+    <li><strong>More number-tied constraints get added as they are found</strong>, for example Life Orb and recoil survival, a Substitute surviving a set hit, and Speed benchmarks (ties, Tailwind, Trick Room minimums). Each is verified in the simulator, not assumed.</li>
+  </ul>
+
+  <h2 id="team-building"><span class="n">10</span>Team building</h2>
+  <p><strong>Goal:</strong> the highest expected win % against the usage-weighted field. Two kinds of request: build a team from scratch, or build around a constraint, such as "with Azumarill", "Azumarill + Rillaboom" or "no Incineroar".</p>
+  <ol>
+    <li><strong>Candidates.</strong> Library teams, constraint-filled cores (the core plus partners drawn by usage and synergy) and random legal teams. Every candidate passes the Reg M-C validator.</li>
+    <li><strong>Fast scoring.</strong> The matchup head against all 500 library teams. Score = Σ usage weight × P(win). The worst 5 matchups and the spread are reported too.</li>
+    <li><strong>Search.</strong> Local search that swaps one thing at a time (a Pokémon, set, move, item, nature or spread) and keeps changes that raise the score, with several restarts and simulated annealing (sometimes keeping a worse change early, so the search doesn't get stuck on a poor team). Item Clause and the one-Mega rule are enforced, and spreads are tuned to benchmark calculations under the spread rules.</li>
+    <li><strong>Verification (slow).</strong> The top 10–20 teams go through full hybrid-search play: mirrored matches against the top 50 library teams, then a 100-player Swiss. This guards against teams that only exploit the network's blind spots.</li>
+    <li><strong>Report</strong> for each built team: win % against the field (fast and verified), best and worst matchups, game plan and leads per archetype, and why it loses its worst matchups, from the auxiliary heads and the decision logs.</li>
+    <li><strong>Human test.</strong> The best teams are played by and against members of a World Cup team.</li>
+  </ol>
+  <h3>Validating the team evaluator</h3>
+  <div class="wp-cards">
+    <div><span class="k">T1</span><b>Head vs simulation</b><span class="d">Matchup head against the simulated win rate on 200 team pairs: correlation and calibration.</span></div>
+    <div><span class="k">T2</span><b>Head vs real results</b><span class="d">Rank the library teams by predicted field win %, and compare with real tournament placements (records such as 11-2 vs 4-4): rank correlation.</span></div>
+    <div><span class="k">T3</span><b>Built teams vs the best</b><span class="d">Built teams against the library's top 20 in mirrored full-search matches, and in Swiss.</span></div>
+    <div><span class="k">T4</span><b>Around Azumarill</b><span class="d">"Build around Azumarill" against my current Azumarill team, on the same field.</span></div>
+  </div>
+
+  <h2 id="evaluation"><span class="n">11</span>Evaluation protocol</h2>
+  <ul>
+    <li><strong>Mirrored matches.</strong> Each team pair plays both seats with the same seeds, so team strength cancels out.</li>
+    <li><strong>Metrics:</strong> win rate with a 95% Wilson confidence interval; Bradley-Terry / BayesElo ratings across all players; per-turn value calibration (Brier, ECE) on held-out real games; agreement with a 30-second reference search; opponent-reply coverage, the share of real opponent actions that fall inside the screened set (a prior analysis measured 62%); and decision latency.</li>
+    <li><strong>Sample sizes.</strong> Detecting 55% vs 50% (α 0.05, power 0.8) needs about 1,500 games in mirrored pairs; detecting 60% needs about 400.</li>
+    <li><strong>Time-budget curve.</strong> Strength against budget at 0.5, 1, 2.5, 6 and 15 s per decision, for the current engine and the full hybrid. This decides whether to raise the 2.5 s default.</li>
+    <li><strong>Tournament check.</strong> 100-player Swiss runs on the existing pipeline with my team: qualitative play review plus the decision log.</li>
+    <li><strong>External.</strong> Showdown challenges from a clearly disclosed bot account, planned only after the internal gates pass: the #1 ladder bot in Bo1 with open sheets, and a published open-source bot in Bo3 with open sheets. Target at least 50 games each; ladder play optional.</li>
+    <li><strong>A/B test of an AI game plan.</strong> The same Swiss field with and without an LLM-written team-preview plan for my seat (full hybrid + plan vs full hybrid).</li>
+  </ul>
+  <h3>Human evaluation: expert players vs the bot</h3>
+  <p>The main human benchmark: members of a World Cup team play the bot through my app, under tournament conditions.</p>
+  <div class="wp-cards">
+    <div><span class="k">Conditions</span><ul><li>Bo3 with open team sheets</li><li>Their own teams, or teams picked from a list</li><li>The in-game timer</li><li>The bot plays the final configuration at its normal budget, with a team from the evaluation set or one the players pick</li></ul></div>
+    <div><span class="k">Logged per game</span><ul><li>Full replay, decision log and the bot's win % estimates</li><li>Pseudonymous player id, team and result</li><li>A short survey after each set: perceived strength, best and worst decisions, and whether it "played like a human"</li></ul></div>
+    <div><span class="k">Metrics</span><ul><li>Set and game win rate with confidence intervals</li><li>Win rate by player</li><li>An Elo estimate anchored to the players' known ratings</li><li>The bot's calibration against real outcomes</li><li>Expert annotation of critical turns</li></ul></div>
+    <div><span class="k">Ethics and consent</span><ul><li>Players agree to recording and anonymised publication</li><li>Nothing is posted to Showdown under their names</li><li>Target: at least 30 sets, a few per player; bot-vs-bot numbers carry the fine-grained comparisons</li></ul></div>
+  </div>
+  <p class="wp-note">The study needs a human-vs-bot battle page in the app, a team-sheet display, a decision timer, the Bo3 flow, the post-set survey, and an export for the paper's dataset.</p>
+
+  <h2 id="ablations"><span class="n">12</span>Ablations</h2>
+  <p>Each runs at reduced (pilot) scale, with mirrored games and confidence intervals.</p>
+  <ol>
+    <li><strong>Evaluator:</strong> 24-feature GBDT vs GBDT with expanded features vs the network after P1 only vs the network after P2 and P3.</li>
+    <li><strong>Inputs:</strong> without the damage and speed matrices; without support tags; boosts clipped (the old way) vs full stages.</li>
+    <li><strong>Auxiliary heads</strong> on vs off.</li>
+    <li><strong>Pretraining:</strong> P1 outcome pretraining on vs off.</li>
+    <li><strong>League:</strong> PFSP league vs pure self-play.</li>
+    <li><strong>Team mutation</strong> at 0%, 30% and 50%.</li>
+    <li><strong>Play:</strong> network alone vs current engine vs engine + network value vs full hybrid; one-turn regret matching vs my multi-turn search at equal time.</li>
+    <li><strong>Worlds:</strong> 4 vs 16 vs 64 sampled guesses of hidden stats.</li>
+    <li><strong>Time-budget curve</strong> (section 11).</li>
+    <li><strong>Team mix:</strong> with vs without species swaps and random legal teams, measured by T1 and T2 accuracy on unseen teams.</li>
+    <li><strong>Team search:</strong> matchup-head scoring vs simulation-only scoring at equal wall-clock time.</li>
+  </ol>
+
+  <h2 id="success"><span class="n">13</span>Success criteria</h2>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Stage</th><th>Pass if</th></tr></thead>
+    <tbody>
+      <tr><td><strong>P0</strong></td><td>Tests 1–4 pass; at least 50 games per second</td></tr>
+      <tr><td><strong>P1</strong></td><td>Holdout log loss below 0.508, accuracy at least 72.3%, ECE ≤ 0.03 on the real holdout</td></tr>
+      <tr><td><strong>P2</strong></td><td>The network alone beats the v1 heuristic at least 80% of the time, and scores at least 50% against the current engine by day 3</td></tr>
+      <tr><td><strong>P4</strong></td><td>The full hybrid scores at least 55% against the current engine (n ≥ 1,500 mirrored games), and at least as well as the network alone on the held-out team set</td></tr>
+      <tr><td><strong>External</strong></td><td>At least 50% against the #1 ladder bot over at least 50 games (a stretch goal: it is still training)</td></tr>
+      <tr><td><strong>Human</strong></td><td>At least 50% set win rate against World Cup team members over at least 30 sets</td></tr>
+      <tr><td><strong>Team building</strong></td><td>T1 correlation ≥ 0.7; T2 rank correlation clearly above 0; built teams beat the library's top 20 on average in verified play; T4 built Azumarill team at least as good as the current one</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="repro"><span class="n">14</span>Reproducibility and operations</h2>
+  <ul>
+    <li><strong>Configs</strong> are versioned files holding every proposed value on this page. Every run writes its config, git commit, data-manifest hash and seeds next to its outputs.</li>
+    <li><strong>Checkpoints</strong> are saved with metadata (games, updates, evaluation results), about 20 MB each.</li>
+    <li><strong>A dated lab notebook</strong> gets one entry per experiment: question, setup, result, conclusion. It includes negative results and bugs found, such as a sampling-order bug, Intimidate into Defiant, Armor Tail against Fake Out, and the Mega-forme import bug.</li>
+    <li><strong>Git commits</strong> at each milestone, for the paper's record.</li>
+    <li><strong>Hardware:</strong> Apple M4, 10 cores (4 performance + 6 efficiency), 16 GB. Eight simulator workers, plus the learner on the GPU with the remaining cores.</li>
+    <li><strong>Running unattended:</strong> plugged in and kept awake for the run; training resumable from the last checkpoint; about 5 GB of disk for checkpoints and buffers; throughput logged hourly so thermal throttling shows up as a drop.</li>
+  </ul>
+  <h3>Timeline (wall clock)</h3>
+  <div class="wp-tbl narrow"><table>
+    <thead><tr><th>Step</th><th>Duration</th></tr></thead>
+    <tbody>
+      <tr><td><strong>P0 build and tests</strong></td><td>About 1 day</td></tr>
+      <tr><td><strong>P1 pretraining</strong></td><td>Hours</td></tr>
+      <tr><td><strong>P2 self-play</strong></td><td>3–5 days, unattended</td></tr>
+      <tr><td><strong>P3 search-guided refinement</strong></td><td>1–2 days</td></tr>
+      <tr><td><strong>P4 evaluation and ablations</strong></td><td>1–2 days</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="risks"><span class="n">15</span>Risks and fallbacks</h2>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Risk</th><th>Fallback</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Throughput below 50 games/s</strong></td><td>A smaller model (width 192, 4 layers); damage matrix restricted to the active Pokémon; more cores to the workers</td></tr>
+      <tr><td><strong>PPO instability or collapse</strong></td><td>KL early stop, a lower learning rate, roll back to the last good snapshot</td></tr>
+      <tr><td><strong>Numerical issues on the Mac GPU</strong></td><td>fp32 or CPU for the affected operations</td></tr>
+      <tr><td><strong>Overfitting to library teams</strong></td><td>Mutations, the held-out team set, the uniform sampling share</td></tr>
+      <tr><td><strong>Open sheets vs the ladder bot's closed-sheet ladder</strong></td><td>Challenges with open sheets on, which it accepts; closed-sheet support is future work</td></tr>
+      <tr><td><strong>Value drift during self-play</strong></td><td>The real-game anchor share; recalibrate on the real holdout</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="threats"><span class="n">16</span>Threats to validity and mitigations</h2>
+  <p>A review of this plan, done on the day it was written, found 18 ways the results could mislead. Each now has a mitigation in the plan.</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>#</th><th>Flaw</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td class="v">1</td><td><strong>Holdout leakage.</strong> The split is by game id, but Bo3 games from one set, and the same players and teams, land in both train and holdout.</td><td>Split by <strong>set and player</strong> (and by team for the team-building tests). Recompute the tree-model baseline on the new split.</td></tr>
+      <tr><td class="v">2</td><td><strong>Label noise.</strong> Forfeits, timer losses and disconnects end games early.</td><td>Decided on 3 Nov, before any P1 results: keep forfeits as real outcomes, because players forfeit when they expect to lose (in a data check, the forfeiting player was behind on faints in 84% of cases). Timer losses and disconnects are excluded, because they say nothing about the board. P1 still reports the all / forfeits kept / both excluded ablation.</td></tr>
+      <tr><td class="v">3</td><td><strong>One RL run is an anecdote.</strong> Run-to-run variance can exceed the effects being measured.</td><td>Key configs run with <strong>3 seeds</strong> at pilot scale and the spread is reported. The full 5-day run is the final config only.</td></tr>
+      <tr><td class="v">4</td><td><strong>Tuning on the test set.</strong></td><td>Separate <strong>validation (32 teams)</strong> and <strong>test (64 teams)</strong> sets; the test set is touched only for final numbers.</td></tr>
+      <tr><td class="v">5</td><td><strong>Correlated verification of the team builder.</strong> Teams scored by the network and then "verified" by a search that uses the same network share its blind spots.</td><td>Verify with (a) the engine <strong>without</strong> the network, (b) a network from a different seed, and (c) humans.</td></tr>
+      <tr><td class="v">6</td><td><strong>Static-field optimisation.</strong> Teams optimised against a fixed field exploit it, while a real meta adapts.</td><td><strong>Counter-team loop:</strong> after building the best team, build the best counter to it, add both to the field, and repeat. Report win % against the adapted field as well as the original.</td></tr>
+      <tr><td class="v">7</td><td><strong>Exploitability is unmeasured.</strong> Beating fixed opponents isn't the same as being hard to exploit, and humans find patterns.</td><td>Train an <strong>exploiter</strong> (a best response against the frozen bot, about a day); its win rate measures exploitability. Use mixed (randomised) strategies at team preview and in close decisions.</td></tr>
+      <tr><td class="v">8</td><td><strong>No Bo3 adaptation.</strong> Humans adjust between games; the bot forgets everything.</td><td><strong>Bo3 memory:</strong> carry revealed stat-point information, the opponent's brings and leads, and observed tendencies into games 2 and 3; ablate it.</td></tr>
+      <tr><td class="v">9</td><td><strong>Endgames are approximated.</strong> Small endgames can be solved exactly.</td><td>An <strong>exact endgame solver</strong> for 2v2 and smaller, enumerating damage rolls (a published open-source bot matched a strict solver within about 0.5%).</td></tr>
+      <tr><td class="v">10</td><td><strong>Simulator fidelity.</strong> The simulator's implementation of this format may differ from the real game, and my encoder has had bugs.</td><td>The P0 encoder and legality tests; a pinned simulator version; a known-differences list; human games checked for disagreements.</td></tr>
+      <tr><td class="v">11</td><td><strong>Throughput is unproven.</strong> Python↔Node transfer and 72 damage calculations per state could dominate.</td><td>The P0 benchmark is a gate; profile the calculator cost; cache by (set, set, field, stages); fall back to actives only.</td></tr>
+      <tr><td class="v">12</td><td><strong>Unfair comparison with the ladder bot.</strong> Different compute, sheet setting (it plays closed sheets on the ladder) and team choice (it plays its best teams).</td><td>Report compute, time per move and team choice next to results; challenge with open sheets on; also play it with its own preferred teams.</td></tr>
+      <tr><td class="v">13</td><td><strong>Small external samples.</strong> 30 human sets and 50 games against the ladder bot give wide confidence intervals.</td><td>Pre-stated as <strong>qualitative and confirmatory</strong>; the fine-grained claims rest on bot-vs-bot games (n ≥ 1,500).</td></tr>
+      <tr><td class="v">14</td><td><strong>Human-study biases.</strong> Players learn the bot over sets, get used to the interface, and vary in motivation.</td><td>Practice games excluded; counterbalanced order if versions are compared; players blind to the version; the same timer as in tournaments; set number recorded to measure learning effects.</td></tr>
+      <tr><td class="v">15</td><td><strong>An unattended 5-day run on one Mac.</strong> Sleep, crashes, thermals.</td><td>Keep-awake, a watchdog with auto-resume from the last checkpoint, hourly checkpoint backup, a throughput alarm.</td></tr>
+      <tr><td class="v">16</td><td><strong>GPU nondeterminism.</strong> Runs on the Mac GPU can't be reproduced bit for bit.</td><td>Log seeds and versions; report variance rather than claiming bit-exactness.</td></tr>
+      <tr><td class="v">17</td><td><strong>Hindsight bias.</strong> Changing goals after seeing results.</td><td><strong>Pre-registration:</strong> this document is dated and committed before P2 starts; deviations are logged in the notebook.</td></tr>
+      <tr><td class="v">18</td><td><strong>The biggest lever is out of scope:</strong> simulator speed (the ladder-leading bot reports a simulator about 650× faster).</td><td>Future work: a faster simulator or a cut-down rule engine for self-play. P0 records where time is spent, so the gain can be estimated.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="hyperparameters"><span class="n">A</span>Hyperparameters in plain terms</h2>
+  <p>All values are <strong>proposed starting values</strong>, to be tuned in a short pilot (day 1 of P2) and recorded in the notebook.</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Setting</th><th>Value</th><th>What it means</th><th>Why this value</th></tr></thead>
+    <tbody>
+      <tr><td><strong>d_model</strong></td><td class="v">256</td><td>How many numbers describe each Pokémon inside the network: the size of its "notes" on each one</td><td>Big enough for species, moves, stats and state; small enough for the Mac</td></tr>
+      <tr><td><strong>Layers</strong></td><td class="v">6</td><td>How many rounds the network uses to compare all Pokémon with each other ("Kingambit threatens Azumarill, Raichu redirects Electro Shot…")</td><td>More rounds capture longer chains of interaction; 6 is mid-size</td></tr>
+      <tr><td><strong>Heads</strong></td><td class="v">8</td><td>How many separate things it can pay attention to at once in each round (speed, damage, redirection…)</td><td>Standard for this size</td></tr>
+      <tr><td><strong>FFN</strong></td><td class="v">1024</td><td>Thinking room inside each round</td><td>4× d_model, the standard ratio</td></tr>
+      <tr><td><strong>Parameters</strong></td><td class="v">~4–5M</td><td>Total adjustable numbers: the network's capacity</td><td>Between a published open-source bot (1.5M) and the ladder leader (8.7M); fits 16 GB</td></tr>
+      <tr><td><strong>Learning rate</strong></td><td class="v">3e-4 → 3e-5</td><td>How big each correction step is after it sees results; starts larger, shrinks</td><td>Too big is unstable, too small is slow. A standard start that decays as it improves</td></tr>
+      <tr><td><strong>Batch</strong> (2,048 games × 32 steps)</td><td class="v">~65k</td><td>How many decisions it collects before each learning step</td><td>More means steadier learning; limited by memory (the ladder leader used 4× more on a big GPU)</td></tr>
+      <tr><td><strong>Epochs</strong></td><td class="v">3</td><td>How many times it re-studies each batch</td><td>More reuses data but risks overfitting that batch</td></tr>
+      <tr><td><strong>Minibatch</strong></td><td class="v">8,192</td><td>Chunk size per correction step</td><td>Fits the GPU's memory</td></tr>
+      <tr><td><strong>PPO clip</strong></td><td class="v">0.2</td><td>The maximum change to its play style per update (±20% on any move's probability)</td><td>Stops one batch wrecking what it has learned</td></tr>
+      <tr><td><strong>Target KL</strong></td><td class="v">0.02</td><td>An emergency brake: stop the update early if behaviour shifted too much</td><td>Safety against collapse</td></tr>
+      <tr><td><strong>Entropy</strong></td><td class="v">0.01 → 0.002</td><td>A bonus for staying unpredictable and exploring</td><td>Early on, try many lines; later, commit to what works</td></tr>
+      <tr><td><strong>γ (gamma)</strong></td><td class="v">1.0</td><td>How much a win at the end counts for earlier moves</td><td>Games are short (about 8–10 turns), so every move gets full credit</td></tr>
+      <tr><td><strong>GAE λ</strong></td><td class="v">0.95</td><td>How it splits credit between "the win-% prediction said this was good" and "we actually won"</td><td>The standard balance between steady and accurate</td></tr>
+      <tr><td><strong>Value coef</strong></td><td class="v">0.5</td><td>How much it cares about predicting win % compared with choosing moves</td><td>Standard</td></tr>
+      <tr><td><strong>Aux weights</strong></td><td class="v">0.1 each</td><td>How much the extra predictions (damage, KO, survival) count</td><td>Helpers, not the main goal</td></tr>
+      <tr><td><strong>League</strong></td><td class="v">50/40/10</td><td>Who it plays: itself / past versions (more often the ones it loses to) / fixed anchors</td><td>Stops it forgetting how to beat old strategies</td></tr>
+      <tr><td><strong>Snapshots</strong></td><td class="v">2M, keep 30</td><td>How often a past version is saved to the opponent pool, and how many are kept</td><td>Spread across training</td></tr>
+      <tr><td><strong>Team mix</strong></td><td class="v">45/20/15/10/5/5</td><td>Section 9</td><td>Meta realism, generalisation for team building, and the Azumarill family always present (original sheet first, optimized variants once the team builder is validated)</td></tr>
+      <tr><td><strong>Worlds</strong></td><td class="v">16</td><td>How many guesses of the opponent's stat points the search averages over</td><td>The ladder leader's author reported blunders at 4; test 4, 16 and 64</td></tr>
+      <tr><td><strong>Weight decay</strong></td><td class="v">0.01</td><td>A gentle pull toward simpler solutions</td><td>Reduces overfitting</td></tr>
+      <tr><td><strong>Gradient clip</strong></td><td class="v">1.0</td><td>Caps any single correction</td><td>Prevents spikes</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="glossary"><span class="n">B</span>Algorithms glossary</h2>
+  <dl class="wp-gloss">
+    <div><dt>Transformer encoder</dt><dd>A network that lets every token (here, every Pokémon, the field and each side) look at every other token through attention. Attention biases let known relationships, such as "this Pokémon outspeeds and OHKOs that one", steer what it looks at.</dd></div>
+    <div><dt>PPO</dt><dd>Proximal Policy Optimization. A reinforcement learning method that improves the policy from batches of its own games, while clipping each update so the play style can't change too much at once.</dd></div>
+    <div><dt>GAE</dt><dd>Generalized Advantage Estimation. A way to decide how much credit each decision gets for the final result, blending the value head's running prediction with the actual outcome; λ sets the blend.</dd></div>
+    <div><dt>PFSP league</dt><dd>Prioritized Fictitious Self-Play. Instead of only playing its latest self, the agent also plays saved past versions, picked more often the more it loses to them, weighted (1 − p_win)². This stops it forgetting how to beat old strategies.</dd></div>
+    <div><dt>Expert iteration (search-guided refinement)</dt><dd>A stronger but slower player (the network plus search) plays games, and the network is trained to imitate the search's choices and its value estimates. The improved network then makes the search stronger, and the loop repeats.</dd></div>
+    <div><dt>Regret matching</dt><dd>A simple game-theory solver for simultaneous moves. Each side repeatedly shifts probability toward the actions it regrets not having played, which converges toward a mixed strategy that is hard to exploit. Here it is an optional solve over the top 8×8 joint actions.</dd></div>
+    <div><dt>Simulated annealing</dt><dd>A local-search method that occasionally accepts a worse change, more often early on, so the search can escape a mediocre team instead of getting stuck on it.</dd></div>
+    <div><dt>Bradley-Terry / BayesElo</dt><dd>Rating models that turn many head-to-head results into one strength scale, where the gap between two ratings predicts the win probability between them.</dd></div>
+    <div><dt>Wilson interval</dt><dd>A confidence interval for a win rate that stays accurate with small samples and near 0% or 100%.</dd></div>
+    <div><dt>Brier score and ECE</dt><dd>Two calibration measures. Brier is the mean squared error of the predicted win probability. Expected Calibration Error checks whether, say, positions given a 70% win chance are actually won about 70% of the time.</dd></div>
+  </dl>
+
+  <p class="wp-pull">Decide in advance what would prove you wrong, then report what actually happened. Results will be published here when they exist, negative ones included.</p>
+
+  <div class="wp-series">
+    <a href="/#research"><span class="k">Back to the portfolio</span><span class="t">Research: self-play reinforcement learning</span></a>
+    <a href="/papers/control-tower-method/"><span class="k">White paper</span><span class="t">The Control Tower Method</span></a>
+  </div>
+
+  <div class="wp-author">
+    <p class="k">About the author</p>
+    <p><strong>Felipe Molino</strong> builds AI products and decision systems: he is the founder of CorkAI and builds and runs a transportation digital-twin decision platform at NFI Industries. This project is the hands-on counterpart to his M.S. in AI: owning a model end to end, from network design through training to evaluation.</p>
+  </div>
+</article>
+<footer class="wp-foot"><span>© 2026 Felipe Molino</span><a href="/">Portfolio</a><a href="/#research">Research</a><a href="https://www.linkedin.com/in/felipemolino" rel="noopener">LinkedIn</a></footer>
+</body>
+</html>
