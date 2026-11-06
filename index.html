@@ -582,6 +582,7 @@
       <li><a href="#experience">Experience</a></li>
       <li><a href="#work">Featured Work</a></li>
       <li><a href="#ai-initiatives">AI Initiatives</a></li>
+      <li><a href="#ml-optimization">ML &amp; Optimization</a></li>
       <li><a href="#research">Research</a></li>
       <li><a href="#agent-org">Claude Agent Org</a></li>
       <li><a href="#skills">Skills</a></li>
@@ -673,8 +674,8 @@
         <div class="tl-sub">
           <div class="tl-sub-head"><h4>CorkAI — Wine Intelligence Platform · five business lines</h4><span class="role-tag">Founder &amp; CEO</span></div>
           <ul>
-            <li>Manage a <strong>portfolio of five business lines</strong> on one taste engine and one wine database, each with its own customer, pricing and roadmap: the <strong>CorkAI app</strong> (CorkType taste profiles, label scanner, CorkChat, pairing and cellar, with subscriptions on web, iOS and Android); <strong>Cork Social</strong> (friends, a feed and wine gifts); <strong>Cork Parties</strong> (a host hub with the guest lineup, "how much wine?", +1s, a bring-a-bottle board and invite links); <strong>Cork Connect</strong> (a marketplace that links users to the wine stores selling their picks, with a store picker when two shops sell the same bottle); and <strong>Cork Table</strong> (a restaurant product at $24.99 a month: diners scan a QR code and see the wine list ranked for their taste, with a server mode for staff).</li>
-            <li>Sequence the portfolio as one roadmap: consumer and social lines first, then B2B, with Cork Table before Cork Connect; B2B lines live in their own codebase and subdomain so they can't destabilize the app; a free pilot with a wine store comes before any sales push.</li>
+            <li>Manage a <strong>portfolio of five business lines</strong> on one taste engine and one wine database, each with its own customer, pricing and roadmap: the <strong>CorkAI app</strong> (CorkType taste profiles, label scanner, CorkChat, pairing and cellar, with subscriptions on web, iOS and Android); <strong>Cork Social</strong> (friends, a feed and wine gifts); <strong>Cork Parties</strong> (a host hub with the guest lineup, "how much wine?", +1s, a bring-a-bottle board and invite links); <strong>Cork Connect</strong> (a marketplace that links users to the wine stores selling their picks, with a store picker when two shops sell the same bottle); and <strong>Cork Table</strong> (a restaurant product: diners scan a QR code and see the wine list ranked for their taste, with a server mode for staff).</li>
+            <li>Sequence the portfolio as one roadmap: consumer and social lines first, then B2B, with Cork Table before Cork Connect; B2B lines live in their own codebase and subdomain so they can't destabilize the app. Cork Table and Cork Connect are in the demo phase, in meetings with prospective customers.</li>
             <li>Built the hybrid recommendation engine every line shares: a 495-varietal knowledge base plus LLM bottle-level analysis, versioned so the app, chat, parties and marketplace always agree. The AI engineering behind it is in <a href="#ai-initiatives">AI Initiatives</a>.</li>
             <li>Directed a canonical wine-data platform resolving every user action into a confidence-weighted master record — source-weighted merge logic, append-only provenance, and an automated similarity-based dedup sweeper — shipped behind feature flags via phased, risk-managed rollout.</li>
             <li>Built the original product on Replit as a top 1% Replit user worldwide; today multiple Claude Code agents build CorkAI under one product owner, with 12 control areas scored L0–L5 on the Autonomous Process Execution Management (APEM) model.</li>
@@ -742,7 +743,7 @@
         <div>
           <p class="eyebrow">Founder &amp; CEO · consumer and B2B product lines</p>
           <h3>CorkAI — one taste engine, five business lines</h3>
-          <p class="desc">The place my engineering work meets my Level Four (Advanced) sommelier training, and where I run a product portfolio rather than a single app. One taste engine and one wine database power five lines with different customers: the <strong>CorkAI app</strong> for wine drinkers, <strong>Cork Social</strong> and <strong>Cork Parties</strong> for drinking together, <strong>Cork Connect</strong> for the wine stores people buy from, and <strong>Cork Table</strong> for restaurants that want to sell more wine without a sommelier. The hard part isn't building each one. It's deciding the order, keeping them consistent, and making sure a change for restaurants can't break the app.</p>
+          <p class="desc">The place my engineering work meets my Level Four (Advanced) sommelier training, and where I run a product portfolio rather than a single app. One taste engine and one wine database power five lines with different customers: the <strong>CorkAI app</strong> for wine drinkers, <strong>Cork Social</strong> and <strong>Cork Parties</strong> for drinking together, <strong>Cork Connect</strong> for the wine stores people buy from, and <strong>Cork Table</strong> for restaurants that want to sell more wine without a sommelier. The two B2B lines are in demos with prospective customers. The hard part isn't building each one. It's deciding the order, keeping them consistent, and making sure a change for restaurants can't break the app.</p>
           <div class="feature-tags">
             <span class="tag">Product portfolio</span>
             <span class="tag">Consumer &amp; B2B</span>
@@ -788,7 +789,7 @@
   </div>
 </section>
 
-<section class="block" id="ai-initiatives" data-sec>
+<section class="block alt" id="ai-initiatives" data-sec>
   <div class="wrap">
     <div class="block-head">
       <p class="eyebrow">AI initiatives · Built and running</p>
@@ -815,6 +816,47 @@
     </table></div>
     <h3>Next</h3>
     <p>Retrieval with reranking and cited answers for CorkAI, a claim-level hallucination check for CorkAI's chat, open and self-hosted models, and fine-tuning once there's enough real usage data to justify it.</p>
+  </div>
+</section>
+
+<section class="block" id="ml-optimization" data-sec>
+  <div class="wrap">
+    <div class="block-head">
+      <p class="eyebrow">ML &amp; Optimization · Twelve years of it</p>
+      <h2>The math under the products: optimization, machine learning and simulation.</h2>
+      <p>Before there were language models to call, there were routing problems to solve. Most of my career has been operations research and machine learning in production, and the same habit shows up everywhere: break a problem too big to solve into pieces that can be, then measure what that costs in quality.</p>
+    </div>
+
+    <h3>Transportation optimization</h3>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Method</th><th>What it does</th><th>Where</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Custom transportation optimizer</strong></td><td>The engine inside NFI's <a href="#work">transportation digital twin</a>: large neighborhood search (destroy and repair), route ranking by cost and service, and multi-mode, multi-carrier assignment across truckload, LTL and intermodal. It runs across 10 enterprise accounts, modeling about $10M in annual savings.</td><td>NFI</td><td>Production</td></tr>
+        <tr><td><strong>Dynamic partitioning and clustering</strong></td><td>Splits large problems so they solve in time. Designed experiments measure solution quality against runtime for each partition design and compare clustering methods for grouping lanes, shipments and sites. The winning designs become the production defaults.</td><td>NFI</td><td>Production</td></tr>
+        <tr><td><strong>Network design</strong></td><td>Linear and mixed-integer programming models for where to put distribution centers and how to flow freight: 50+ engagements at 10–15% average savings, including two worth over $100M each.</td><td>NFI, LLamasoft</td><td>Production</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Machine learning</h3>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Method</th><th>What it does</th><th>Where</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Classification (XGBoost)</strong></td><td>Predicts whether a carrier will accept a tender. An eight-year study produced a three-class classifier at about 90% accuracy, and the model now writes to the live tendering system.</td><td>NFI</td><td>Production</td></tr>
+        <tr><td><strong>Gradient-boosted trees</strong></td><td>The bot's position judge: 160 trees over 24 board features, shipped only if it beats a logistic-regression baseline on held-out log loss. <a href="#research">More in Research</a>.</td><td>VGC bot</td><td>Running</td></tr>
+        <tr><td><strong>Deep reinforcement learning</strong></td><td>A 4–5M-parameter transformer trained by PPO self-play against a league of its past versions, then refined by search-guided expert iteration. <a href="/papers/vgc-selfplay-design/">Read the design</a>.</td><td>VGC bot</td><td>Results running</td></tr>
+        <tr><td><strong>Bandit algorithms</strong></td><td>A UCB1 bandit tree inside the bot's multi-turn search, and Thompson sampling that learns which suggestions each user finds useful.</td><td>VGC bot, Prodigy</td><td>Running</td></tr>
+        <tr><td><strong>Recommendation</strong></td><td>A hybrid recommender that matches each person's taste profile to specific bottles, shared by all five <a href="#work">CorkAI business lines</a>.</td><td>CorkAI</td><td>Production</td></tr>
+        <tr><td><strong>Entity resolution and embeddings</strong></td><td>Matches duplicate wines into one master record with a confidence score. In Prodigy: vector search, intent matching, and a speaker-identification model for meeting transcripts.</td><td>CorkAI, Prodigy</td><td>Production, built</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Simulation</h3>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Method</th><th>What it does</th><th>Where</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Clustering + stochastic simulation</strong></td><td>Store-level inventory tools built for retailer scale: 100,000 SKUs across 1,000 stores, about 100 million records a day. They flag likely phantom inventory and estimate lost sales from daily sales and on-hand inventory, then cluster similar store-item combinations so a stochastic simulation can set reorder points and case packs against a target fill rate. Built in R, then moved to Python.</td><td>P&amp;G internship · University of Arkansas honors thesis</td><td>2014</td></tr>
+      </tbody>
+    </table></div>
   </div>
 </section>
 
