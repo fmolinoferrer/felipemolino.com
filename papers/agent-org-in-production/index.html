@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Agent Organization in Production · White paper by Felipe Molino</title>
+<meta name="description" content="Part III of the Control Tower Method: how an organization of Claude Code agents actually runs a start-up. Inboxes instead of messages, gates the agents can't cross, two decision windows a day, and the measured before and after of resetting a 20-chat setup to 8. White paper by Felipe Molino.">
+<link rel="canonical" href="https://felipemolino.com/papers/agent-org-in-production/">
+<meta name="author" content="Felipe Molino">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Felipe Molino">
+<meta property="og:title" content="The Agent Organization in Production">
+<meta property="og:description" content="Inboxes, gates and decision windows: how a Claude Code agent org actually runs a start-up, with the numbers from before and after the reset. Part III of the Control Tower Method.">
+<meta property="og:url" content="https://felipemolino.com/papers/agent-org-in-production/">
+<meta property="og:image" content="https://felipemolino.com/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="article:author" content="https://felipemolino.com/">
+<meta property="article:published_time" content="2026-11-06">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://felipemolino.com/assets/og.png">
+<meta name="theme-color" content="#0f1215">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1215'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23e79364'%3EFM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The Agent Organization in Production","alternativeHeadline":"Inboxes, gates and decision windows: how a Claude Code agent org actually runs a start-up. Part III of the Control Tower Method","description":"Part III of the Control Tower Method: how an organization of Claude Code agents runs a start-up in production, with the measured before and after of moving from about 20 always-on chats to 8 standing chats, file inboxes, hard gates and two decision windows a day.","url":"https://felipemolino.com/papers/agent-org-in-production/","mainEntityOfPage":"https://felipemolino.com/papers/agent-org-in-production/","image":"https://felipemolino.com/assets/og.png","datePublished":"2026-11-06","dateModified":"2026-11-06","isPartOf":{"@type":"CreativeWorkSeries","name":"The Control Tower Method"},"author":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/","sameAs":["https://www.linkedin.com/in/felipemolino"]},"publisher":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/"},"keywords":"Claude Code, AI agents, multi-agent systems, agent organization, operating model, AI cost, prompt caching, governance, start-up operations"}</script>
+<style>
+:root {
+  --bg: #0f1215; --surface: #171b1f; --surface-2: #1f242a; --surface-3: #262c33;
+  --ink: #f1efe7; --ink-soft: #c1c5bc; --muted: #858b84; --line: #2a3037;
+  --accent: #e79364; --accent-strong: #f3ab84; --accent-ink: #0f1215;
+  --accent-2: #8ec4bc; --accent-2-soft: #1a2b29;
+  --good: #86bd8c; --warn: #ddb168;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -16px rgba(0,0,0,.7);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Public Sans", -apple-system, "Segoe UI", sans-serif; font-size: 16.5px; line-height: 1.68; -webkit-font-smoothing: antialiased; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+a { color: var(--accent-2); text-underline-offset: 3px; } a:hover { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wrap: balance; margin: 0; color: var(--ink); }
+.wp-bar { position: sticky; top: 0; z-index: 2; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.wp-bar-in { max-width: 880px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 12px 20px; }
+.wp-back { color: var(--ink); font: 600 .9rem "Public Sans", sans-serif; padding: 6px 0; white-space: nowrap; text-decoration: none; }
+.wp-back:hover { color: var(--accent); }
+.wp-bar-t { margin-left: auto; font: 500 .7rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wp { max-width: 880px; margin: 0 auto; padding-inline: max(20px, env(safe-area-inset-left, 0px)); padding-block: 44px 96px; }
+.wp p, .wp li { color: var(--ink-soft); max-width: 68ch; }
+.wp p { margin: 14px 0 0; }
+.wp strong { color: var(--ink); }
+.wp ul, .wp ol { padding-left: 22px; margin: 12px 0 0; }
+.wp li { margin-top: 8px; }
+.wp-kick { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 !important; }
+.wp h1 { font-size: clamp(2.1rem, 5.4vw, 3.2rem); line-height: 1.08; margin-top: 14px; }
+.wp-dek { font-size: 1.16rem; line-height: 1.55; margin-top: 16px !important; color: var(--ink) !important; }
+.wp-by { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 18px; font: 500 .78rem "IBM Plex Mono", monospace; color: var(--muted); }
+.wp h2 { font-size: clamp(1.45rem, 3vw, 1.85rem); margin-top: 64px; display: flex; gap: 14px; align-items: baseline; }
+.wp h2 .n { font: 600 .82rem "IBM Plex Mono", monospace; color: var(--accent); }
+.wp h3 { font: 700 1.08rem "Public Sans", sans-serif; margin-top: 30px; }
+.wp-exec { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 14px; padding: 22px 26px; margin-top: 34px; box-shadow: var(--shadow); }
+.wp-exec .k { font: 600 .78rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 0 !important; }
+.wp-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-top: 28px; }
+.wp-fact { background: var(--surface); padding: 18px 18px 16px; }
+.wp-fact b { display: block; font: 600 1.45rem "IBM Plex Mono", monospace; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.wp-fact span { display: block; margin-top: 4px; font-size: .82rem; color: var(--muted); line-height: 1.4; }
+.wp-pull { font-family: "Fraunces", Georgia, serif; font-size: 1.32rem !important; line-height: 1.4; color: var(--ink) !important; border-left: 3px solid var(--accent); padding-left: 18px; margin: 34px 0 0 !important; }
+.wp-fig { margin: 30px 0 0; }
+.wp-fig svg { width: 100%; height: auto; display: block; }
+.wp-fig figcaption { font-size: .85rem; color: var(--muted); margin-top: 10px; text-align: center; max-width: 64ch; margin-inline: auto; }
+.wp-fig figcaption b { color: var(--ink-soft); margin-right: 6px; }
+.wp-tbl { overflow-x: auto; margin-top: 18px; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+.wp-tbl table { border-collapse: collapse; width: 100%; background: var(--surface); font-size: .9rem; min-width: 600px; }
+.wp-tbl th { font: 600 .7rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); text-align: left; padding: 11px 14px; background: var(--surface-2); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.wp-tbl td { padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+.wp-tbl tr:last-child td { border-bottom: 0; }
+.wp-tbl td strong { color: var(--ink); }
+.wp-tbl tr.grp td { background: var(--surface-2); font: 600 .7rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-2); padding: 8px 14px; }
+.lv { display: inline-block; min-width: 30px; text-align: center; font: 600 .74rem "IBM Plex Mono", monospace; border-radius: 5px; padding: 2px 6px; }
+.l1 { background: #3a2420; color: #ef9f88; } .l2 { background: #362d18; color: #e2bd6e; } .l3 { background: #1d3532; color: #9fd6cd; } .l4 { background: #2a5550; color: #d3f1ec; } .l5 { background: #8ec4bc; color: #0f1215; }
+.wp-lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; }
+@media (max-width: 680px) { .wp-lanes { grid-template-columns: 1fr; } }
+.wp-lane { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+.wp-lane .k { font: 600 .7rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .09em; color: var(--accent-2); margin: 0 !important; }
+.wp-lane h3 { margin-top: 6px; font-family: "Fraunces", Georgia, serif; font-size: 1.2rem; font-weight: 600; }
+.wp-lane ol { margin-top: 10px; }
+.wp-lane li { margin-top: 5px; font-size: .92rem; }
+.wp-tl { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.wp-tl > div { background: var(--surface); display: grid; grid-template-columns: 70px 110px 1fr; gap: 14px; padding: 13px 18px; align-items: baseline; }
+@media (max-width: 600px) { .wp-tl > div { grid-template-columns: 60px 1fr; } .wp-tl > div p { grid-column: 1 / -1; } }
+.wp-tl time { font: 600 .8rem "IBM Plex Mono", monospace; color: var(--accent); }
+.wp-tl h4 { margin: 0; font-size: .95rem; color: var(--ink); }
+.wp-tl p { margin: 0 !important; font-size: .9rem; }
+.wp-adopt { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 20px; }
+.wp-adopt > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+.wp-adopt b { display: block; color: var(--ink); }
+.wp-adopt span { display: block; margin-top: 6px; font-size: .9rem; color: var(--ink-soft); }
+.wp-series { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.wp-series a { flex: 1 1 260px; text-decoration: none; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 12px; padding: 16px 20px; color: var(--ink); }
+.wp-series a:hover { border-color: var(--accent); color: var(--ink); }
+.wp-series .k { display: block; font: 600 .68rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-2); }
+.wp-series .t { display: block; font-family: "Fraunces", Georgia, serif; font-size: 1.08rem; margin-top: 4px; }
+.wp-author { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line); }
+.wp-author .k { font: 600 .72rem "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 !important; }
+.wp-foot { max-width: 880px; margin: 0 auto; padding: 0 20px 64px; display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: .9rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+.wp-note { font-size: .85rem !important; color: var(--muted) !important; }
+</style>
+</head>
+<body>
+<div class="wp-bar"><div class="wp-bar-in"><a class="wp-back" href="/">&larr; felipemolino.com</a><span class="wp-bar-t">White paper · Part III · The Agent Organization in Production</span></div></div>
+<article class="wp">
+  <p class="wp-kick">White paper · Part III · November 2026 · 13 min read</p>
+  <h1>The Agent Organization in Production</h1>
+  <p class="wp-dek">Inboxes, gates and decision windows: how a Claude Code agent org actually runs a start-up, what broke when it ran too hot, and what the first week after the reset measured.</p>
+  <div class="wp-by"><span>Felipe Molino</span><span>Founder, CorkAI</span><span>6 November 2026</span><span>Follows <a href="/papers/control-tower-method/">Part I</a> and <a href="/papers/governing-an-ai-workforce/">Part II</a></span></div>
+
+  <section class="wp-exec" aria-labelledby="exec-k">
+    <p class="k" id="exec-k">Executive summary</p>
+    <ul>
+      <li><strong>Part I</strong> set the method (control areas, levels, evidence). <strong>Part II</strong> set the decision rights. <strong>Part III is the operations manual:</strong> how the agents talk, what they can't touch, when I decide, and what it costs.</li>
+      <li><strong>The first setup worked and was unaffordable.</strong> About 20 role chats, all on Opus, messaging each other around the clock, merged 233 pull requests in one week. They also used a full week's Claude plan in about two days.</li>
+      <li><strong>The cost was memory, not work.</strong> Long chats re-reading their own history made up most of the bill. Every message between agents woke another long context.</li>
+      <li><strong>The reset, on 2 November:</strong> 8 standing chats (2 on Opus, 6 on Sonnet), short per-ticket build sessions, one-line asks in files instead of messages, a decision queue I see twice a day, and plain scripts for anything that doesn't need a model.</li>
+      <li><strong>First four weekdays after the reset:</strong> API-priced work fell from $6,350 to $438, Opus fell from 99% to 55% of cost, and cache reads from 55% to 32%. Merged pull requests fell too, from 233 in the peak week to 37 so far this week. Part of that drop is deliberate, and part is still being worked out.</li>
+    </ul>
+  </section>
+
+  <div class="wp-facts">
+    <div class="wp-fact"><b>~20 → 8</b><span>always-on chats, with build sessions opened per ticket</span></div>
+    <div class="wp-fact"><b>$6,350 → $438</b><span>API-priced work, Mon–Thu before vs Mon–Thu after</span></div>
+    <div class="wp-fact"><b>99% → 55%</b><span>share of cost on Opus</span></div>
+    <div class="wp-fact"><b>233 → 37</b><span>merged PRs, peak week vs this week so far</span></div>
+  </div>
+
+  <p class="wp-pull">The agents were never the bottleneck. The expensive parts were their memories, their conversations with each other, and their questions to me.</p>
+
+  <h2><span class="n">01</span>Where this starts</h2>
+  <p>Part I described how to score and gate AI-built software. Part II described which decisions stay with me and what evidence each one needs. Both assumed the organization of agents underneath simply ran. This paper is about that organization: the chats, the files they share, the rules they can't break, and the clock they run on.</p>
+  <p>CorkAI is built and run by Claude Code chats on one PC, each with a role: product, development, QA, security, marketing, data and so on. I am the only person. Everything below comes from that setup's own logs, its usage files and the GitHub history of the main repository.</p>
+
+  <h2><span class="n">02</span>The before: one very productive, very expensive week</h2>
+  <p>In the week of 26 October the setup was at its largest: about 20 role chats (a COO, Strategy, a Chief of Staff, Product, a Dev Lead and three more developers, QA &amp; DevOps, InfoSec, UX, Marketing, Marketplace, Wine Data, Research, Analytics, Finance &amp; Ops, Revenue, Investor Relations, HR), plus four or five scheduled runs a day. Every one ran on Opus. They ran about 21 hours a day and coordinated by messaging each other.</p>
+  <p>The output was real. Then the bill arrived.</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Measure, week of 26 Oct–1 Nov</th><th>Value</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Merged pull requests</strong></td><td>233</td><td>GitHub search, merged 26 Oct–1 Nov</td></tr>
+      <tr><td><strong>Commits reaching main</strong></td><td>about 1,180</td><td>git history of main, by commit date (ET)</td></tr>
+      <tr><td><strong>Claude chats active</strong></td><td>54</td><td>usage collector, distinct transcripts</td></tr>
+      <tr><td><strong>Weekly plan</strong></td><td>7% on Monday 12:40 ET, 100% on Wednesday 12:37 ET</td><td>plan log</td></tr>
+      <tr><td><strong>Extra usage bought</strong></td><td>$2,407.92, Wednesday to Friday; the cap was raised five times, from $200 to $3,000</td><td>plan log</td></tr>
+      <tr><td><strong>API-priced work, 26–29 Oct</strong></td><td>$5,449 at the time of the audit (Mon $1,610, Tue $1,696, Wed $1,755)</td><td>process log</td></tr>
+      <tr><td><strong>Model mix</strong></td><td>Opus 98.8%, Sonnet 1.2%, Haiku 0%</td><td>usage collector</td></tr>
+      <tr><td><strong>Cache reads</strong></td><td>58% of cost in the audit</td><td>process log</td></tr>
+      <tr><td><strong>Cost per merged PR</strong></td><td>about $23, API-priced, overhead included</td><td>process log</td></tr>
+    </tbody>
+  </table></div>
+  <p class="wp-note">"API-priced" means token counts multiplied by public API list prices. The real bill is a fixed monthly plan plus any extra usage, so this is a consistent yardstick rather than an invoice.</p>
+
+  <h3>What the audit found</h3>
+  <p>The cost did not come from writing code. It came from context. Fifty-eight percent of the cost was cache reads: long chats re-reading their own history on every call. One chat made 1,528 model calls in a day and read 767 million cached tokens. The Chief of Staff rebuilt its action page 193 times in about 17 hours. Shared files had grown to 463 KB (the security log) and 214 KB (the decisions log), and every chat that opened them paid to read them again.</p>
+  <p>Three habits multiplied it:</p>
+  <ul>
+    <li><strong>Agents messaging agents.</strong> Each nudge woke a long context on the other side. A routine "did you see this?" could cost more than the work it asked about.</li>
+    <li><strong>The most capable model for everything.</strong> Monitoring, data pulls and status checks ran on Opus. On API list prices Sonnet costs about half as much and Haiku about one fortieth.</li>
+    <li><strong>Questions at any hour.</strong> Decisions reached me as a stream, and the chats waited on each answer.</li>
+  </ul>
+
+  <h2><span class="n">03</span>Files, not messages: the inbox process</h2>
+  <p>The reset, recorded as an architecture decision on 2 November, rests on one idea: agents coordinate through small files, not conversations. A file costs nothing until someone reads it, and it is still there after a chat forgets.</p>
+
+  <h3>One line per ask</h3>
+  <p>Every area has an inbox file. Any chat that needs something from another appends one line to it:</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Date</th><th>From</th><th>Ask</th><th>Due</th><th>Link</th></tr></thead>
+    <tbody>
+      <tr><td>3 Nov</td><td>Chief of Staff</td><td>Refresh your handoff file and move any plan or decision that lives only in the chat into a file</td><td>now</td><td>the operating model</td></tr>
+    </tbody>
+  </table></div>
+  <p>A chat reads its inbox at the start of each work block and moves cleared items to a "done" list. Direct messages are kept for four cases: production down, a security incident, money moving, and the chat reset itself.</p>
+
+  <h3>The decision queue and two packs a day</h3>
+  <p>When a chat needs me, it doesn't ask me. It writes one item to a shared queue: the question, the options, its recommended pick, and what a yes or a no would unblock. Only the Chief of Staff turns that queue into what I see, which is a decision pack at 7:30 and at 4:30 Eastern. Each pack carries a short standup (yesterday, today, blockers, budget pace by project) and a numbered list of decisions with recommendations. I answer in one line, for example "1 yes 2 skip 3 yes". Between windows the chats keep working on anything that isn't blocked.</p>
+
+  <h3>Defaults with an undo</h3>
+  <p>The first version of the reset said that unanswered items wait. Within hours that proved too slow: everything stopped for my approval. The same afternoon the rule changed to "default and go". If I haven't answered by the next window, and the item is reversible and not one of my keys (section 04), the Chief of Staff marks it applied by default and the owning chat proceeds. Every default is one line in a defaults log with a one-line undo, and it appears in the next pack under "done by default". Packs now list only my keys and real taste calls as decisions.</p>
+
+  <h3>Handoff files and memory</h3>
+  <p>Every standing chat keeps a handoff file under 3 KB: goal, work in flight, next step, open asks, links. A fresh chat that reads its charter, its handoff and its inbox can pick up where the last one stopped. On 2 November, 17 old chats wrote their handoffs (all under 3.3 KB), were archived, and 8 fresh chats started from them. The swap cost about 3% of the weekly plan.</p>
+  <p>The plan was to save and reset every chat on Monday, Wednesday and Friday. It lasted one day. Resets need a turn that I started (an app limit), they lose the chat's identity, and transcript exports failed on the biggest old chats (248 and 284 MB, against a 200 MB limit). Since 3 November the rule is: write everything that must survive to a file the moment it exists, let the app compact the chat automatically, and reset only at a natural break when a chat starts to drift. The chat is a scratchpad. The files are the record. At each window the Chief of Staff compares every handoff file with what the chat actually did and logs any miss. Lasting decisions become numbered decision records, never deleted, only superseded.</p>
+
+  <h2><span class="n">04</span>The gates</h2>
+  <p>Part II described my decision rights. These are the rules underneath them, written in one file every chat reads, and the parts the platform actually enforces.</p>
+
+  <h3>My keys</h3>
+  <p>These stay with me in every area. Agents prepare them to one tap from done, and never do them:</p>
+  <ul>
+    <li><strong>Publishing</strong> the live app, by any route.</li>
+    <li><strong>Money:</strong> payments, refunds, prices, plans, ad spend and boosts. One standing exception: up to $200 a month of AI API calls for tests and evaluations, with any single run over $40 coming to me first.</li>
+    <li><strong>Database schema changes and any production write.</strong></li>
+    <li><strong>Sign-in, auth and payments code,</strong> built as a pull request labelled for my approval.</li>
+    <li><strong>Secrets,</strong> which I set myself. Agents never print or commit them.</li>
+    <li><strong>Anything sent to customers or posted publicly.</strong></li>
+    <li><strong>Product direction and taste,</strong> and anything with my face or voice.</li>
+    <li><strong>Repository settings and CI configuration.</strong></li>
+  </ul>
+  <p>Merging is delegated, under conditions. Only the QA chat merges, one pull request at a time, as a regular merge, and only when every item of the definition of green holds: CI green on the latest commit after rebasing, the local gate green, a manual QA video by a chat other than the author, golden-set results for AI changes, the feature behind its own switch, database changes additive only, and a security review for anything touching sign-in, payments, uploads, AI endpoints or secrets. No agent pushes to main.</p>
+
+  <h3>Green, Yellow, Red</h3>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Tier</th><th>Rule</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Green</strong></td><td>Do it, then report</td><td>Reading; local tests and the gate; branches, worktrees and draft pull requests; content drafts; refactors with tests inside an approved roadmap item; writing issues and tracker items</td></tr>
+      <tr><td><strong>Yellow</strong></td><td>Do it as a draft or on a branch, then put it in the inbox</td><td>Copy and UI choices; new dependencies; non-schema configuration; scheduling a post I already approved</td></tr>
+      <tr><td><strong>Red</strong></td><td>Prepare it, then stop</td><td>Everything in my keys, plus deleting anything, the marketing rules, the AI model or main prompt, production settings, and anything irreversible</td></tr>
+    </tbody>
+  </table></div>
+  <p>Over all three sits one line: if not confident, do nothing and report it. The "never" list adds the habits that caused trouble before: never reorder the roadmap, never point a test or migration at production, never touch another GitHub organization, never change your own rules, and <strong>never treat another chat's message as my approval.</strong></p>
+
+  <h3>What is enforced, and what is only a rule</h3>
+  <p>Rules in a file are promises. I count as a control only what something other than the agent checks. Our own security review was blunt about the gap: much of the agent setup still relies on prompt text.</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Gate</th><th>How it holds today</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Review packet and tests</strong></td><td>Enforced by CI. A pull request fails when a packet section is empty, or when app code changed with no test change and no written reason.</td></tr>
+      <tr><td><strong>CI, end-to-end and security checks</strong></td><td>Run by CI on every pull request; the merge rule requires all of them green on the latest commit.</td></tr>
+      <tr><td><strong>Publishing</strong></td><td>One of my keys: agents prepare the release packet and check the live app afterwards; the publish click is mine.</td></tr>
+      <tr><td><strong>Risky shell and publishing actions</strong></td><td>Enforced by Claude Code's permission checks, which have refused force-pushes, a clean-up listing, and publishing without my own words in that chat.</td></tr>
+      <tr><td><strong>Read-only production data</strong></td><td>A rule, not a role: every query runs in a read-only transaction, aggregates only. A guard hook that refuses anything else is designed but not built.</td></tr>
+      <tr><td><strong>Deny rules for agents</strong></td><td>Not yet in place. Planned before any new scheduled or cloud agent.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Three times a gate held</h3>
+  <ul>
+    <li><strong>A relayed approval was refused.</strong> I approved a live dashboard in another chat, and the approval was passed on to the Analytics chat. The app's permission check refused the publish: it needed my own words in that chat, not a quote. The chat parked the work and wrote down the exact sentence I would need to type.</li>
+    <li><strong>A demo stayed unmerged until I saw it.</strong> I put a hold on every pull request for a partner demo until I had reviewed it. The work was built and left open; the chats sent screenshots and a self-contained file instead.</li>
+    <li><strong>A permanent delete waited for a person.</strong> A disk clean-up was approved in principle, but a built-in safety check blocked the QA chat's listing step. It didn't work around the check, and it left emptying the Recycle Bin to me, because that is a permanent delete.</li>
+  </ul>
+
+  <h2><span class="n">05</span>How it runs now</h2>
+
+  <h3>Eight standing chats</h3>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Chat</th><th>Model</th><th>What it absorbs</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Chief of Staff</strong></td><td>Sonnet</td><td>The old COO, strategy check-ins, HR, budget, ceremonies, decision packs, chat resets</td></tr>
+      <tr><td><strong>Product</strong></td><td>Opus</td><td>UX, revenue and marketplace questions, scoping of new product lines such as Cork Table and Cork Connect</td></tr>
+      <tr><td><strong>Dev Lead</strong></td><td>Sonnet</td><td>Developers 2 to 4, now short per-ticket sessions</td></tr>
+      <tr><td><strong>QA &amp; Release</strong></td><td>Sonnet</td><td>Release train, smoke tests, weekly video QA, merges</td></tr>
+      <tr><td><strong>Algorithms</strong> (new)</td><td>Opus</td><td>Scoring, matching and the taste engine</td></tr>
+      <tr><td><strong>Wine Data</strong></td><td>Sonnet, with Haiku batches</td><td>Data entry and the research behind it</td></tr>
+      <tr><td><strong>Marketing</strong></td><td>Sonnet, Opus for strategy</td><td>Content, posting, newsletter</td></tr>
+      <tr><td><strong>InfoSec</strong></td><td>Sonnet, Opus on sensitive pull requests</td><td>Weekly review and every sensitive change</td></tr>
+    </tbody>
+  </table></div>
+  <p>The other areas (marketplace, revenue, investor relations, research, finance, UX, analytics) keep a written charter and open only when a sprint ticket needs them. Development runs as short sessions, one per ticket, at most three at once, each ending when its pull request opens. The rule for models is simple: Haiku for monitoring and data pulls, Sonnet for builds, QA, content and packs, Opus only where depth pays (product, algorithms, architecture, sensitive security reviews, deep research).</p>
+
+  <h3>The clock</h3>
+  <figure class="wp-fig">
+    <div class="wp-tl">
+      <div><time>07:00</time><h4>Scripts</h4><p>Plain scripts collect usage, analytics and health checks. No model runs unless a script finds a problem.</p></div>
+      <div><time>07:15</time><h4>Pack built</h4><p>A script assembles the morning pack from the decision queue, open pull requests and budget pace.</p></div>
+      <div><time>07:30</time><h4>Window 1</h4><p>I read the standup and the numbered decisions, and reply in one line.</p></div>
+      <div><time>Every 2 h</time><h4>Keep moving</h4><p>A scheduled task wakes each idle standing chat to read its inbox and take the next item. A chat with nothing queued says so and stops.</p></div>
+      <div><time>16:30</time><h4>Window 2</h4><p>The day's decisions, "release ready: yes or no", and tomorrow's plan. If the release is ready, I publish.</p></div>
+    </div>
+    <figcaption><b>Figure 1</b>A weekday. The wake-up runs around the clock, every day, so work continues overnight without anyone starting it. Releases run Monday to Thursday only.</figcaption>
+  </figure>
+  <p>The calendar is borrowed from agile teams because it gives the agents and me a shared rhythm: two-week sprints, the morning pack as the daily standup, a retro every other Friday, review and planning every other Monday.</p>
+
+  <h3>Budgets per project</h3>
+  <p>The weekly plan is split into buckets, because the same plan also runs my other projects. CorkAI gets 40%, and each other project has its own share, with the rest left free. A script tracks each bucket against a daily pace line. At 80% of a bucket the Chief of Staff asks me in the next window, and extra usage stays off. Every new task I give gets a one-line projection: size, model, estimated share of the week, and what it displaces.</p>
+
+  <h2><span class="n">06</span>What the first week measured</h2>
+  <p>These numbers cover Monday 2 November to the morning of Friday 6 November. The "before" figures use the same usage file and the same method. Where the weeks are uneven, I compare Monday to Thursday with Monday to Thursday.</p>
+  <div class="wp-tbl"><table>
+    <thead><tr><th>Measure</th><th>Before</th><th>After</th></tr></thead>
+    <tbody>
+      <tr><td><strong>API-priced work, Mon–Thu</strong></td><td>$6,350 (26–29 Oct)</td><td>$438 (2–5 Nov), of which $192 was the swap day</td></tr>
+      <tr><td><strong>Opus share of cost</strong></td><td>98.8%</td><td>55%</td></tr>
+      <tr><td><strong>Opus share of model calls</strong></td><td>97.7%</td><td>33%</td></tr>
+      <tr><td><strong>Cache reads, share of cost</strong></td><td>55% (whole week)</td><td>31% (2–6 Nov)</td></tr>
+      <tr><td><strong>Model calls</strong></td><td>38,647 (whole week)</td><td>6,707 (2–6 Nov)</td></tr>
+      <tr><td><strong>Weekly plan, CorkAI</strong></td><td>100% of the whole plan by Wednesday</td><td>about 9% by Friday morning, against a 40% bucket (estimate)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="wp-note">The 55% cache-read share is recomputed from the usage file for the full week; the audit's 58% was measured on 26–29 October. The plan figure after the reset is the budget script's estimate (API-priced work at $50 per 1% of the week); the plan's own gauge hasn't been logged since 30 October.</p>
+
+  <h3>Throughput fell further than cost</h3>
+  <p>Merged pull requests went from 233 in the peak week to 37 from 2 November to today. Commits on main went from about 1,180 to 103. API-priced cost per merged pull request fell from about $23 to about $12. Treat that ratio with care: the new week is partial and much smaller, and one week is not a trend.</p>
+  <p>Some of the drop is by design. The week's priority was a partner demo for Cork Table, which was built locally and held from merging until I reviewed it. The facelift for the app merged behind switches that are off. Twenty-four pull requests are open and waiting. Some of it is the cost of the new process: work now waits for a window when it needs me, and on Thursday 11 decisions were waiting on me, of which each pack shows five. Whether the new setup can return to the old pace at the new price isn't known yet. That is the main thing the next two weeks have to show.</p>
+
+  <h3>What still breaks</h3>
+  <ul>
+    <li><strong>A scheduled job waited on an approval nobody could give.</strong> Both packs on 3 November never arrived. The scheduled runs built them and then sat "running" for more than 20 hours, almost certainly waiting on a permission prompt to send the email, with nobody at the PC. While one run hung, the next didn't start. I sent the next pack by hand; the packs are now built by a plain script, and the proposed safety net is a check that flags any window with no pack logged 20 minutes after it.</li>
+    <li><strong>One mistake wiped a shared dependency folder.</strong> To save disk, about 300 worktrees link to one shared copy of the project's dependencies. On 4 November the QA chat deleted it by mistake. The linked worktrees were without it overnight, until it was reinstalled the next morning.</li>
+    <li><strong>The same review was built twice.</strong> One of my reviews became GitHub issues for the developers and inbox work for Product, and both built it. The fix: one owner per review item, and a check for open pull requests on that screen before building.</li>
+    <li><strong>Memory still fills.</strong> The Marketing chat reached about 300,000 tokens one day after its reset, mostly images, scripts and plan text held in the chat. The rule now: the plan lives in a file.</li>
+    <li><strong>Handoffs drift.</strong> The first lazy-chat checks found two chats whose handoff files were older than their latest work, and two handoff files are slightly over the 3 KB limit.</li>
+  </ul>
+  <p>One near miss went the other way. A reported bug, "saved scores are stale", turned out to be a measuring error: a read-only script didn't apply a switch the server applies in memory. With the switch, 44 of 44 profiles matched. It was caught before any build, saving about three hours.</p>
+
+  <h2><span class="n">07</span>Before and after</h2>
+  <div class="wp-tbl"><table>
+    <thead><tr><th></th><th>Before (week of 26 Oct)</th><th>After (from 2 Nov)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Setup</strong></td><td>About 20 role chats plus 4–5 scheduled runs a day, about 21 hours a day</td><td>8 standing chats, up to 3 per-ticket dev sessions, charters for the rest</td></tr>
+      <tr><td><strong>Chats active in the week</strong></td><td>54</td><td>89 so far, most of them short per-ticket and scheduled sessions</td></tr>
+      <tr><td><strong>Models</strong></td><td>All Opus (98.8% of cost)</td><td>2 Opus, 6 Sonnet, Haiku for batches (Opus 55% of cost)</td></tr>
+      <tr><td><strong>Coordination</strong></td><td>Agents messaging agents</td><td>One-line inbox files and a decision queue; messages only for incidents, money and resets</td></tr>
+      <tr><td><strong>Memory</strong></td><td>Ever-growing chats and shared files over 200 KB</td><td>Handoff files under 3 KB, files written as work happens, automatic compaction</td></tr>
+      <tr><td><strong>My attention</strong></td><td>Questions at any hour</td><td>Two packs a day, answered in one line; reversible items applied by default with an undo</td></tr>
+      <tr><td><strong>Interruptions outside the windows</strong></td><td>Not measured</td><td>Not yet measured</td></tr>
+      <tr><td><strong>Weekly plan</strong></td><td>Used up by Wednesday; $2,407.92 of extra usage</td><td>About 9% for CorkAI by Friday (estimate); extra usage off</td></tr>
+      <tr><td><strong>Cache-read share of cost</strong></td><td>55–58%</td><td>31%</td></tr>
+      <tr><td><strong>Merged pull requests</strong></td><td>233</td><td>37 (to 6 Nov)</td></tr>
+      <tr><td><strong>Commits on main</strong></td><td>About 1,180</td><td>103 (to 6 Nov)</td></tr>
+      <tr><td><strong>Cost per merged PR</strong></td><td>About $23–27</td><td>About $12</td></tr>
+      <tr><td><strong>Release frequency</strong></td><td>Not measured</td><td>Not yet measured; QA marked main "release ready" on 3 and 5 Nov</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2><span class="n">08</span>Lessons</h2>
+  <div class="wp-adopt">
+    <div><b>Context drives cost, not output</b><span>Keep chats short-lived or compacted, keep shared files small, and let files carry the memory.</span></div>
+    <div><b>Agents should talk through files</b><span>Every message wakes a long context. An inbox line costs nothing until it's read.</span></div>
+    <div><b>Match the model to the job</b><span>Coordination and monitoring don't need the strongest model. Keep it for the work where depth pays.</span></div>
+    <div><b>Protect the owner's attention</b><span>Two windows, numbered picks with recommendations, one-line answers. Then default the reversible items, or the company stops while it waits for you.</span></div>
+    <div><b>Anything that waits on an approval will fail silently</b><span>Check scheduled outputs against the clock, not against the job's own status.</span></div>
+    <div><b>Count only enforced controls</b><span>A rule in a prompt is a promise. CI checks and platform permissions are controls.</span></div>
+    <div><b>Run scripts off the model</b><span>Collectors, probes, dashboards and pack assembly cost nothing as plain scripts.</span></div>
+    <div><b>Measure throughput and cost together</b><span>Cutting cost by 90% is easy if the work stops. The test of the reset is the pace it holds over the next sprint.</span></div>
+  </div>
+  <p class="wp-pull">Part I built the factory and Part II gave it decision rights. Part III is the shift pattern: who is on, what they can touch, and when the owner is asked.</p>
+
+  <div class="wp-series">
+    <a href="/papers/control-tower-method/"><span class="k">Part I</span><span class="t">The Control Tower Method</span></a>
+    <a href="/papers/governing-an-ai-workforce/"><span class="k">Part II</span><span class="t">Governing an AI Workforce</span></a>
+  </div>
+
+  <div class="wp-author">
+    <p class="k">About the author</p>
+    <p><strong>Felipe Molino</strong> is the founder of CorkAI, which is built and run by the agent organization described here, and builds and runs a transportation digital-twin decision platform at NFI Industries.</p>
+  </div>
+</article>
+<footer class="wp-foot"><span>© 2026 Felipe Molino</span><a href="/">Portfolio</a><a href="/papers/control-tower-method/">Part I</a><a href="/papers/governing-an-ai-workforce/">Part II</a><a href="https://www.linkedin.com/in/felipemolino" rel="noopener">LinkedIn</a></footer>
+</body>
+</html>
