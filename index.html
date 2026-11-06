@@ -582,7 +582,7 @@
       <li><a href="#experience">Experience</a></li>
       <li><a href="#work">Featured Work</a></li>
       <li><a href="#ai-initiatives">AI Initiatives</a></li>
-      <li><a href="#ml-optimization">ML &amp; Optimization</a></li>
+      <li><a href="#ml-algorithms">ML &amp; Algorithms</a></li>
       <li><a href="#research">Research</a></li>
       <li><a href="#agent-org">Claude Agent Org</a></li>
       <li><a href="#skills">Skills</a></li>
@@ -820,15 +820,15 @@
   </div>
 </section>
 
-<section class="block" id="ml-optimization" data-sec>
+<section class="block" id="ml-algorithms" data-sec>
   <div class="wrap">
     <div class="block-head">
-      <p class="eyebrow">ML &amp; Optimization · Twelve years of it</p>
+      <p class="eyebrow">ML &amp; Algorithms · Twelve years of it</p>
       <h2>The math under the products: optimization, machine learning and simulation.</h2>
       <p>Before there were language models to call, there were routing problems to solve. Most of my career has been operations research and machine learning in production, and the same habit shows up everywhere: break a problem too big to solve into pieces that can be, then measure what that costs in quality.</p>
     </div>
 
-    <h3>Transportation optimization</h3>
+    <h3>Network design and transportation optimization</h3>
     <div class="tbl-wrap wide"><table>
       <thead><tr><th>Method</th><th>What it does</th><th>Where</th><th>Status</th></tr></thead>
       <tbody>
@@ -856,6 +856,7 @@
     <div class="tbl-wrap wide"><table>
       <thead><tr><th>Method</th><th>What it does</th><th>Where</th><th>Status</th></tr></thead>
       <tbody>
+        <tr><td><strong>Game simulation</strong></td><td>The VGC bot plays inside the real battle simulator: every position its search considers is rebuilt there, bot-vs-bot batches generate self-play games, and a 500-team library is ranked by simulated Swiss tournaments. The simulator is checked against reality, with 16 of 16 real replays reproduced exactly and 1,588 legal-move checks passed. <a href="#research">More in Research</a> · <a href="/papers/vgc-selfplay-design/">Read the design</a>.</td><td>VGC bot</td><td>Running</td></tr>
         <tr><td><strong>Clustering + stochastic simulation</strong></td><td>Store-level inventory tools built for retailer scale: 100,000 SKUs across 1,000 stores, about 100 million records a day. They flag likely phantom inventory and estimate lost sales from daily sales and on-hand inventory, then cluster similar store-item combinations so a stochastic simulation can set reorder points and case packs against a target fill rate. Built in R, then moved to Python. In the same internship I presented a $1B network savings opportunity.</td><td>P&amp;G internship · University of Arkansas honors thesis</td><td>2014</td></tr>
       </tbody>
     </table></div>
