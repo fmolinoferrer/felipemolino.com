@@ -728,9 +728,9 @@
             <span class="tag">Controlled AI agents (APEM)</span>
           </div>
           <div class="cta-row" style="margin-top:26px;">
-            <a class="btn btn-primary" href="/papers/control-tower-method/">Part I: The Control Tower Method →</a>
-            <a class="btn btn-ghost" href="/papers/governing-an-ai-workforce/">Part II: Governing an AI Workforce →</a>
-            <a class="btn btn-ghost" href="/papers/agent-org-in-production/">Part III: The Agent Organization in Production →</a>
+            <a class="btn btn-primary" href="/papers/agent-org-in-production/">Governing an AI Workforce →</a>
+            <a class="btn btn-ghost" href="/papers/control-tower-method/">Part I: The Control Tower Method →</a>
+            <a class="btn btn-ghost" href="/papers/governing-an-ai-workforce/">Part II: Decision Rights and Earned Autonomy →</a>
           </div>
         </div>
         <div class="feature-stats">
@@ -969,9 +969,9 @@
             <span class="tag">Model routing</span>
           </div>
           <div class="cta-row" style="margin-top:26px;">
-            <a class="btn btn-primary" href="/papers/agent-org-in-production/">How it runs in production →</a>
+            <a class="btn btn-primary" href="/papers/agent-org-in-production/">Governing an AI Workforce →</a>
             <a class="btn btn-ghost" href="/papers/control-tower-method/">The governance method →</a>
-            <a class="btn btn-ghost" href="/papers/governing-an-ai-workforce/">Governing an AI workforce →</a>
+            <a class="btn btn-ghost" href="/papers/governing-an-ai-workforce/">Decision rights and earned autonomy →</a>
           </div>
         </div>
         <div class="feature-stats">
@@ -991,7 +991,7 @@
         <tr><td><strong>Memory</strong></td><td>Sessions don't share memory, so the record lives in files: a handoff file under 3 KB per area, inbox files, a decisions queue and a defaults log. Architecture decision records are the long-term memory. The chat is a scratchpad; the files are the record.</td></tr>
         <tr><td><strong>Drift check</strong></td><td>At each pack, the Chief of Staff compares every agent's handoff notes with what it actually did. A stale handoff is logged as a miss and fixed on the spot.</td></tr>
         <tr><td><strong>My attention</strong></td><td>Two decision packs a day, each item with options and a recommended pick. I answer in one line ("1A 2A 3 skip"). Unanswered reversible items proceed on the default and appear in the next pack with a one-line undo.</td></tr>
-        <tr><td><strong>Safety gates</strong></td><td>No agent pushes to main; only the QA agent merges, one pull request at a time, and only when every check and journey test is green. CI rejects any pull request without a complete review packet and tests. Production data is read-only to Claude. Publishing, money, schema and production writes, sign-in and payment logic, secrets, anything customers see, and scope all wait for me.</td></tr>
+        <tr><td><strong>Safety gates</strong></td><td>No agent pushes to main; only the QA agent pushes to main, one pull request at a time, and only when every check and journey test is green. CI rejects any pull request without a complete review packet and tests. Production data is read-only to Claude. Publishing, money, schema and production writes, sign-in and payment logic, secrets, anything customers see, and scope all wait for me.</td></tr>
         <tr><td><strong>Automation</strong></td><td>17 scheduled tasks, including the two-hourly wake-up, the two packs, a daily brief and a release go/no-go, plus 7 CI workflows (tests, DORA metrics, end-to-end, security, incident triage). Plain scripts run on the OS scheduler at no model cost and wake an agent only when they find a problem.</td></tr>
         <tr><td><strong>Model routing</strong></td><td>Opus where a wrong call is expensive to undo (product, algorithms, sensitive security reviews), Sonnet where tests or I check the work, Haiku for monitoring and batch checks. Every new task gets a one-line projection of size, model, share of the weekly budget and what it displaces.</td></tr>
         <tr><td><strong>Iteration</strong></td><td>Week one ran about 17 agents messaging each other, almost all on Opus. It used a week's Claude plan in about two days, and 58% of the cost was long chats re-reading their own history. Decisions also got lost: two agents were given contradictory rules because I'd told each one separately. I rebuilt it as 8 agents coordinating through files, with every decision going through one channel and one log, and direct messages kept for outages, security incidents and money only.</td></tr>

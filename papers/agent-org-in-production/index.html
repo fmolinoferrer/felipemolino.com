@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The Agent Organization in Production · White paper by Felipe Molino</title>
-<meta name="description" content="Part III of the Control Tower Method: how an organization of Claude Code agents actually runs a start-up. Inboxes instead of messages, gates the agents can't cross, two decision windows a day, and the measured before and after of resetting a 20-chat setup to 8. White paper by Felipe Molino.">
+<title>Governing an AI Workforce · White paper by Felipe Molino</title>
+<meta name="description" content="How an organization of Claude Code agents actually runs a start-up. Inboxes instead of messages, gates the agents can't cross, two decision windows a day, and the measured before and after of resetting a 20-chat setup to 8. White paper by Felipe Molino.">
 <link rel="canonical" href="https://felipemolino.com/papers/agent-org-in-production/">
 <meta name="author" content="Felipe Molino">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Felipe Molino">
-<meta property="og:title" content="The Agent Organization in Production">
-<meta property="og:description" content="Inboxes, gates and decision windows: how a Claude Code agent org actually runs a start-up, with the numbers from before and after the reset. Part III of the Control Tower Method.">
+<meta property="og:title" content="Governing an AI Workforce">
+<meta property="og:description" content="Inboxes, gates and decision windows: how a Claude Code agent org actually runs a start-up, with the numbers from before and after the reset.">
 <meta property="og:url" content="https://felipemolino.com/papers/agent-org-in-production/">
 <meta property="og:image" content="https://felipemolino.com/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
@@ -22,7 +22,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1215'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23e79364'%3EFM%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The Agent Organization in Production","alternativeHeadline":"Inboxes, gates and decision windows: how a Claude Code agent org actually runs a start-up. Part III of the Control Tower Method","description":"Part III of the Control Tower Method: how an organization of Claude Code agents runs a start-up in production, with the measured before and after of moving from about 20 always-on chats to 8 standing chats, file inboxes, hard gates and two decision windows a day.","url":"https://felipemolino.com/papers/agent-org-in-production/","mainEntityOfPage":"https://felipemolino.com/papers/agent-org-in-production/","image":"https://felipemolino.com/assets/og.png","datePublished":"2026-11-06","dateModified":"2026-11-06","isPartOf":{"@type":"CreativeWorkSeries","name":"The Control Tower Method"},"author":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/","sameAs":["https://www.linkedin.com/in/felipemolino"]},"publisher":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/"},"keywords":"Claude Code, AI agents, multi-agent systems, agent organization, operating model, AI cost, prompt caching, governance, start-up operations"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Governing an AI Workforce","alternativeHeadline":"Inboxes, gates and decision windows: how a Claude Code agent org actually runs a start-up","description":"How an organization of Claude Code agents runs a start-up in production, with the measured before and after of moving from about 20 always-on chats to 8 standing chats, file inboxes, hard gates and two decision windows a day.","url":"https://felipemolino.com/papers/agent-org-in-production/","mainEntityOfPage":"https://felipemolino.com/papers/agent-org-in-production/","image":"https://felipemolino.com/assets/og.png","datePublished":"2026-11-06","dateModified":"2026-11-06","isPartOf":{"@type":"CreativeWorkSeries","name":"The Control Tower Method"},"author":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/","sameAs":["https://www.linkedin.com/in/felipemolino"]},"publisher":{"@type":"Person","name":"Felipe Molino","url":"https://felipemolino.com/"},"keywords":"Claude Code, AI agents, multi-agent systems, agent organization, operating model, AI cost, prompt caching, governance, start-up operations"}</script>
 <style>
 :root {
   --bg: #0f1215; --surface: #171b1f; --surface-2: #1f242a; --surface-3: #262c33;
@@ -107,17 +107,17 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
 </style>
 </head>
 <body>
-<div class="wp-bar"><div class="wp-bar-in"><a class="wp-back" href="/">&larr; felipemolino.com</a><span class="wp-bar-t">White paper · Part III · The Agent Organization in Production</span></div></div>
+<div class="wp-bar"><div class="wp-bar-in"><a class="wp-back" href="/">&larr; felipemolino.com</a><span class="wp-bar-t">White paper · Governing an AI Workforce</span></div></div>
 <article class="wp">
-  <p class="wp-kick">White paper · Part III · November 2026 · 13 min read</p>
-  <h1>The Agent Organization in Production</h1>
+  <p class="wp-kick">White paper · November 2026 · 13 min read</p>
+  <h1>Governing an AI Workforce</h1>
   <p class="wp-dek">Inboxes, gates and decision windows: how a Claude Code agent org actually runs a start-up, what broke when it ran too hot, and what the first week after the reset measured.</p>
-  <div class="wp-by"><span>Felipe Molino</span><span>Founder, CorkAI</span><span>6 November 2026</span><span>Follows <a href="/papers/control-tower-method/">Part I</a> and <a href="/papers/governing-an-ai-workforce/">Part II</a></span></div>
+  <div class="wp-by"><span>Felipe Molino</span><span>Founder, CorkAI</span><span>6 November 2026</span><span>Builds on <a href="/papers/control-tower-method/">The Control Tower Method</a></span></div>
 
   <section class="wp-exec" aria-labelledby="exec-k">
     <p class="k" id="exec-k">Executive summary</p>
     <ul>
-      <li><strong>Part I</strong> set the method (control areas, levels, evidence). <strong>Part II</strong> set the decision rights. <strong>Part III is the operations manual:</strong> how the agents talk, what they can't touch, when I decide, and what it costs.</li>
+      <li><strong>The Control Tower Method</strong> set the method (control areas, levels, evidence), and <strong>Decision Rights and Earned Autonomy</strong> set who decides what. <strong>This paper is the operations manual:</strong> how the agents talk, what they can't touch, when I decide, and what it costs.</li>
       <li><strong>The first setup worked and was unaffordable.</strong> About 20 role chats, all on Opus, messaging each other around the clock, merged 233 pull requests in one week. They also used a full week's Claude plan in about two days.</li>
       <li><strong>The cost was memory, not work.</strong> Long chats re-reading their own history made up most of the bill. Every message between agents woke another long context.</li>
       <li><strong>The reset, on 2 November:</strong> 8 standing chats (2 on Opus, 6 on Sonnet), short per-ticket build sessions, one-line asks in files instead of messages, a decision queue I see twice a day, and plain scripts for anything that doesn't need a model.</li>
@@ -128,14 +128,14 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
   <div class="wp-facts">
     <div class="wp-fact"><b>~20 → 8</b><span>always-on chats, with build sessions opened per ticket</span></div>
     <div class="wp-fact"><b>$6,350 → $438</b><span>API-priced work, Mon–Thu before vs Mon–Thu after</span></div>
-    <div class="wp-fact"><b>99% → 55%</b><span>share of cost on Opus</span></div>
+    <div class="wp-fact"><b>100% → &lt;40%</b><span>weekly plan used, peak week vs this week</span></div>
     <div class="wp-fact"><b>233 → 37</b><span>merged PRs, peak week vs this week so far</span></div>
   </div>
 
   <p class="wp-pull">The agents were never the bottleneck. The expensive parts were their memories, their conversations with each other, and their questions to me.</p>
 
   <h2><span class="n">01</span>Where this starts</h2>
-  <p>Part I described how to score and gate AI-built software. Part II described which decisions stay with me and what evidence each one needs. Both assumed the organization of agents underneath simply ran. This paper is about that organization: the chats, the files they share, the rules they can't break, and the clock they run on.</p>
+  <p>My earlier papers described how to score and gate AI-built software, and which decisions stay with me and what evidence each one needs. Both assumed the organization of agents underneath simply ran. This paper is about that organization: the chats, the files they share, the rules they can't break, and the clock they run on.</p>
   <p>CorkAI is built and run by Claude Code chats on one PC, each with a role: product, development, QA, security, marketing, data and so on. I am the only person. Everything below comes from that setup's own logs, its usage files and the GitHub history of the main repository.</p>
 
   <h2><span class="n">02</span>The before: one very productive, very expensive week</h2>
@@ -148,7 +148,7 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
       <tr><td><strong>Commits reaching main</strong></td><td>about 1,180</td><td>git history of main, by commit date (ET)</td></tr>
       <tr><td><strong>Claude chats active</strong></td><td>54</td><td>usage collector, distinct transcripts</td></tr>
       <tr><td><strong>Weekly plan</strong></td><td>7% on Monday 12:40 ET, 100% on Wednesday 12:37 ET</td><td>plan log</td></tr>
-      <tr><td><strong>Extra usage bought</strong></td><td>$2,407.92, Wednesday to Friday; the cap was raised five times, from $200 to $3,000</td><td>plan log</td></tr>
+      <tr><td><strong>Extra usage bought</strong></td><td>about $2,400, Wednesday to Friday; the cap was raised five times, from $200 to $3,000</td><td>plan log</td></tr>
       <tr><td><strong>API-priced work, 26–29 Oct</strong></td><td>$5,449 at the time of the audit (Mon $1,610, Tue $1,696, Wed $1,755)</td><td>process log</td></tr>
       <tr><td><strong>Model mix</strong></td><td>Opus 98.8%, Sonnet 1.2%, Haiku 0%</td><td>usage collector</td></tr>
       <tr><td><strong>Cache reads</strong></td><td>58% of cost in the audit</td><td>process log</td></tr>
@@ -190,7 +190,7 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
   <p>The plan was to save and reset every chat on Monday, Wednesday and Friday. It lasted one day. Resets need a turn that I started (an app limit), they lose the chat's identity, and transcript exports failed on the biggest old chats (248 and 284 MB, against a 200 MB limit). Since 3 November the rule is: write everything that must survive to a file the moment it exists, let the app compact the chat automatically, and reset only at a natural break when a chat starts to drift. The chat is a scratchpad. The files are the record. At each window the Chief of Staff compares every handoff file with what the chat actually did and logs any miss. Lasting decisions become numbered decision records, never deleted, only superseded.</p>
 
   <h2><span class="n">04</span>The gates</h2>
-  <p>Part II described my decision rights. These are the rules underneath them, written in one file every chat reads, and the parts the platform actually enforces.</p>
+  <p>My decision rights are set out in <a href="/papers/governing-an-ai-workforce/">Decision Rights and Earned Autonomy</a>. These are the rules underneath them, written in one file every chat reads, and the parts the platform actually enforces.</p>
 
   <h3>My keys</h3>
   <p>These stay with me in every area. Agents prepare them to one tap from done, and never do them:</p>
@@ -204,7 +204,7 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
     <li><strong>Product direction and taste,</strong> and anything with my face or voice.</li>
     <li><strong>Repository settings and CI configuration.</strong></li>
   </ul>
-  <p>Merging is delegated, under conditions. Only the QA chat merges, one pull request at a time, as a regular merge, and only when every item of the definition of green holds: CI green on the latest commit after rebasing, the local gate green, a manual QA video by a chat other than the author, golden-set results for AI changes, the feature behind its own switch, database changes additive only, and a security review for anything touching sign-in, payments, uploads, AI endpoints or secrets. No agent pushes to main.</p>
+  <p>Merging is delegated, under conditions. Only the QA chat merges, one pull request at a time, as a regular merge, and only when every item of the definition of green holds: CI green on the latest commit after rebasing, the local gate green, a manual QA video by a chat other than the author, golden-set results for AI changes, the feature behind its own switch, database changes additive only, and a security review for anything touching sign-in, payments, uploads, AI endpoints or secrets. Only the QA agent pushes to main, and only when the definition of green holds.</p>
 
   <h3>Green, Yellow, Red</h3>
   <div class="wp-tbl"><table>
@@ -282,7 +282,7 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
       <tr><td><strong>Opus share of model calls</strong></td><td>97.7%</td><td>33%</td></tr>
       <tr><td><strong>Cache reads, share of cost</strong></td><td>55% (whole week)</td><td>31% (2–6 Nov)</td></tr>
       <tr><td><strong>Model calls</strong></td><td>38,647 (whole week)</td><td>6,707 (2–6 Nov)</td></tr>
-      <tr><td><strong>Weekly plan, CorkAI</strong></td><td>100% of the whole plan by Wednesday</td><td>about 9% by Friday morning, against a 40% bucket (estimate)</td></tr>
+      <tr><td><strong>Weekly plan, CorkAI</strong></td><td>100% of the whole plan by Wednesday</td><td>under 40% of the whole plan this week, all projects included; CorkAI about 9% by Friday morning (estimate)</td></tr>
     </tbody>
   </table></div>
   <p class="wp-note">The 55% cache-read share is recomputed from the usage file for the full week; the audit's 58% was measured on 26–29 October. The plan figure after the reset is the budget script's estimate (API-priced work at $50 per 1% of the week); the plan's own gauge hasn't been logged since 30 October.</p>
@@ -312,7 +312,7 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
       <tr><td><strong>Memory</strong></td><td>Ever-growing chats and shared files over 200 KB</td><td>Handoff files under 3 KB, files written as work happens, automatic compaction</td></tr>
       <tr><td><strong>My attention</strong></td><td>Questions at any hour</td><td>Two packs a day, answered in one line; reversible items applied by default with an undo</td></tr>
       <tr><td><strong>Interruptions outside the windows</strong></td><td>Not measured</td><td>Not yet measured</td></tr>
-      <tr><td><strong>Weekly plan</strong></td><td>Used up by Wednesday; $2,407.92 of extra usage</td><td>About 9% for CorkAI by Friday (estimate); extra usage off</td></tr>
+      <tr><td><strong>Weekly plan</strong></td><td>Used up by Wednesday; about $2,400 of extra usage</td><td>Under 40% of the whole plan this week; extra usage off</td></tr>
       <tr><td><strong>Cache-read share of cost</strong></td><td>55–58%</td><td>31%</td></tr>
       <tr><td><strong>Merged pull requests</strong></td><td>233</td><td>37 (to 6 Nov)</td></tr>
       <tr><td><strong>Commits on main</strong></td><td>About 1,180</td><td>103 (to 6 Nov)</td></tr>
@@ -332,11 +332,11 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
     <div><b>Run scripts off the model</b><span>Collectors, probes, dashboards and pack assembly cost nothing as plain scripts.</span></div>
     <div><b>Measure throughput and cost together</b><span>Cutting cost by 90% is easy if the work stops. The test of the reset is the pace it holds over the next sprint.</span></div>
   </div>
-  <p class="wp-pull">Part I built the factory and Part II gave it decision rights. Part III is the shift pattern: who is on, what they can touch, and when the owner is asked.</p>
+  <p class="wp-pull">The method built the factory and the decision rights told it who decides. This is the shift pattern: who is on, what they can touch, and when the owner is asked.</p>
 
   <div class="wp-series">
-    <a href="/papers/control-tower-method/"><span class="k">Part I</span><span class="t">The Control Tower Method</span></a>
-    <a href="/papers/governing-an-ai-workforce/"><span class="k">Part II</span><span class="t">Governing an AI Workforce</span></a>
+    <a href="/papers/control-tower-method/"><span class="k">Method</span><span class="t">The Control Tower Method</span></a>
+    <a href="/papers/governing-an-ai-workforce/"><span class="k">Decision rights</span><span class="t">Decision Rights and Earned Autonomy</span></a>
   </div>
 
   <div class="wp-author">
@@ -344,6 +344,6 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
     <p><strong>Felipe Molino</strong> is the founder of CorkAI, which is built and run by the agent organization described here, and builds and runs a transportation digital-twin decision platform at NFI Industries.</p>
   </div>
 </article>
-<footer class="wp-foot"><span>© 2026 Felipe Molino</span><a href="/">Portfolio</a><a href="/papers/control-tower-method/">Part I</a><a href="/papers/governing-an-ai-workforce/">Part II</a><a href="https://www.linkedin.com/in/felipemolino" rel="noopener">LinkedIn</a></footer>
+<footer class="wp-foot"><span>© 2026 Felipe Molino</span><a href="/">Portfolio</a><a href="/papers/control-tower-method/">Control Tower Method</a><a href="/papers/governing-an-ai-workforce/">Decision Rights</a><a href="https://www.linkedin.com/in/felipemolino" rel="noopener">LinkedIn</a></footer>
 </body>
 </html>
