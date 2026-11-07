@@ -852,7 +852,7 @@
         <tr><td><strong>Cost and observability</strong></td><td>Every model call logged with tokens and dollar cost; failure, quota and sign-in health tracked.</td><td>CorkAI, Prodigy</td></tr>
         <tr><td><strong>Caching and prompt versions</strong></td><td>A semantic cache that reuses answers to similar questions. Versioned prompts, so a prompt change automatically retires stale cached results.</td><td>CorkAI, Prodigy</td></tr>
         <tr><td><strong>Synthetic data</strong></td><td>Label and menu images rendered from data for scan tests, and attack sets drafted with Claude.</td><td>CorkAI</td></tr>
-        <tr><td><strong>Model training</strong></td><td>Gradient-boosted trees trained on 112,000 positions from real games, shipped only if they beat a simpler model on held-out data. Next: a transformer trained by self-play (below).</td><td>VGC bot</td></tr>
+        <tr><td><strong>Model training: trees, transformers, reinforcement learning</strong></td><td>Gradient-boosted trees trained on 112,000 positions from real games, shipped only if they beat a simpler model on held-out data. Now training a transformer neural network by deep reinforcement learning: PPO self-play against a league of its past versions (below).</td><td>VGC bot</td></tr>
       </tbody>
     </table></div>
     <h3>Next</h3>
@@ -884,7 +884,7 @@
       <tbody>
         <tr><td><strong>Classification (XGBoost)</strong></td><td>Predicts whether a carrier will accept a tender. An eight-year study produced a three-class classifier at about 90% accuracy, and the model now writes to the live tendering system.</td><td>NFI</td><td>Production</td></tr>
         <tr><td><strong>Gradient-boosted trees</strong></td><td>The bot's position judge: 160 trees over 24 board features, shipped only if it beats a logistic-regression baseline on held-out log loss. <a href="#research">More in Research</a>.</td><td>VGC bot</td><td>Running</td></tr>
-        <tr><td><strong>Deep reinforcement learning</strong></td><td>A 4–5M-parameter transformer trained by PPO self-play against a league of its past versions, then refined by search-guided expert iteration. <a href="/papers/vgc-selfplay-design/">Read the design</a>.</td><td>VGC bot</td><td>Results running</td></tr>
+        <tr><td><strong>Deep reinforcement learning (transformer + PPO)</strong></td><td>A 4–5M-parameter transformer trained by PPO self-play against a league of its past versions, then refined by search-guided expert iteration. <a href="/papers/vgc-selfplay-design/">Read the design</a>.</td><td>VGC bot</td><td>Results running</td></tr>
         <tr><td><strong>Bandit search (UCB1)</strong></td><td>A UCB1 bandit tree inside the bot's multi-turn search that decides which of its own lines to explore further, alongside beam search with Monte Carlo rollouts.</td><td>VGC bot</td><td>Running</td></tr>
         <tr><td><strong>Thompson sampling</strong></td><td>A bandit that learns which suggestions each user actually finds useful, balancing proven picks against new ones.</td><td>Prodigy</td><td>Built</td></tr>
         <tr><td><strong>Recommendation</strong></td><td>A hybrid recommender that matches each person's taste profile to specific bottles, shared by all five <a href="#work">CorkAI business lines</a>.</td><td>CorkAI</td><td>Production</td></tr>
@@ -896,7 +896,7 @@
     <div class="tbl-wrap wide"><table>
       <thead><tr><th>Method</th><th>What it does</th><th>Where</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td><strong>Game simulation</strong></td><td>The VGC bot plays inside the real battle simulator: every position its search considers is rebuilt there, bot-vs-bot batches generate self-play games, and a 500-team library is ranked by simulated Swiss tournaments. The simulator is checked against reality, with 16 of 16 real replays reproduced exactly and 1,588 legal-move checks passed. <a href="#research">More in Research</a> · <a href="/papers/vgc-selfplay-design/">Read the design</a>.</td><td>VGC bot</td><td>Running</td></tr>
+        <tr><td><strong>Game simulation</strong></td><td>The VGC bot plays inside the real battle simulator: every position its search considers is rebuilt there, bot-vs-bot batches generate the self-play games the transformer learns from by reinforcement learning (PPO), and a 500-team library is ranked by simulated Swiss tournaments. The simulator is checked against reality, with 16 of 16 real replays reproduced exactly and 1,588 legal-move checks passed. <a href="#research">More in Research</a> · <a href="/papers/vgc-selfplay-design/">Read the design</a>.</td><td>VGC bot</td><td>Running</td></tr>
         <tr><td><strong>Clustering + stochastic simulation</strong></td><td>Store-level inventory tools built for retailer scale: 100,000 SKUs across 1,000 stores, about 100 million records a day. They flag likely phantom inventory and estimate lost sales from daily sales and on-hand inventory, then cluster similar store-item combinations so a stochastic simulation can set reorder points and case packs against a target fill rate. Built in R, then moved to Python. In the same internship I presented a $1B network savings opportunity.</td><td>P&amp;G internship · University of Arkansas honors thesis</td><td>2014</td></tr>
       </tbody>
     </table></div>
@@ -1065,7 +1065,7 @@
           <span class="pill">Evals &amp; LLM-as-judge</span><span class="pill">Red-teaming &amp; guardrails</span><span class="pill">Grounding checks</span>
           <span class="pill">RAG — hybrid retrieval, embeddings, pgvector</span><span class="pill">RLHF</span><span class="pill">Model routing &amp; failover</span><span class="pill">Structured outputs</span><span class="pill">Voice agents</span>
           <span class="pill">Applied ML — regression, classification, decision trees, clustering</span><span class="pill">Recommendation systems</span>
-          <span class="pill">Deep learning — transformers, CNNs, RNNs, LSTMs</span><span class="pill">Reinforcement learning — PPO, self-play</span><span class="pill">Computer vision</span>
+          <span class="pill">Neural networks &amp; deep learning — transformers, attention, CNNs, RNNs, LSTMs</span><span class="pill">Reinforcement learning — PPO, GAE, self-play, league training</span><span class="pill">Computer vision</span>
           <span class="pill">Human-in-the-loop governance</span>
         </div>
       </div>
@@ -1111,7 +1111,7 @@
         <div class="pill-row">
           <span class="pill">Optimization — linear programming (LP), mixed-integer programming (MIP)</span><span class="pill">Large neighborhood search &amp; metaheuristics</span><span class="pill">Vehicle routing &amp; multi-carrier optimization</span>
           <span class="pill">Dynamic partitioning</span><span class="pill">Clustering</span><span class="pill">Stochastic modeling</span><span class="pill">Simulation</span>
-          <span class="pill">Gradient boosting — XGBoost</span><span class="pill">Bandits — UCB1, Thompson sampling</span><span class="pill">Monte Carlo rollouts</span><span class="pill">AI search algorithms — A*, greedy best-first, heuristics</span>
+          <span class="pill">Neural networks — transformers</span><span class="pill">Reinforcement learning — PPO, self-play, expert iteration</span><span class="pill">Gradient boosting — XGBoost</span><span class="pill">Bandits — UCB1, Thompson sampling</span><span class="pill">Monte Carlo rollouts</span><span class="pill">AI search algorithms — A*, greedy best-first, heuristics</span>
           <span class="pill">Entity resolution</span>
         </div>
       </div>
