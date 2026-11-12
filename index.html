@@ -835,7 +835,7 @@
     <div class="block-head">
       <p class="eyebrow">AI initiatives · Built and running</p>
       <h2>The AI engineering behind my own work.</h2>
-      <p>Outside NFI I build hands-on, across one product and two research projects: CorkAI (a wine-intelligence app on web, iOS and Android), Prodigy (a research project: a productivity app with an AI assistant, Maia) and a VGC battle bot. Between them they cover most of what a production AI system needs. This is what each one does, and where it lives.</p>
+      <p>Outside NFI I build hands-on, across one product and two research projects: CorkAI (a wine-intelligence app on web, iOS and Android), Prodigy (a research project: a productivity app with an AI assistant, Maia) and a VGC battle bot with its own app, VGC Lab. Between them they cover most of what a production AI system needs. This is what each one does, and where it lives.</p>
     </div>
     <div class="tbl-wrap wide"><table>
       <thead><tr><th>Capability</th><th>What I built</th><th>Where</th></tr></thead>
@@ -852,7 +852,9 @@
         <tr><td><strong>Cost and observability</strong></td><td>Every model call logged with tokens and dollar cost; failure, quota and sign-in health tracked.</td><td>CorkAI, Prodigy</td></tr>
         <tr><td><strong>Caching and prompt versions</strong></td><td>A semantic cache that reuses answers to similar questions. Versioned prompts, so a prompt change automatically retires stale cached results.</td><td>CorkAI, Prodigy</td></tr>
         <tr><td><strong>Synthetic data</strong></td><td>Label and menu images rendered from data for scan tests, and attack sets drafted with Claude.</td><td>CorkAI</td></tr>
-        <tr><td><strong>Model training: trees, transformers, reinforcement learning</strong></td><td>Gradient-boosted trees trained on 112,000 positions from real games, shipped only if they beat a simpler model on held-out data. Now training a transformer neural network by deep reinforcement learning: PPO self-play against a league of its past versions (below).</td><td>VGC bot</td></tr>
+        <tr><td><strong>Model training: trees, transformers, reinforcement learning</strong></td><td>Gradient-boosted trees trained on 112,000 positions from real games, shipped only if they beat a simpler model on held-out data. Then a 2.3M-parameter transformer pretrained on 26,000 real games and trained by 120 hours of PPO self-play against a league of its past versions (<a href="#research-results">results</a>).</td><td>VGC bot</td></tr>
+        <tr><td><strong>MLOps and experiment design</strong></td><td>Pre-registered hypotheses and pass marks, a leakage-free holdout, SHA-256 data manifests, checkpoints stamped with config, commit and seeds, an always-on evaluator with drift alarms, and a versioned model package with a merge gate before the app picks it up. A dated lab notebook records every deviation and negative result.</td><td>VGC bot</td></tr>
+        <tr><td><strong>Cloud and release pipelines</strong></td><td>CorkAI: 7 CI workflows on GitHub Actions (tests, end-to-end, security, DORA metrics, incident triage) and a QA agent that merges only green pull requests. VGC Lab: AWS infrastructure as code in CDK (EC2, RDS, load balancer, Route 53, S3, Secrets Manager, CloudWatch) with scripted deploy and rollback.</td><td>CorkAI, VGC Lab</td></tr>
       </tbody>
     </table></div>
     <h3>Next</h3>
@@ -884,7 +886,7 @@
       <tbody>
         <tr><td><strong>Classification (XGBoost)</strong></td><td>Predicts whether a carrier will accept a tender. An eight-year study produced a three-class classifier at about 90% accuracy, and the model now writes to the live tendering system.</td><td>NFI</td><td>Production</td></tr>
         <tr><td><strong>Gradient-boosted trees</strong></td><td>The bot's position judge: 160 trees over 24 board features, shipped only if it beats a logistic-regression baseline on held-out log loss. <a href="#research">More in Research</a>.</td><td>VGC bot</td><td>Running</td></tr>
-        <tr><td><strong>Deep reinforcement learning (transformer + PPO)</strong></td><td>A 4–5M-parameter transformer trained by PPO self-play against a league of its past versions, then refined by search-guided expert iteration. <a href="/papers/vgc-selfplay-design/">Read the design</a>.</td><td>VGC bot</td><td>Results running</td></tr>
+        <tr><td><strong>Deep reinforcement learning (transformer + PPO)</strong></td><td>A 2.3M-parameter transformer trained by 120 hours of PPO self-play against a league of its past versions; inside the search it wins 63% against the old engine. Next, search-guided expert iteration. <a href="#research-results">Results</a> · <a href="/papers/vgc-selfplay-design/">Read the design</a>.</td><td>VGC bot</td><td>Trained</td></tr>
         <tr><td><strong>Bandit search (UCB1)</strong></td><td>A UCB1 bandit tree inside the bot's multi-turn search that decides which of its own lines to explore further, alongside beam search with Monte Carlo rollouts.</td><td>VGC bot</td><td>Running</td></tr>
         <tr><td><strong>Thompson sampling</strong></td><td>A bandit that learns which suggestions each user actually finds useful, balancing proven picks against new ones.</td><td>Prodigy</td><td>Built</td></tr>
         <tr><td><strong>Recommendation</strong></td><td>A hybrid recommender that matches each person's taste profile to specific bottles, shared by all five <a href="#work">CorkAI business lines</a>.</td><td>CorkAI</td><td>Production</td></tr>
@@ -908,12 +910,12 @@
     <div class="block-head">
       <p class="eyebrow">Research · Self-play reinforcement learning</p>
       <h2>Teaching a bot to win at competitive Pokémon, on one laptop.</h2>
-      <p>A research project in game-playing AI: a bot for Pokémon VGC doubles (the Regulation M-C format, open team sheets) that learns its play only from games against itself. The goal is to beat the top-rated bot on the Reg M-C ladder (about 1,857 Elo), training on a single Apple M4 Mac.</p>
+      <p>A research project in game-playing AI: a bot for Pokémon VGC doubles (the Regulation M-C format, open team sheets) that learns its play only from games against itself. The goal is to beat the top-rated bot on the Reg M-C ladder (about 1,857 Elo), training on a single Apple M4 Mac. Around it I built VGC Lab, a full web app for competitive players, deployed on AWS (<a href="#vgc-lab">below</a>). I direct it the way I run CorkAI: I set the design, the experiments and the release gates, and Claude Code agents write most of the code.</p>
     </div>
     <div class="feature-list">
       <div class="feature-card">
         <div>
-          <p class="eyebrow">Status · Design pre-registered 3 Nov 2026 · self-play results still running</p>
+          <p class="eyebrow">Status · Design pre-registered 3 Nov 2026 · 120-hour self-play run complete · search-distillation phase next</p>
           <h3>A mechanics-aware network, self-play training, and an evaluation written down before the results</h3>
           <p class="desc">VGC doubles is a hard game for AI. Both players choose moves at the same time, each turn has about 30 options per Pokémon, the opponent's exact stats are hidden, and luck matters. The current engine searches several turns ahead with a 24-feature tree model as its judge. This project replaces that judge with a small transformer that reads the whole board, learns its own play by self-play, and then guides the search. A team builder uses the same network to design teams. Every claim will be tested against a protocol I fixed in advance.</p>
           <div class="feature-tags">
@@ -928,10 +930,10 @@
           </div>
         </div>
         <div class="feature-stats">
-          <div class="feature-stat"><div class="fnum">~12k</div><div class="flabel">real high-rated games for outcome pretraining</div></div>
-          <div class="feature-stat"><div class="fnum">4–5M</div><div class="flabel">parameters, sized to train on one 16 GB laptop</div></div>
-          <div class="feature-stat"><div class="fnum">1,500</div><div class="flabel">mirrored games needed to detect a 5-point edge</div></div>
-          <div class="feature-stat"><div class="fnum">18</div><div class="flabel">threats to validity, each with a planned fix</div></div>
+          <div class="feature-stat"><div class="fnum">2.3M</div><div class="flabel">parameters, after a 5.5M model proved no better on holdout</div></div>
+          <div class="feature-stat"><div class="fnum">120 h</div><div class="flabel">of PPO self-play, about 2.8M games a day</div></div>
+          <div class="feature-stat"><div class="fnum">74.1%</div><div class="flabel">holdout accuracy before self-play, vs 71.7% for the tree model</div></div>
+          <div class="feature-stat"><div class="fnum">63%</div><div class="flabel">win rate of the network-guided search vs the old engine, 1,000 games</div></div>
         </div>
       </div>
     </div>
@@ -957,18 +959,35 @@
         <tr><td><strong>Overfitting guard</strong></td><td>Champion/challenger on held-out log loss: the boosted model ships only if it beats a logistic-regression baseline's held-out log loss by a fixed margin. Otherwise the engine falls back to the simpler model automatically. Baselines are temperature-calibrated so the comparison is fair, and accuracy and log loss are reported per turn.</td></tr>
         <tr><td><strong>Search</strong></td><td>Every position is rebuilt in the real battle simulator. Iterative deepening to depth 8 (cap 12); exhaustive search over joint choices at depth 1; beam search with Monte-Carlo rollouts deeper; a UCB1 bandit tree for my next turns. It runs on worker threads and only starts a deeper level if it fits the remaining time.</td></tr>
         <tr><td><strong>Robust choice</strong></td><td>Each candidate is scored as 0.7 × average outcome + 0.3 × worst case. Opponent replies are a 45 / 40 / 15 mix of a move prior learned from replays, the best response and uniform play.</td></tr>
-        <tr><td><strong>Testing</strong></td><td>1,588 legal-move checks with none rejected, 16 of 16 replays reproduced exactly, and 10 engine scenario tests.</td></tr>
+        <tr><td><strong>Testing</strong></td><td>1,588 legal-move checks with none rejected, 16 of 16 replays reproduced exactly, and 10 engine scenario tests. Before self-play: 7.12 million action-legality probes over 100,000 decisions, plus encoder-parity and damage-fidelity checks (96.8% of 600 hits matched).</td></tr>
+        <tr><td><strong>Training data</strong></td><td>26,467 real games (181,989 positions) for outcome pretraining, with 5,301 games held out by player and by Bo3 set. The first split, by a hash of the game id, leaked about 0.018 log loss on real games; I found it, documented it and replaced it. Every file is pinned in a SHA-256 manifest.</td></tr>
+        <tr><td><strong>MLOps</strong></td><td>PyTorch on Apple silicon (MPS, bf16) with Node workers running 512 parallel battles. Every checkpoint records its config, git commit, data-manifest hash and seeds. Checkpoints every 30 minutes, a supervisor that resumes after a crash, a stall watchdog, a scheduled restart every 4 hours to contain a framework memory leak, and a separate evaluator that plays 1,000 games against the heuristic bot every 4 hours and 200 against the old engine every 12, with collapse and value-drift alarms.</td></tr>
+        <tr><td><strong>Model release</strong></td><td>The trained engine ships to the app as a versioned package: a 30-file SHA-256 manifest, a parity fixture, and an 8-check merge suite (ownership guard, engine pin, legality, merge dry run) that must pass before it lands.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 id="research-results">Results so far</h3>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Experiment</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Outcome pretraining</strong></td><td>Holdout log loss 0.4907 and 74.1% accuracy, against 0.5182 and 71.7% for the tree model, in 13 minutes of training. Calibration error 0.028, 0.011 after temperature scaling; isotonic calibration overfit and was rejected.</td></tr>
+        <tr><td><strong>Model size</strong></td><td>A 5.5M-parameter network (256 wide, 6 layers) matched the 2.3M one (192 wide, 4 layers) within 0.002 log loss at less than half the speed, so the smaller one went forward.</td></tr>
+        <tr><td><strong>120 hours of self-play</strong></td><td>82.6% against the heuristic bot. Against the old engine, from 40.5% at 24 hours to 52% [45%, 59%] at 96 hours. The pre-registered day-3 gate against the old engine failed (45.5% [38.8%, 52.4%]); it is reported as a fail, not redefined.</td></tr>
+        <tr><td><strong>Errors self-play fixed on its own</strong></td><td>Mega Evolution used when available rose from 72.5% to 97.5%; attacks on its own partner fell from 24.1% to 1.1%.</td></tr>
+        <tr><td><strong>Network inside the search</strong></td><td>With the network as move prior and position judge (AlphaZero-style), the search won 63.1% [60%, 66%] of 1,000 games against the old engine, and found a hard set-up line in 6 of 6 runs that the old engine never found.</td></tr>
+        <tr><td><strong>Speed versus strength</strong></td><td>At equal thinking time the simpler search wins below about 2.5 seconds a move (38.1% for the new one over 2,000 games at 0.5 s) and they tie at 2.5 s, so the app switches engines at 3 seconds.</td></tr>
+        <tr><td><strong>A negative result, written up</strong></td><td>One training run's holdout log loss jumped from 0.545 to 1.057: the value head had memorized its anchor games. A holdout check caught it, distillation fixed it, and it's documented as a case study.</td></tr>
       </tbody>
     </table></div>
 
     <h3 id="research-algorithms">Algorithms &amp; key settings</h3>
     <div class="tbl-wrap wide"><table>
-      <thead><tr><th>Component</th><th>Algorithm</th><th>Key settings (proposed)</th></tr></thead>
+      <thead><tr><th>Component</th><th>Algorithm</th><th>Key settings</th></tr></thead>
       <tbody>
-        <tr><td><strong>Network</strong></td><td>Transformer encoder over 16 tokens (12 Pokémon, field, 2 sides, summary); damage and speed as attention biases</td><td>Width 256, 6 layers, 8 heads, ~4–5M parameters</td></tr>
-        <tr><td><strong>Pretraining</strong></td><td>Value and helper heads trained on outcomes of ~12,000 real games</td><td>Must beat the tree model's accuracy and log loss on the same holdout</td></tr>
-        <tr><td><strong>Self-play</strong></td><td>PPO with GAE, against a league of past versions (PFSP)</td><td>Clip 0.2, lr 3e-4 → 3e-5, γ 1.0, GAE λ 0.95, target KL 0.02; opponents 50% self / 40% past / 10% anchors; 3–5 days</td></tr>
-        <tr><td><strong>Refinement</strong></td><td>Search-guided refinement (expert iteration): the network learns from the full search's choices</td><td>50,000–200,000 games at 0.5–1 s per move</td></tr>
+        <tr><td><strong>Network</strong></td><td>Transformer encoder over 16 tokens (12 Pokémon, field, 2 sides, summary); damage and speed as attention biases; heads for value, a joint two-slot policy, team preview and helper predictions</td><td>Width 192, 4 layers, 8 heads, 2.3M parameters (a 5.5M variant tested and not needed)</td></tr>
+        <tr><td><strong>Pretraining</strong></td><td>Value and helper heads trained on outcomes of 26,467 real games</td><td>Had to beat the tree model's accuracy and log loss on the same holdout; it did</td></tr>
+        <tr><td><strong>Self-play</strong></td><td>PPO with GAE, against a league of past versions (PFSP)</td><td>Clip 0.2, AdamW lr 3e-4 → 3e-5 cosine, GAE λ 0.95, 32,768 samples per update, 512 parallel battles; opponents 50% self / 40% past / 10% anchors; 120 hours</td></tr>
+        <tr><td><strong>Refinement</strong></td><td>Search-guided refinement (expert iteration): the network learns from the full search's choices</td><td>Built and scheduled; results not in yet</td></tr>
         <tr><td><strong>Play</strong></td><td>Multi-turn search with the network as prior and judge; optional regret-matching solve at the root</td><td>16 sampled guesses of the opponent's hidden stats</td></tr>
         <tr><td><strong>Team building</strong></td><td>Matchup head + local search with simulated annealing, verified by full-search play</td><td>Scored against 500 library teams, weighted by usage</td></tr>
       </tbody>
@@ -977,7 +996,8 @@
     <h3>How it will be judged</h3>
     <ul>
       <li><strong>Pre-registered.</strong> Hypotheses, pass marks and sample sizes were dated and fixed before any self-play run. Changes go in a dated lab notebook, negative results included.</li>
-      <li><strong>Fair comparisons.</strong> Mirrored matches: every pairing plays both seats with the same random seeds, so team strength cancels out. Results are reported with 95% confidence intervals and Bradley-Terry ratings.</li>
+      <li><strong>Fair comparisons.</strong> Mirrored matches: every pairing plays both seats with the same random seeds, so team strength cancels out. Results are reported with Wilson and pair-clustered 95% confidence intervals and Bradley-Terry ratings, with checks for rock-paper-scissors cycles between versions.</li>
+      <li><strong>No peeking.</strong> Early stopping only by a rule fixed in advance (a 99% interval); when a mid-run alarm fired I let the run finish rather than stop on a good-looking number.</li>
       <li><strong>No tuning on the test.</strong> Separate validation (32 teams) and test (64 teams) sets, a split by player and set to stop leakage, and three seeds for key settings.</li>
       <li><strong>Hard to exploit, not just strong.</strong> A dedicated exploiter is trained against the frozen bot to measure how easily it can be beaten. Team builds are checked against a field that adapts, not a fixed one.</li>
       <li><strong>Eleven ablations</strong> isolate what each part contributes: the mechanics inputs, the helper predictions, pretraining, the league and search depth.</li>
@@ -985,7 +1005,22 @@
     </ul>
 
     <h3>Why I'm doing it</h3>
-    <p>It's the hands-on counterpart to my M.S. in AI: owning a model end to end, from network design through training to evaluation, rather than calling one through an API. The discipline is the same one I apply to products. Decide in advance what would prove you wrong, and report what actually happened. Results will be posted here when they exist, negative ones included.</p>
+    <p>It's the hands-on counterpart to my M.S. in AI: owning a model end to end, from network design through training to evaluation, rather than calling one through an API. The discipline is the same one I apply to products. Decide in advance what would prove you wrong, and report what actually happened. Results go up here as each phase finishes, negative ones included, and the write-up is heading toward a paper.</p>
+
+    <h3 id="vgc-lab">VGC Lab: the product built around the bot</h3>
+    <p>The research runs inside a full web app for competitive players, VGC Lab (powered by Dark Aura), with its infrastructure defined as code on AWS.</p>
+    <div class="tbl-wrap wide"><table>
+      <thead><tr><th>Area</th><th>What's built</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Product</strong></td><td>35 pages: team builder and a 500-team tournament library, meta report, matchup lab, damage calculator, replay analysis by turn, scouting, Swiss and single-elimination tournament simulation for up to 1,000 players, alternate-endgame analysis, play against the bot, and an admin console with activity tracking.</td></tr>
+        <tr><td><strong>Stack</strong></td><td>TypeScript monorepo: Express API with about 284 routes, an OpenAPI contract that generates the Zod validators and the React Query client, React and Vite front end, PostgreSQL through Drizzle (35 schema files), Google sign-in with an allowlist, per-user limits, and a Postgres job queue for long simulations.</td></tr>
+        <tr><td><strong>Data pipeline</strong></td><td>Replays synced from the battle server every 30 minutes, plus tournament results and team sheets from community sources, with a measured cost study before scaling the pull.</td></tr>
+        <tr><td><strong>AWS, as code</strong></td><td>One CDK stack in TypeScript: EC2 managed through Systems Manager (no SSH), an HTTPS load balancer with an ACM certificate, Route 53, RDS PostgreSQL 16 with encrypted backups, S3 for release bundles and nightly database dumps, Secrets Manager, CloudWatch alarms that recover or reboot the server, and EventBridge Scheduler to stop it overnight. Scripted deploy, update and rollback.</td></tr>
+        <tr><td><strong>Cost</strong></td><td>Priced from the AWS Pricing API before building: about $196 a month with the overnight stop against $271 always on, under a $250 cap. A container path (ECS Fargate for the API, spot workers for batch jobs) and a GPU spot training track are sized for when usage justifies them.</td></tr>
+        <tr><td><strong>Market and pricing</strong></td><td>Competitive analysis of the ladder's leading bots (the top one about 8.7M parameters), a published benchmark, and the community tools players already use. A freemium plan (Free, Pro at about $6 a month, Dark Aura at about $15) built up from unit cost per engine-minute plus fixed hosting.</td></tr>
+        <tr><td><strong>Next</strong></td><td>Run it the way CorkAI runs: an agent organization (orchestrator, dev and QA, product, algorithms, IT) with CI that gates every pull request, then containers and public pages for search.</td></tr>
+      </tbody>
+    </table></div>
   </div>
 </section>
 
@@ -1056,6 +1091,7 @@
         <div class="pill-row">
           <span class="pill">Product strategy &amp; roadmaps</span><span class="pill">Portfolio management across business lines</span><span class="pill">Consumer &amp; B2B SaaS</span><span class="pill">Pricing &amp; packaging</span>
           <span class="pill">Customer discovery &amp; demos</span><span class="pill">QBRs &amp; RFPs</span><span class="pill">ROI cases</span><span class="pill">Growth analytics — funnels, retention</span><span class="pill">0-to-1 products</span>
+          <span class="pill">Competitive analysis</span><span class="pill">Go-to-market &amp; marketing — brand, SEO, launch</span><span class="pill">Unit economics &amp; freemium pricing</span>
         </div>
       </div>
       <div class="skill-group" style="grid-column:1 / -1">
@@ -1066,6 +1102,8 @@
           <span class="pill">RAG — hybrid retrieval, embeddings, pgvector</span><span class="pill">RLHF</span><span class="pill">Model routing &amp; failover</span><span class="pill">Structured outputs</span><span class="pill">Voice agents</span>
           <span class="pill">Applied ML — regression, classification, decision trees, clustering</span><span class="pill">Recommendation systems</span>
           <span class="pill">Neural networks &amp; deep learning — transformers, attention, CNNs, RNNs, LSTMs</span><span class="pill">Reinforcement learning — PPO, GAE, self-play, league training</span><span class="pill">Computer vision</span>
+          <span class="pill">MLOps — data manifests, versioned checkpoints, continuous evaluation, drift alarms, model release gates</span>
+          <span class="pill">Experiment design &amp; statistics — pre-registration, holdouts, ablations, confidence intervals, Bradley-Terry ratings</span><span class="pill">Scientific &amp; technical writing</span>
           <span class="pill">Human-in-the-loop governance</span>
         </div>
       </div>
@@ -1073,8 +1111,9 @@
         <h4>Cloud, Infrastructure &amp; Migration</h4>
         <div class="pill-row">
           <span class="pill">Live production replatforming</span><span class="pill">Phased cutover &amp; parallel-run validation</span>
-          <span class="pill">Databricks</span><span class="pill">Kubernetes</span><span class="pill">Docker</span>
-          <span class="pill">CI/CD — GitHub Actions, Jenkins, OpenShift</span><span class="pill">GCP</span><span class="pill">AWS</span>
+          <span class="pill">Databricks</span><span class="pill">Containers &amp; orchestration — Docker, Kubernetes, EKS/ECS</span>
+          <span class="pill">CI/CD — GitHub Actions, Jenkins, OpenShift</span><span class="pill">GCP</span>
+          <span class="pill">AWS — EC2, RDS, S3, ALB, Route 53, Secrets Manager, CloudWatch, EventBridge</span><span class="pill">Infrastructure as code — AWS CDK</span><span class="pill">Cloud cost modeling</span>
         </div>
       </div>
       <div class="skill-group">
@@ -1112,7 +1151,7 @@
           <span class="pill">Exact optimization — LP, MIP, network flow</span>
           <span class="pill">Metaheuristics — large neighborhood search (destroy &amp; repair), simulated annealing, tabu search</span><span class="pill">Local search — 2-opt, Or-opt, swap moves</span>
           <span class="pill">Vehicle routing (VRP) — savings heuristics</span><span class="pill">Multi-carrier, multi-mode assignment</span><span class="pill">Dynamic partitioning</span>
-          <span class="pill">Search — A*, greedy best-first, beam search</span><span class="pill">Monte Carlo tree search — UCB1</span><span class="pill">Regret matching</span>
+          <span class="pill">Search — A*, greedy best-first, beam search</span><span class="pill">Monte Carlo tree search — UCB1, PUCT (AlphaZero-style)</span><span class="pill">Regret matching</span><span class="pill">Bayesian inference</span>
           <span class="pill">Tree-based learning — decision trees, random forests, gradient boosting (XGBoost)</span><span class="pill">Bandits — Thompson sampling</span>
           <span class="pill">Monte Carlo simulation</span><span class="pill">Stochastic modeling</span><span class="pill">Clustering</span><span class="pill">Entity resolution</span>
         </div>

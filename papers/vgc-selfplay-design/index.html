@@ -114,7 +114,7 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
   <h1>A Self-Play Bot for Competitive Pokémon</h1>
   <p class="wp-dek">The full methods plan for a bot that learns to play Pokémon VGC doubles by playing against itself, on one laptop: what I'm testing, how the network and training work, how teams get built, and how I'll judge the results, written down before any of them exist.</p>
   <div class="wp-by"><span>Felipe Molino</span><span>Format: Reg M-C doubles, open team sheets</span><span>Hardware: one Apple M4 Mac, 16 GB</span></div>
-  <p class="wp-status">Design pre-registered · build under way · no results yet</p>
+  <p class="wp-status">Design pre-registered · kept as written · first results now on <a href="/#research-results">felipemolino.com</a></p>
 
   <section class="wp-exec" aria-labelledby="exec-k">
     <p class="k" id="exec-k">Summary</p>
@@ -124,7 +124,7 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; text-wra
       <li><strong>What I'm building:</strong> a 4–5M-parameter transformer that reads the whole board, with a damage calculator and speed order wired in as inputs. It learns to play purely by self-play (PPO against a league of its past versions), then plugs into the existing search as both the move prior and the position judge.</li>
       <li><strong>Team building, too:</strong> a matchup head scores two team sheets against each other in milliseconds, and a local search with simulated annealing uses it to build teams from scratch or around a named Pokémon.</li>
       <li><strong>Judged against a protocol fixed in advance:</strong> five hypotheses, pass marks for every stage, mirrored matches with confidence intervals, eleven ablations, a human study with expert players, and 18 threats to validity each with a planned mitigation.</li>
-      <li><strong>Status:</strong> this design is dated and pre-registered. The build is under way. There are no results yet; they will be published here when they exist, negative ones included.</li>
+      <li><strong>Status:</strong> this design is dated and pre-registered, and is left exactly as written. Since then: pretraining and a 120-hour self-play run are done, a smaller 2.3M-parameter network replaced the planned size after it matched a 5.5M one on holdout, and one pre-registered gate failed and is reported as a fail. <a href="/#research-results">Results so far</a>.</li>
     </ul>
   </section>
 
